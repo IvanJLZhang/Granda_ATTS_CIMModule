@@ -1,0 +1,535 @@
+﻿[
+  {
+    "S": "1",
+    "F_Pri": "1",
+    "F_Sec": "2",
+    "FirstMessageDirection": "H<->E",
+    "FunctionName": "Are You There Request (R)"
+  },
+  {
+    "S": "1",
+    "F_Pri": "3",
+    "F_Sec": "4",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Selected Equipment Status Request (SSR)"
+  },
+  {
+    "S": "1",
+    "F_Pri": "5",
+    "F_Sec": "6",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": [
+      "Formatted Status Request (FSR)",
+      "SFCD=01, Equipment Status Request" ,
+      "SFCD=02, Port Status Request" ,
+      "SFCD=03, Operation mode Request" ,
+      "SFCD=04, Unit Status Request" ,
+      "SFCD=05, Sub-Unit Status Request" ,
+      "SFCD=06, Sub-Sub-Unit Status Request" ,
+      "SFCD=07, Mask Status Request" ,
+      "SFCD=08, Material Status Request" ,
+      "SFCD=09, Sorter Job List Request" ,
+      "SFCD=10, Crate Port Status Request" ,
+      "SFCD=11, Half Port Status Request" ,
+      "SFCD=12, Port load-request and Unload-Request report start" ,
+      "SFCD=13, Equipment Recycle mode Request" 
+    ]
+  },
+  {
+    "S": "1",
+    "F_Pri": "11",
+    "F_Sec": "12",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Status Variable NameList Request (SVNR)"
+  },
+  {
+    "S": "1",
+    "F_Pri": "13",
+    "F_Sec": "14",
+    "FirstMessageDirection": "H<->E",
+    "FunctionName": "Establish Communication Request"
+  },
+  {
+    "S": "1",
+    "F_Pri": "15",
+    "F_Sec": "16",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Request OFF-LINE (ROFL)"
+  },
+  {
+    "S": "1",
+    "F_Pri": "17",
+    "F_Sec": "18",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Request ON-LINE (RONL)"
+  },
+  {
+    "S": "2",
+    "F_Pri": "13",
+    "F_Sec": "14",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Equipment Constants Request (ECR)"
+  },
+  {
+    "S": "2",
+    "F_Pri": "15",
+    "F_Sec": "16",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "New Equipment Constants Send (ECS)"
+  },
+  {
+    "S": "2",
+    "F_Pri": "17",
+    "F_Sec": "18",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": "Date & Time Request (DTR)"
+  },
+  {
+    "S": "2",
+    "F_Pri": "23",
+    "F_Sec": "24",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Trace Initialize Send (TIS)"
+  },
+  {
+    "S": "2",
+    "F_Pri": "29",
+    "F_Sec": "30",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Equipment Constant NameList Request (ECNR)"
+  },
+  {
+    "S": "2",
+    "F_Pri": "31",
+    "F_Sec": "32",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Date and Time Set Request (DTS)"
+  },
+  {
+    "S": "2",
+    "F_Pri": "37",
+    "F_Sec": "38",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Enable or Disable Event Report (EDER)"
+  },
+  {
+    "S": "2",
+    "F_Pri": "39",
+    "F_Sec": "40",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Enable or Disable Event List Report (EDER)"
+  },
+  {
+    "S": "2",
+    "F_Pri": "41",
+    "F_Sec": "42",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": [
+      "Host Command Send (HCS)",
+      "RCMD=1, START",
+      "RCMD=2, CANCEL",
+      "RCMD=3, ABORT",
+      "RCMD=4, PAUSE",
+      "RCMD=5, RESUME",
+      "RCMD=6, OPERATOR CALL",
+      "RCMD=7, Mask Cassette Cancel",
+      "RCMD=8, Unpacker  BarCodeData (crate-id) result",
+      "RCMD=9, Recycle "
+    ]
+  },
+  {
+    "S": "2",
+    "F_Pri": "53",
+    "F_Sec": "54",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Crate glass QTY download"
+  },
+  {
+    "S": "2",
+    "F_Pri": "103",
+    "F_Sec": "104",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": [
+      "Cassette Information Download (Glass)",
+      "Tray Information Download (Tray)",
+      "Tray Information Download (Cell)"
+    ]
+  },
+  {
+    "S": "2",
+    "F_Pri": "105",
+    "F_Sec": "106",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Empty CST Permission"
+  },
+  {
+    "S": "2",
+    "F_Pri": "107",
+    "F_Sec": "108",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Sorter Job Command"
+  },
+  {
+    "S": "2",
+    "F_Pri": "109",
+    "F_Sec": "110",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Mask cassette information Download"
+  },
+  {
+    "S": "2",
+    "F_Pri": "111",
+    "F_Sec": "112",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Mask cassette information Download EVA"
+  },
+  {
+    "S": "2",
+    "F_Pri": "119",
+    "F_Sec": "120",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Mask offset information Download"
+  },
+  {
+    "S": "2",
+    "F_Pri": "121",
+    "F_Sec": "122",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Job Reservation Command"
+  },
+  {
+    "S": "2",
+    "F_Pri": "123",
+    "F_Sec": "124",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Remind Job Start Signal"
+  },
+  {
+    "S": "2",
+    "F_Pri": "131",
+    "F_Sec": "132",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Port PPID Send"
+  },
+  {
+    "S": "2",
+    "F_Pri": "203",
+    "F_Sec": "204",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Send Packing box ID"
+  },
+  {
+    "S": "2",
+    "F_Pri": "211",
+    "F_Sec": "212",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Mask Eject Request"
+  },
+  {
+    "S": "2",
+    "F_Pri": "221",
+    "F_Sec": "222",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": "Loading Stop"
+  },
+  {
+    "S": "2",
+    "F_Pri": "231",
+    "F_Sec": "232",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": "Work Order Request"
+  },
+  {
+    "S": "5",
+    "F_Pri": "1",
+    "F_Sec": "2",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": "Alarm Report Send (Extended)(ARS)"
+  },
+  {
+    "S": "5",
+    "F_Pri": "3",
+    "F_Sec": "4",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Enable/Disable Alarm Send (EAS)"
+  },
+  {
+    "S": "5",
+    "F_Pri": "5",
+    "F_Sec": "6",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "List Alarm Data Request(LAR)"
+  },
+  {
+    "S": "5",
+    "F_Pri": "103",
+    "F_Sec": "104",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Current Alarm List Request (CALR)"
+  },
+  {
+    "S": "6",
+    "F_Pri": "1",
+    "F_Sec": "-",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": "Trace Data Send (TDS)"
+  },
+  {
+    "S": "6",
+    "F_Pri": "3",
+    "F_Sec": "4",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": [
+      "Discrete Variable Data Send (DVS)",
+      "CEID=500, Glass Process Data",
+      "CEID=501, Lot Process Data",
+      "CEID=502, Mask Process Data"
+    ]
+  },
+  {
+    "S": "6",
+    "F_Pri": "11",
+    "F_Sec": "12",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": [
+      "Event Report Send (ERS)",
+      "CEID=104, Operation mode Status Change",
+      "CEID=105, Unit Status Change ",
+      "CEID=106, Sub-Unit Status Change",
+      "CEID=107, SSub-Unit Status Change",
+      "CEID=108, Material Change ",
+      "CEID=109, Equipment Constant Change",
+      "CEID=110, Ready To Start",
+      "CEID=111, Control State Change(OFF-LINE)",
+      "CEID=112, Control State Change (ON-LINE LOCAL)",
+      "CEID=113, Control State Change (ON-LINE REMOTE)",
+      "CEID=114, Equipment Status Change",
+      "CEID=115, Material List Report",
+      "CEID=118, Operator Confirm Event About Operator Call Command",
+      "CEID=200, Load Request",
+      "CEID=201, Pre - Load Complete",
+      "CEID=202, Load Complete",
+      "CEID=203, Unload Request",
+      "CEID=204, Unload Complete",
+      "CEID=205, Port Disable Changed",
+      "CEID=206, Port Enable Changed",
+      "CEID=207, Port Type Changed",
+      "CEID=208, Port Use Type Changed",
+      "CEID=209, Transfer Mode Changed",
+      "CEID=210, Crate Port Load Request",
+      "CEID=211, Remained Glass Count of Crate Report",
+      "CEID=212, Crate Port Load Complete",
+      "CEID=213, Crate Port Unload Request",
+      "CEID=214, Crate Port Unload Complete",
+      "CEID=215, Crate Port Disabled",
+      "CEID=216, Crate Port Enabled",
+      "CEID=217, Crate Port Type Changed",
+      "CEID=218, Crate Port Use Type changed",
+      "CEID=219, Crate Port Transfer Mode Change",
+      "CEID=220, Mask Cassette Port Load Request",
+      "CEID=221, Mask Cassette Port Pre - Load Complete",
+      "CEID=222, Mask Cassette Port Load Complete",
+      "CEID=223, Mask Cassette Port Unload Request",
+      "CEID=224, Mask Cassette Port Unload Complete",
+      "CEID=225, Mask Cassette Port Disable Changed",
+      "CEID=226, Mask Cassette Port Enable Changed",
+      "CEID=227, Mask Cassette Port Type Changed",
+      "CEID=228, Mask Cassette Port Use Type Changed",
+      "CEID=229, Mask Cassette Port Transfer Mode Changed",
+      "CEID=230, Tray Port Load Request",
+      "CEID=231, Tray Port Load Complete",
+      "CEID=232, Tray Port Unload Request",
+      "CEID=233, Tray Port Unload Complete",
+      "CEID=234, Tray Port Disable Change",
+      "CEID=235, Tray Port Enable Change",
+      "CEID=236, Tray Port Type Change",
+      "CEID=237, Tray Port Use Type Change",
+      "CEID=301, Process Start",
+      "CEID=304, Process Cancel",
+      "CEID=305, Process Abort",
+      "CEID=306, Process Pause",
+      "CEID=307, Process Resume",
+      "CEID=309, EQP Stop",
+      "CEID=311, Last Glass Process Start",
+      "CEID=312, Last Mask Process Start",
+      "CEID=321, Glass Out By Indexer Event",
+      "CEID=322, Glass In By Indexer Event",
+      "CEID=323, Glass Out By Unit Event",
+      "CEID=324, Glass In By Unit Event",
+      "CEID=325, Glass Out By Sub-Unit Event",
+      "CEID=326, Glass In By Sub-Unit Event",
+      "CEID=327, Glass Out By SSub-Unit Event",
+      "CEID=328, Glass In By SSub-Unit Event",
+      "CEID=329, Cassette In By Unit",
+      "CEID=330, Cassette Out By Unit",
+      "CEID=331, Glass Scrap Event",
+      "CEID=332, Glass Un-scrap Event",
+      "CEID=334, Glass Turn Event",
+      "CEID=335, Glass Process Start",
+      "CEID=336, Glass Process Abort",
+      "CEID=337, Glass Process End",
+      "CEID=338, Cassette In By Sub-Unit",
+      "CEID=339, Cassette Out By Sub-Unit",
+      "CEID=341, Mask Out By Indexer Event",
+      "CEID=342, Mask In By Indexer Event",
+      "CEID=343, Mask Out By Unit Event",
+      "CEID=344, Mask In By Unit Event",
+      "CEID=345, Mask Out By Sub-Unit Event",
+      "CEID=346, Mask In By Sub-Unit Event",
+      "CEID=347, Mask In Line",
+      "CEID=348, Mask Out Line",
+      "CEID=349, Mask Cassette In By Sub-Unit",
+      "CEID=350, Mask Cassette Out By Sub-Unit",
+      "CEID=351, Mask into shelf",
+      "CEID=352, Mask out from shelf",
+      "CEID=360, Tray Move Out",
+      "CEID=361, Tray Move In",
+      "CEID=362, Tray Process End",
+      "CEID=363, Tray Process Abort",
+      "CEID=364, Tray Process Cancel",
+      "CEID=365, Tray Process Start",
+      "CEID=366, Batch Tray Process End",
+      "CEID=367, Cell In Unit or Port ",
+      "CEID=368, Cell Out Unit or Port ",
+      "CEID=369, Tray Information Request",
+      "CEID=370, Cell Information Request ",
+      "CEID=401, Process Program or Recipe Change",
+      "CEID=411, Assemble Complete",
+      "CEID=412, Glass Cut Process Event",
+      "CEID=431, Sorting Job Process Start",
+      "CEID=432, Sorting Job Process End",
+      "CEID=433, Sorting Job Cancel Begin",
+      "CEID=434, Sorting Job Cancel End",
+      "CEID=435, Sorting Job Abort Begin",
+      "CEID=436, Sorting Job Abort End",
+      "CEID=440, Material used count change",
+      "CEID=450, Un-packer Bar Code Data Read",
+      "CEID=460, VCR Data Read",
+      "CEID=701, Recycle mode change report"
+    ]
+  },
+
+  {
+    "S": "6",
+    "F_Pri": "103",
+    "F_Sec": "104",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": [
+      "Cassette Information Upload (CIU)",
+      "Glass Information Upload"
+    ]
+  },
+  {
+    "S": "6",
+    "F_Pri": "109",
+    "F_Sec": "110",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": "Mask Cassette Information Upload"
+  },
+  {
+    "S": "6",
+    "F_Pri": "119",
+    "F_Sec": "120",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": "Mask Offset Information Upload"
+  },
+  {
+    "S": "6",
+    "F_Pri": "121",
+    "F_Sec": "122",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": "Job Reservation Reset Request"
+  },
+  {
+    "S": "6",
+    "F_Pri": "131",
+    "F_Sec": "132",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": "Glass Call Data Request"
+  },
+  {
+    "S": "6",
+    "F_Pri": "203",
+    "F_Sec": "204",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": "Packing box information upload"
+  },
+  {
+    "S": "7",
+    "F_Pri": "19",
+    "F_Sec": "20",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Current EPPD Request (RER)"
+  },
+  {
+    "S": "7",
+    "F_Pri": "23",
+    "F_Sec": "24",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Formatted Process Program Send (FPS)"
+  },
+  {
+    "S": "7",
+    "F_Pri": "25",
+    "F_Sec": "26",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Formatted Process Program Request (FPR)"
+  },
+  {
+    "S": "9",
+    "F_Pri": "1",
+    "F_Sec": "-",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": "Unrecognized Device ID (UDN)"
+  },
+  {
+    "S": "9",
+    "F_Pri": "3",
+    "F_Sec": "-",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": "Unrecognized Stream Type (USN)"
+  },
+  {
+    "S": "9",
+    "F_Pri": "5",
+    "F_Sec": "-",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": "Unrecognized Function Type(UFN)"
+  },
+  {
+    "S": "9",
+    "F_Pri": "7",
+    "F_Sec": "-",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": "Illegal Data (IDN)"
+  },
+  {
+    "S": "9",
+    "F_Pri": "9",
+    "F_Sec": "-",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": "Transaction Timer Timeout (TTN)"
+  },
+  {
+    "S": "9",
+    "F_Pri": "13",
+    "F_Sec": "-",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": "Conversation Timeout (CTN)"
+  },
+  {
+    "S": "10",
+    "F_Pri": "1",
+    "F_Sec": "2",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": "Terminal Request"
+  },
+  {
+    "S": "10",
+    "F_Pri": "5",
+    "F_Sec": "6",
+    "FirstMessageDirection": "H->E",
+    "FunctionName": "Terminal Display, Multi-block (VTN)"
+  }
+
+]
