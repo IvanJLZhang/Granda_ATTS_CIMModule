@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27428.2011
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Granda.ATTS.CIMModule", "Granda.ATTS.CIMModule\Granda.ATTS.CIMModule.csproj", "{4717C255-74A3-4000-97BA-06C544DBD6A8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelloWorld", "HelloWorld\HelloWorld.csproj", "{59B27FD7-D199-43F8-9942-BA4183D9C0C4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{4717C255-74A3-4000-97BA-06C544DBD6A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4717C255-74A3-4000-97BA-06C544DBD6A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4717C255-74A3-4000-97BA-06C544DBD6A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59B27FD7-D199-43F8-9942-BA4183D9C0C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59B27FD7-D199-43F8-9942-BA4183D9C0C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59B27FD7-D199-43F8-9942-BA4183D9C0C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59B27FD7-D199-43F8-9942-BA4183D9C0C4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

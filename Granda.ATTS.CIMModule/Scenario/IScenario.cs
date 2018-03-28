@@ -12,6 +12,12 @@ namespace Granda.ATTS.CIMModule.Scenario
         /// 枚举类型属性，Scenario类型
         /// </summary>
         Scenarios ScenarioType { get; set; }
+
+        /// <summary>
+        /// 消息是Host发送过来的消息
+        /// </summary>
+        bool isFromHst { get; set; }
+
         /// <summary>
         /// 
         /// </summary>

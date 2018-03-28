@@ -52,7 +52,9 @@ namespace Granda.ATTS.CIMModule.Data
         {
             using (TextReader reader = File.OpenText(jsonPath))
             {
-                return JArray.Load(new JsonTextReader(reader)).Values<StreamFunction>().ToArray();
+                return JArray.Load(new JsonTextReader(reader)).Values<JObject>().Select((JObject Object) =>
+                    JsonConvert.DeserializeObject<StreamFunction>(Object.ToString())
+                ).ToArray();
             }
         }
 

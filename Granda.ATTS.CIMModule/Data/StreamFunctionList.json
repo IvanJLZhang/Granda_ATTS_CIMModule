@@ -4,14 +4,14 @@
     "F_Pri": "1",
     "F_Sec": "2",
     "FirstMessageDirection": "H<->E",
-    "FunctionName": "Are You There Request (R)"
+    "FunctionName": [ "Are You There Request (R)" ]
   },
   {
     "S": "1",
     "F_Pri": "3",
     "F_Sec": "4",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Selected Equipment Status Request (SSR)"
+    "FunctionName": [ "Selected Equipment Status Request (SSR)" ]
   },
   {
     "S": "1",
@@ -40,84 +40,84 @@
     "F_Pri": "11",
     "F_Sec": "12",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Status Variable NameList Request (SVNR)"
+    "FunctionName": [ "Status Variable NameList Request (SVNR)" ]
   },
   {
     "S": "1",
     "F_Pri": "13",
     "F_Sec": "14",
     "FirstMessageDirection": "H<->E",
-    "FunctionName": "Establish Communication Request"
+    "FunctionName": [ "Establish Communication Request" ]
   },
   {
     "S": "1",
     "F_Pri": "15",
     "F_Sec": "16",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Request OFF-LINE (ROFL)"
+    "FunctionName": [ "Request OFF-LINE (ROFL)" ]
   },
   {
     "S": "1",
     "F_Pri": "17",
     "F_Sec": "18",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Request ON-LINE (RONL)"
+    "FunctionName": [ "Request ON-LINE (RONL)" ]
   },
   {
     "S": "2",
     "F_Pri": "13",
     "F_Sec": "14",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Equipment Constants Request (ECR)"
+    "FunctionName": [ "Equipment Constants Request (ECR)" ]
   },
   {
     "S": "2",
     "F_Pri": "15",
     "F_Sec": "16",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "New Equipment Constants Send (ECS)"
+    "FunctionName": [ "New Equipment Constants Send (ECS)" ]
   },
   {
     "S": "2",
     "F_Pri": "17",
     "F_Sec": "18",
     "FirstMessageDirection": "H<-E",
-    "FunctionName": "Date & Time Request (DTR)"
+    "FunctionName": [ "Date & Time Request (DTR)" ]
   },
   {
     "S": "2",
     "F_Pri": "23",
     "F_Sec": "24",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Trace Initialize Send (TIS)"
+    "FunctionName": [ "Trace Initialize Send (TIS)" ]
   },
   {
     "S": "2",
     "F_Pri": "29",
     "F_Sec": "30",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Equipment Constant NameList Request (ECNR)"
+    "FunctionName": [ "Equipment Constant NameList Request (ECNR)" ]
   },
   {
     "S": "2",
     "F_Pri": "31",
     "F_Sec": "32",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Date and Time Set Request (DTS)"
+    "FunctionName": [ "Date and Time Set Request (DTS)" ]
   },
   {
     "S": "2",
     "F_Pri": "37",
     "F_Sec": "38",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Enable or Disable Event Report (EDER)"
+    "FunctionName": [ "Enable or Disable Event Report (EDER)" ]
   },
   {
     "S": "2",
     "F_Pri": "39",
     "F_Sec": "40",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Enable or Disable Event List Report (EDER)"
+    "FunctionName": [ "Enable or Disable Event List Report (EDER)" ]
   },
   {
     "S": "2",
@@ -142,7 +142,7 @@
     "F_Pri": "53",
     "F_Sec": "54",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Crate glass QTY download"
+    "FunctionName": [ "Crate glass QTY download" ]
   },
   {
     "S": "2",
@@ -160,119 +160,119 @@
     "F_Pri": "105",
     "F_Sec": "106",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Empty CST Permission"
+    "FunctionName": [ "Empty CST Permission" ]
   },
   {
     "S": "2",
     "F_Pri": "107",
     "F_Sec": "108",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Sorter Job Command"
+    "FunctionName": [ "Sorter Job Command" ]
   },
   {
     "S": "2",
     "F_Pri": "109",
     "F_Sec": "110",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Mask cassette information Download"
+    "FunctionName": [ "Mask cassette information Download" ]
   },
   {
     "S": "2",
     "F_Pri": "111",
     "F_Sec": "112",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Mask cassette information Download EVA"
+    "FunctionName": [ "Mask cassette information Download EVA" ]
   },
   {
     "S": "2",
     "F_Pri": "119",
     "F_Sec": "120",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Mask offset information Download"
+    "FunctionName": [ "Mask offset information Download" ]
   },
   {
     "S": "2",
     "F_Pri": "121",
     "F_Sec": "122",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Job Reservation Command"
+    "FunctionName": [ "Job Reservation Command" ]
   },
   {
     "S": "2",
     "F_Pri": "123",
     "F_Sec": "124",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Remind Job Start Signal"
+    "FunctionName": [ "Remind Job Start Signal" ]
   },
   {
     "S": "2",
     "F_Pri": "131",
     "F_Sec": "132",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Port PPID Send"
+    "FunctionName": [ "Port PPID Send" ]
   },
   {
     "S": "2",
     "F_Pri": "203",
     "F_Sec": "204",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Send Packing box ID"
+    "FunctionName": [ "Send Packing box ID" ]
   },
   {
     "S": "2",
     "F_Pri": "211",
     "F_Sec": "212",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Mask Eject Request"
+    "FunctionName": [ "Mask Eject Request" ]
   },
   {
     "S": "2",
     "F_Pri": "221",
     "F_Sec": "222",
     "FirstMessageDirection": "H<-E",
-    "FunctionName": "Loading Stop"
+    "FunctionName": [ "Loading Stop" ]
   },
   {
     "S": "2",
     "F_Pri": "231",
     "F_Sec": "232",
     "FirstMessageDirection": "H<-E",
-    "FunctionName": "Work Order Request"
+    "FunctionName": [ "Work Order Request" ]
   },
   {
     "S": "5",
     "F_Pri": "1",
     "F_Sec": "2",
     "FirstMessageDirection": "H<-E",
-    "FunctionName": "Alarm Report Send (Extended)(ARS)"
+    "FunctionName": [ "Alarm Report Send (Extended)(ARS)" ]
   },
   {
     "S": "5",
     "F_Pri": "3",
     "F_Sec": "4",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Enable/Disable Alarm Send (EAS)"
+    "FunctionName": [ "Enable/Disable Alarm Send (EAS)" ]
   },
   {
     "S": "5",
     "F_Pri": "5",
     "F_Sec": "6",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "List Alarm Data Request(LAR)"
+    "FunctionName": [ "List Alarm Data Request(LAR)" ]
   },
   {
     "S": "5",
     "F_Pri": "103",
     "F_Sec": "104",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Current Alarm List Request (CALR)"
+    "FunctionName": [ "Current Alarm List Request (CALR)" ]
   },
   {
     "S": "6",
     "F_Pri": "1",
-    "F_Sec": "-",
+    "F_Sec": "0",
     "FirstMessageDirection": "H<-E",
-    "FunctionName": "Trace Data Send (TDS)"
+    "FunctionName": [ "Trace Data Send (TDS)" ]
   },
   {
     "S": "6",
@@ -424,112 +424,112 @@
     "F_Pri": "109",
     "F_Sec": "110",
     "FirstMessageDirection": "H<-E",
-    "FunctionName": "Mask Cassette Information Upload"
+    "FunctionName": [ "Mask Cassette Information Upload" ]
   },
   {
     "S": "6",
     "F_Pri": "119",
     "F_Sec": "120",
     "FirstMessageDirection": "H<-E",
-    "FunctionName": "Mask Offset Information Upload"
+    "FunctionName": [ "Mask Offset Information Upload" ]
   },
   {
     "S": "6",
     "F_Pri": "121",
     "F_Sec": "122",
     "FirstMessageDirection": "H<-E",
-    "FunctionName": "Job Reservation Reset Request"
+    "FunctionName": [ "Job Reservation Reset Request" ]
   },
   {
     "S": "6",
     "F_Pri": "131",
     "F_Sec": "132",
     "FirstMessageDirection": "H<-E",
-    "FunctionName": "Glass Call Data Request"
+    "FunctionName": [ "Glass Call Data Request" ]
   },
   {
     "S": "6",
     "F_Pri": "203",
     "F_Sec": "204",
     "FirstMessageDirection": "H<-E",
-    "FunctionName": "Packing box information upload"
+    "FunctionName": [ "Packing box information upload" ]
   },
   {
     "S": "7",
     "F_Pri": "19",
     "F_Sec": "20",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Current EPPD Request (RER)"
+    "FunctionName": [ "Current EPPD Request (RER)" ]
   },
   {
     "S": "7",
     "F_Pri": "23",
     "F_Sec": "24",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Formatted Process Program Send (FPS)"
+    "FunctionName": [ "Formatted Process Program Send (FPS)" ]
   },
   {
     "S": "7",
     "F_Pri": "25",
     "F_Sec": "26",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Formatted Process Program Request (FPR)"
+    "FunctionName": [ "Formatted Process Program Request (FPR)" ]
   },
   {
     "S": "9",
     "F_Pri": "1",
-    "F_Sec": "-",
+    "F_Sec": "0",
     "FirstMessageDirection": "H<-E",
-    "FunctionName": "Unrecognized Device ID (UDN)"
+    "FunctionName": [ "Unrecognized Device ID (UDN)" ]
   },
   {
     "S": "9",
     "F_Pri": "3",
-    "F_Sec": "-",
+    "F_Sec": "0",
     "FirstMessageDirection": "H<-E",
-    "FunctionName": "Unrecognized Stream Type (USN)"
+    "FunctionName": [ "Unrecognized Stream Type (USN)" ]
   },
   {
     "S": "9",
     "F_Pri": "5",
-    "F_Sec": "-",
+    "F_Sec": "0",
     "FirstMessageDirection": "H<-E",
-    "FunctionName": "Unrecognized Function Type(UFN)"
+    "FunctionName": [ "Unrecognized Function Type(UFN)" ]
   },
   {
     "S": "9",
     "F_Pri": "7",
-    "F_Sec": "-",
+    "F_Sec": "0",
     "FirstMessageDirection": "H<-E",
-    "FunctionName": "Illegal Data (IDN)"
+    "FunctionName": [ "Illegal Data (IDN)" ]
   },
   {
     "S": "9",
     "F_Pri": "9",
-    "F_Sec": "-",
+    "F_Sec": "0",
     "FirstMessageDirection": "H<-E",
-    "FunctionName": "Transaction Timer Timeout (TTN)"
+    "FunctionName": [ "Transaction Timer Timeout (TTN)" ]
   },
   {
     "S": "9",
     "F_Pri": "13",
-    "F_Sec": "-",
+    "F_Sec": "0",
     "FirstMessageDirection": "H<-E",
-    "FunctionName": "Conversation Timeout (CTN)"
+    "FunctionName": [ "Conversation Timeout (CTN)" ]
   },
   {
     "S": "10",
     "F_Pri": "1",
     "F_Sec": "2",
     "FirstMessageDirection": "H<-E",
-    "FunctionName": "Terminal Request"
+    "FunctionName": [ "Terminal Request" ]
   },
   {
     "S": "10",
     "F_Pri": "5",
     "F_Sec": "6",
     "FirstMessageDirection": "H->E",
-    "FunctionName": "Terminal Display, Multi-block (VTN)"
+    "FunctionName": [ "Terminal Display, Multi-block (VTN)" ]
   }
 
 ]
