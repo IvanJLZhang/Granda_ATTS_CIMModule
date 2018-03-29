@@ -59,15 +59,30 @@ namespace Granda.ATTS.CIMModule.Extension
         public static string GetFunctionName(byte s, byte f)
         {
             var streamFunctions = StreamFunction.LoadStreamFunctionArray();
-            return GetFunctionName(streamFunctions, s, f);
+            return GetFunctionName(streamFunctions, s, f, 0);
         }
-
-        public static string GetFunctionName(StreamFunction[] streamFunctions, byte s, byte f)
+        public static string GetFunctionName(byte s, byte f, int ceid)
+        {
+            var streamFunctions = StreamFunction.LoadStreamFunctionArray();
+            return GetFunctionName(streamFunctions, s, f, ceid);
+        }
+        public static string GetFunctionName(StreamFunction[] streamFunctions, byte s, byte f, int ceid)
         {
             foreach (var item in streamFunctions)
             {
                 if (s == item.S && (f == item.F_Pri || f == item.F_Sec))
-                    return item.FunctionName[0];
+                {
+                    if (ceid == 0) return item.FunctionName[ceid];
+                    else
+                    {
+                        foreach (var function in item.FunctionName)
+                        {
+                            if (function.Contains($"CEID={ceid}"))
+                                return function;
+                        }
+                    }
+                }
+                return item.FunctionName[0];
             }
             return null;
         }
