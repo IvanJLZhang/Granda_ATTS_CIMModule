@@ -1,4 +1,5 @@
 ﻿using Granda.ATTS.CIMModule.Model;
+using Secs4Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +12,7 @@ namespace Granda.ATTS.CIMModule.Scenario
         /// <summary>
         /// 枚举类型属性，Scenario类型
         /// </summary>
-        Scenarios ScenarioType { get; set; }
-
-        /// <summary>
-        /// 消息是Host发送过来的消息
-        /// </summary>
-        bool isFromHst { get; set; }
+        Scenarios ScenarioType { get;}
 
         /// <summary>
         /// 
@@ -29,10 +25,12 @@ namespace Granda.ATTS.CIMModule.Scenario
         /// <summary>
         /// 
         /// </summary>
-        void ParseSecsMessage();
+        void HandleSecsMessage(SecsMessage secsMessage);
         /// <summary>
         /// 
         /// </summary>
         void PackSecsMessage();
+
+        SecsMessage primaryMessage { get; set; }
     }
 }

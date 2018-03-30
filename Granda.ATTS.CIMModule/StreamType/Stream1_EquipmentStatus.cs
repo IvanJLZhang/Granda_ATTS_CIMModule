@@ -9,12 +9,12 @@ namespace Granda.ATTS.CIMModule.StreamType
     internal class Stream1_EquipmentStatus
     {
         /// <summary>
-        /// 待定
+        /// Equipment denies requests
         /// </summary>
         /// <returns></returns>
         public static SecsMessage S1F0()
         {
-            return null;
+            return SendMessage(1, 0, false, null, 0);
         }
         /// <summary>
         /// Are you there request

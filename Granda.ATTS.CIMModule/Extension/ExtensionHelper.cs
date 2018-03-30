@@ -2,6 +2,7 @@
 using Secs4Net;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -72,19 +73,31 @@ namespace Granda.ATTS.CIMModule.Extension
             {
                 if (s == item.S && (f == item.F_Pri || f == item.F_Sec))
                 {
-                    if (ceid == 0) return item.FunctionName[ceid];
+                    if (ceid == 0) return f % 2 == 0 ? item.FunctionName[ceid] + " Ack" : item.FunctionName[ceid];
                     else
                     {
                         foreach (var function in item.FunctionName)
                         {
                             if (function.Contains($"CEID={ceid}"))
-                                return function;
+                                return f % 2 == 0 ? function + " Ack" : function;
                         }
                     }
                 }
-                return item.FunctionName[0];
             }
             return null;
+        }
+
+
+        public static SecsMessage SendMessage(this SecsGem secsGem, byte s, byte f, bool replyExpected, Item item = null, int ceid = 0)
+        {
+            SecsMessage secsMessage = new SecsMessage(s, f, GetFunctionName(s, f, ceid), replyExpected, item);
+            Debug.WriteLine(secsMessage.ToSML());
+            return secsGem.Send(secsMessage);
+        }
+
+        public static String GetSFString(this SecsMessage secsMessage)
+        {
+            return $"S{secsMessage.S}F{secsMessage.F}";
         }
     }
 }

@@ -1,6 +1,13 @@
 ﻿[
   {
     "S": "1",
+    "F_Pri": "0",
+    "F_Sec": "0",
+    "FirstMessageDirection": "H<-E",
+    "FunctionName": [ "Equipment denies requests" ]
+  },
+  {
+    "S": "1",
     "F_Pri": "1",
     "F_Sec": "2",
     "FirstMessageDirection": "H<->E",
@@ -20,19 +27,19 @@
     "FirstMessageDirection": "H->E",
     "FunctionName": [
       "Formatted Status Request (FSR)",
-      "SFCD=01, Equipment Status Request" ,
-      "SFCD=02, Port Status Request" ,
-      "SFCD=03, Operation mode Request" ,
-      "SFCD=04, Unit Status Request" ,
-      "SFCD=05, Sub-Unit Status Request" ,
-      "SFCD=06, Sub-Sub-Unit Status Request" ,
-      "SFCD=07, Mask Status Request" ,
-      "SFCD=08, Material Status Request" ,
-      "SFCD=09, Sorter Job List Request" ,
-      "SFCD=10, Crate Port Status Request" ,
-      "SFCD=11, Half Port Status Request" ,
-      "SFCD=12, Port load-request and Unload-Request report start" ,
-      "SFCD=13, Equipment Recycle mode Request" 
+      "SFCD=01, Equipment Status Request",
+      "SFCD=02, Port Status Request",
+      "SFCD=03, Operation mode Request",
+      "SFCD=04, Unit Status Request",
+      "SFCD=05, Sub-Unit Status Request",
+      "SFCD=06, Sub-Sub-Unit Status Request",
+      "SFCD=07, Mask Status Request",
+      "SFCD=08, Material Status Request",
+      "SFCD=09, Sorter Job List Request",
+      "SFCD=10, Crate Port Status Request",
+      "SFCD=11, Half Port Status Request",
+      "SFCD=12, Port load-request and Unload-Request report start",
+      "SFCD=13, Equipment Recycle mode Request"
     ]
   },
   {

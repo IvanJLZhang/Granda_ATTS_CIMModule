@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace HelloWorld
+namespace SecsClient
 {
     static class Program
     {
@@ -15,7 +15,7 @@ namespace HelloWorld
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Server());
+            Application.Run(new Client());
         }
     }
 }

@@ -120,7 +120,7 @@ namespace Granda.ATTS.CIMModule.Extension
             U4Parser = new Tuple<Func<Item>, Func<uint[], Item>, Func<string, uint>>(U4, U4, uint.Parse);
         private static readonly Tuple<Func<Item>, Func<ulong[], Item>, Func<string, ulong>>
             U8Parser = new Tuple<Func<Item>, Func<ulong[], Item>, Func<string, ulong>>(U8, U8, ulong.Parse);
-        private static readonly new Tuple<Func<Item>, Func<float[], Item>, Func<string, float>>
+        private static readonly Tuple<Func<Item>, Func<float[], Item>, Func<string, float>>
             F4Parser = new Tuple<Func<Item>, Func<float[], Item>, Func<string, float>>(F4, F4, float.Parse);
         private static readonly Tuple<Func<Item>, Func<double[], Item>, Func<string, double>>
             F8Parser = new Tuple<Func<Item>, Func<double[], Item>, Func<string, double>>(F8, F8, double.Parse);

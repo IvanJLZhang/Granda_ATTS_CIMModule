@@ -68,8 +68,9 @@ namespace Granda.ATTS.CIMModule.StreamType
 
             return SendMessage(2, 15, false, item);
         }
+
         /// <summary>
-        /// Date & Time Request
+        /// Date and Time Request
         /// </summary>
         /// <returns></returns>
         public static SecsMessage S2F17()
