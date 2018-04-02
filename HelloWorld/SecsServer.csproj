@@ -37,14 +37,6 @@
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Secs4Net, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\workData\granda_workdata\Secs4Net\Secs4Net.dll</HintPath>
-    </Reference>
-    <Reference Include="SmlHelper, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>E:\workData\granda_workdata\SecsCore\SmlHelper.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -94,6 +86,14 @@
     <ProjectReference Include="..\Granda.ATTS.CIMModule\Granda.ATTS.CIMModule.csproj">
       <Project>{4717c255-74a3-4000-97ba-06c544dbd6a8}</Project>
       <Name>Granda.ATTS.CIMModule</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\xue\Desktop\Granda工作\secs4net\Secs4Net\SecsCore.csproj">
+      <Project>{3c8c67b8-3746-4d26-b3a8-dcb01b5aa66b}</Project>
+      <Name>SecsCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="C:\Users\xue\Desktop\Granda工作\secs4net\SmlHelper\SmlHelper.csproj">
+      <Project>{36a2c439-8771-4f98-b33f-390e6d7821a2}</Project>
+      <Name>SmlHelper</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
