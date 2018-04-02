@@ -88,9 +88,9 @@ namespace Granda.ATTS.CIMModule.Extension
         }
 
 
-        public static SecsMessage SendMessage(this SecsGem secsGem, byte s, byte f, bool replyExpected, Item item = null, int ceid = 0)
+        public static SecsMessage SendMessage(this SecsGem secsGem, short deviceId, byte s, byte f, bool replyExpected, int systemBytes, Item item = null, int ceid = 0)
         {
-            SecsMessage secsMessage = new SecsMessage(s, f, GetFunctionName(s, f, ceid), replyExpected, item);
+            SecsMessage secsMessage = new SecsMessage(deviceId, s, f, GetFunctionName(s, f, ceid), replyExpected, systemBytes, item);
             Debug.WriteLine(secsMessage.ToSML());
             return secsGem.Send(secsMessage);
         }

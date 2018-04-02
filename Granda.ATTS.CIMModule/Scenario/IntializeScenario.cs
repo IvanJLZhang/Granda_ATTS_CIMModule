@@ -238,19 +238,19 @@ namespace Granda.ATTS.CIMModule.Scenario
 
         public void CustomMethod()
         {
-            Stack<List<Item>> stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>());
-            var item = A("0");
-            stack.Peek().Add(item);
-            stack.Push(new List<Item>());
-            stack.Peek().Add(A("MDLN"));
-            stack.Peek().Add(A("SOFTREV"));
-            item = ParseItem(stack);
+            //Stack<List<Item>> stack = new Stack<List<Item>>();
+            //stack.Push(new List<Item>());
+            //var item = A("0");
+            //stack.Peek().Add(item);
+            //stack.Push(new List<Item>());
+            //stack.Peek().Add(A("MDLN"));
+            //stack.Peek().Add(A("SOFTREV"));
+            //item = ParseItem(stack);
 
-            string str = item.ToString();
-            GetItemStr(item);
-            SecsMessage secsMessage = new SecsMessage(1, 14, ExtensionHelper.GetFunctionName(1, 14), false, item);
-            string sml = secsMessage.ToSML();
+            //string str = item.ToString();
+            //GetItemStr(item);
+            //SecsMessage secsMessage = new SecsMessage(1, 1, 14, ExtensionHelper.GetFunctionName(1, 14), false,, item);
+            //string sml = secsMessage.ToSML();
         }
 
         public void GetItemStr(Item item)

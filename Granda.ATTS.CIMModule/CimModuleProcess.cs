@@ -18,6 +18,7 @@ namespace Granda.ATTS.CIMModule
     /// </summary>
     public class CimModuleProcess : IItializeScenario
     {
+        public static short DeviceId { get; set; } = 1;
         private static SecsGem secsGemService = null;
         private readonly Dictionary<Scenarios, IScenario> scenarioControllers = new Dictionary<Scenarios, IScenario>();
         public CimModuleProcess(SecsGem secsGem)
@@ -81,11 +82,11 @@ namespace Granda.ATTS.CIMModule
 
 
 
-        public static SecsMessage SendMessage(byte s, byte f, bool replyExpected, Item item = null, int ceid = 0)
+        public static SecsMessage SendMessage(byte s, byte f, bool replyExpected, int systemBytes, Item item = null, int ceid = 0)
         {
             if (secsGemService.State == ConnectionState.Selected)
             {
-                return secsGemService.SendMessage(s, f, replyExpected, item, ceid);
+                return secsGemService.SendMessage(DeviceId, s, f, replyExpected, systemBytes, item, ceid);
             }
             return null;
         }

@@ -24,7 +24,7 @@ namespace SecsClient
         SecsGem secsGem;
         private void Client_Load(object sender, EventArgs e)
         {
-            secsGem = new SecsGem(IPAddress.Parse("192.168.0.145"), 1024, true, 1024);
+            secsGem = new SecsGem(IPAddress.Parse("192.168.0.49"), 1024, true, 1024);
             secsGem.PrimaryMessageRecived += SecsGem_PrimaryMessageRecived;
             secsGem.ConnectionChanged += SecsGem_ConnectionChanged;
             cimModule = new CimModuleProcess(secsGem);
