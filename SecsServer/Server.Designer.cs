@@ -1,4 +1,4 @@
-﻿namespace HelloWorld
+﻿namespace SecsServer
 {
     partial class Server
     {

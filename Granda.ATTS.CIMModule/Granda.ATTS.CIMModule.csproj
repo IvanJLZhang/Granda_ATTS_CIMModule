@@ -91,11 +91,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="C:\Users\xue\Desktop\Granda工作\secs4net\Secs4Net\SecsCore.csproj">
+    <ProjectReference Include="..\Secs4Net\SecsCore.csproj">
       <Project>{3c8c67b8-3746-4d26-b3a8-dcb01b5aa66b}</Project>
       <Name>SecsCore</Name>
     </ProjectReference>
-    <ProjectReference Include="C:\Users\xue\Desktop\Granda工作\secs4net\SmlHelper\SmlHelper.csproj">
+    <ProjectReference Include="..\SmlHelper\SmlHelper.csproj">
       <Project>{36a2c439-8771-4f98-b33f-390e6d7821a2}</Project>
       <Name>SmlHelper</Name>
     </ProjectReference>

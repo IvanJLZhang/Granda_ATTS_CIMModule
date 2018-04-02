@@ -36,7 +36,7 @@ namespace Secs4Net
         /// <summary>
         /// Device Id
         /// </summary>
-        //public short DeviceId { get; set; }
+        public short DeviceId { get; set; }
 
         /// <summary>
         /// LinkTest Timer Interval
@@ -80,6 +80,9 @@ namespace Secs4Net
                 _timerLinkTest.Enabled = value;
             }
         }
+
+        private const int RECEIVE_BUFFER_SIZE = 0x4000;
+
         #endregion
 
         #region 字段
@@ -91,7 +94,7 @@ namespace Secs4Net
         readonly SecsDecoder _secsDecoder;
         readonly ConcurrentDictionary<int, SecsAsyncResult> _replyExpectedMsgs = new ConcurrentDictionary<int, SecsAsyncResult>();
         readonly Action<SecsMessage, Action<SecsMessage>> PrimaryMessageHandler;
-        readonly SecsTracer _tracer;
+        SecsTracer _tracer;
         readonly System.Timers.Timer _timer7 = new System.Timers.Timer();	// between socket connected and received Select.req timer
         readonly System.Timers.Timer _timer8 = new System.Timers.Timer();
         readonly System.Timers.Timer _timerLinkTest = new System.Timers.Timer();
@@ -100,13 +103,24 @@ namespace Secs4Net
         readonly Action StopImpl;
 
         readonly byte[] _recvBuffer;
-        static readonly SecsMessage ControlMessage = new SecsMessage(0, 0, 0, string.Empty, true);
-        static readonly ArraySegment<byte> ControlMessageLengthBytes = new ArraySegment<byte>(new byte[] { 0, 0, 0, 10 });
+        static SecsMessage ControlMessage = new SecsMessage(0, 0, 0, string.Empty, true);
+        static ArraySegment<byte> ControlMessageLengthBytes = new ArraySegment<byte>(new byte[] { 0, 0, 0, 10 });
         static readonly SecsTracer DefaultTracer = new SecsTracer();
-        public static Func<int> NewSystemByte;
+        //static int systemByte = new Random(Guid.NewGuid().GetHashCode()).Next();
+        //public static Func<int> NewSystemByte = () => Interlocked.Increment(ref systemByte);
+
+        public static int NewSystemByte()
+        {
+            int systemByte = new Random(Guid.NewGuid().GetHashCode()).Next();
+            return Interlocked.Increment(ref systemByte);
+        }
         #endregion
 
         #region Socket Start Process 网络连接启动
+        public SecsGem()
+        {
+
+        }
         /// <summary>
         /// 使用指定的IP地址，端口号，通信模式，处理主消息的委托方法，SecsMessage消息调试对象，内部调用的sorket实例的缓冲区大小，初始化SecsGem类的新实例
         /// </summary>
@@ -114,7 +128,7 @@ namespace Secs4Net
         /// <param name="port">端口号</param>
         /// <param name="isActive">活动模式</param>
         /// <param name="receiveBufferSize">构造函数内部的Socket接收区缓存大小</param>
-        public SecsGem(IPAddress ip, int port, bool isActive, int receiveBufferSize)
+        public SecsGem(IPAddress ip, int port, bool isActive)
         {
             if (ip == null)
                 throw new ArgumentNullException("ip");
@@ -122,9 +136,8 @@ namespace Secs4Net
             _ip = ip;
             _port = port;
             _isActive = isActive;
-            _recvBuffer = new byte[receiveBufferSize < 0x4000 ? 0x4000 : receiveBufferSize];
+            _recvBuffer = new byte[RECEIVE_BUFFER_SIZE];
             _secsDecoder = new SecsDecoder(HandleControlMessage, HandleDataMessage);
-            _tracer = DefaultTracer;
             // PrimaryMessageHandler = primaryMsgHandler ?? ((primary, reply) => reply(null));
             T3 = 45000;
             T5 = 10000;
@@ -132,9 +145,7 @@ namespace Secs4Net
             T7 = 10000;
             T8 = 5000;
             LinkTestInterval = 60000;
-
-            int systemByte = new Random(Guid.NewGuid().GetHashCode()).Next();
-            NewSystemByte = () => Interlocked.Increment(ref systemByte);
+            _tracer = new SecsTracer();
 
             #region Timer Action
             // Timer时间绑定委托
@@ -260,7 +271,7 @@ namespace Secs4Net
             LinkTestInterval = 60000;
 
             int systemByte = new Random(Guid.NewGuid().GetHashCode()).Next();
-            NewSystemByte = () => Interlocked.Increment(ref systemByte);
+            //NewSystemByte = () => Interlocked.Increment(ref systemByte);
 
             #region Timer Action
             // Timer时间绑定委托
@@ -366,6 +377,7 @@ namespace Secs4Net
             }
         }
 
+        //public SecsGem(IPAddress ip, int port, bool isActive) : this(ip, port, isActive, 0) { }
         #endregion
 
         #region Socket Receive Process  接收程序
@@ -499,7 +511,6 @@ namespace Secs4Net
                 _tracer.TraceWarning("Received Unrecognized Device Id Message");
                 try
                 {
-                    //this.SendDataMessage(new SecsMessage(9, 1, "UnrecognizedDeviceId", false, Item.B(header.Bytes)), NewSystemByte(), null, null);
                     this.SendDataMessage(new SecsMessage(msg.DeviceID, 9, 1, "Unknown", false, -1, Item.B(header.Bytes)), null, null);
                 }
                 catch (Exception ex)
@@ -519,23 +530,22 @@ namespace Secs4Net
 
                     //Primary message
                     _tracer.TraceMessageIn(msg, systembyte);
-                    PrimaryMessageHandler(msg, secondary =>
-                    {
-                        // 如果不需要返回消息，且不处于选择状态则返回
-                        if (!header.ReplyExpected || State != ConnectionState.Selected)
-                            return;
+                    //PrimaryMessageHandler(msg, secondary =>
+                    //{
+                    //    // 如果不需要返回消息，且不处于选择状态则返回
+                    //    if (!header.ReplyExpected || State != ConnectionState.Selected)
+                    //        return;
 
-                        secondary = secondary ?? new SecsMessage(msg.DeviceID, 9, 7, "Unknown Message", false, -1, Item.B(header.Bytes));
-                        secondary.ReplyExpected = false;
-                        try
-                        {
-                            this.SendDataMessage(secondary, null, null);
-                        }
-                        catch (Exception ex)
-                        {
-                            _tracer.TraceError("Reply Secondary Message Error:" + ex.Message);
-                        }
-                    });
+                    //    secondary = secondary ?? new SecsMessage(msg.DeviceID, 9, 7, "Unknown", false, -1, Item.B(header.Bytes));
+                    //    try
+                    //    {
+                    //        this.SendDataMessage(secondary, null, null);
+                    //    }
+                    //    catch (Exception ex)
+                    //    {
+                    //        _tracer.TraceError("Reply Secondary Message Error:" + ex.Message);
+                    //    }
+                    //});
                     return;
                 }
                 // Error message
@@ -567,7 +577,7 @@ namespace Secs4Net
             // 如果指令需求响应，且不为分离请求
             if ((byte)msgType % 2 == 1 && msgType != MessageType.Seperate_req)
             {
-                var ar = new SecsAsyncResult(ControlMessage, 0, null, null);
+                var ar = new SecsAsyncResult(ControlMessage, systembyte, null, null);
                 _replyExpectedMsgs[systembyte] = ar;
 
                 ThreadPool.RegisterWaitForSingleObject(ar.AsyncWaitHandle,
@@ -748,6 +758,7 @@ namespace Secs4Net
         }
 
         volatile bool _isDisposed;
+
         /// <summary>
         /// 清除连接信息，并将所有设置重置
         /// </summary>
@@ -916,7 +927,7 @@ namespace Secs4Net
                     }
                     else if (length - index >= _messageLength)
                     {
-                        _msg = new SecsMessage(_msgHeader.DeviceId,_msgHeader.S, _msgHeader.F, string.Empty, _msgHeader.ReplyExpected, _msgHeader.SystemBytes, data, ref index);
+                        _msg = new SecsMessage(_msgHeader.DeviceId, _msgHeader.S, _msgHeader.F, string.Empty, _msgHeader.ReplyExpected, _msgHeader.SystemBytes, data, ref index);
                         ProcessMessage();
                         return 0; //completeWith message received
                     }
@@ -988,7 +999,7 @@ namespace Secs4Net
                             }
                             else
                             {
-                                _msg = new SecsMessage(_msgHeader.DeviceId ,_msgHeader.S, _msgHeader.F, string.Empty, _msgHeader.ReplyExpected, _msgHeader.SystemBytes, item);
+                                _msg = new SecsMessage(_msgHeader.DeviceId, _msgHeader.S, _msgHeader.F, string.Empty, _msgHeader.ReplyExpected, _msgHeader.SystemBytes, item);
                                 ProcessMessage();
                                 return 0;
                             }
@@ -1094,7 +1105,10 @@ namespace Secs4Net
         #endregion
 
         #region Message Header Struct  消息头结构体
-        struct Header
+        /// <summary>
+        /// 
+        /// </summary>
+        public struct Header
         {
             internal readonly byte[] Bytes;
             internal Header(byte[] headerbytes)

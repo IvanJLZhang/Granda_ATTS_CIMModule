@@ -9,7 +9,7 @@ using static Granda.ATTS.CIMModule.Extension.SmlExtension;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIMModule.StreamType
 {
-    internal class Stream6_DataCollection
+    internal static class Stream6_DataCollection
     {
         /// <summary>
         /// Trace Data Send
@@ -49,9 +49,14 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// Event Report Acknowledge
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S6F12()
+        public static SecsMessage S6F12(this SecsMessage secsMessage, string ack)
         {
-            return SendMessage(6, 12, false, null);
+            var stack = new Stack<List<Item>>();
+            stack.Push(new List<Item>() {
+                A(ack),
+            });
+            var item = ParseItem(stack);
+            return SendMessage(6, 12, false, secsMessage.SystenBytes, item);
         }
 
         /// <summary>

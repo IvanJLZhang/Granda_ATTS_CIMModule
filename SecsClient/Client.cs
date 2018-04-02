@@ -21,17 +21,17 @@ namespace SecsClient
             this.Load += Client_Load;
         }
         CimModuleProcess cimModule;
-        SecsGem secsGem;
+        SecsGem secsGem = new SecsGem();
         private void Client_Load(object sender, EventArgs e)
         {
-            secsGem = new SecsGem(IPAddress.Parse("192.168.0.49"), 1024, true, 1024);
+            secsGem = new SecsGem(IPAddress.Parse("192.168.0.145"), 1024, true);
             secsGem.PrimaryMessageRecived += SecsGem_PrimaryMessageRecived;
             secsGem.ConnectionChanged += SecsGem_ConnectionChanged;
             cimModule = new CimModuleProcess(secsGem);
             cimModule.ControlStateChanged += CimModule_ControlStateChanged;
 
             Application.ThreadException += Application_ThreadException;
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException; ;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -64,7 +64,7 @@ namespace SecsClient
 
         private void btnSecSend_Click(object sender, EventArgs e)
         {
-
+            cimModule.LaunchOnOffLineProcess1(true);
         }
 
         private void btnSendPrimaryMsg_Click(object sender, EventArgs e)

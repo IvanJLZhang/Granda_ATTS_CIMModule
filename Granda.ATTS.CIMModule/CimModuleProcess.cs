@@ -32,7 +32,7 @@ namespace Granda.ATTS.CIMModule
 
         public CimModuleProcess(string ipAddress, int port, bool isActive)
         {
-            secsGemService = new SecsGem(IPAddress.Parse(ipAddress), port, isActive, 1024);
+            secsGemService = new SecsGem(IPAddress.Parse(ipAddress), port, isActive);
             secsGemService.ConnectionChanged += SecsGemService_ConnectionChanged;
             secsGemService.PrimaryMessageRecived += SecsGemService_PrimaryMessageRecived;
         }
@@ -43,11 +43,15 @@ namespace Granda.ATTS.CIMModule
         private void SecsGemService_PrimaryMessageRecived(object sender, TEventArgs<SecsMessage> e)
         {
             var message = e.Data;
-            switch (message.GetSFString())
+            string sf = message.GetSFString();
+            switch (sf)
             {
+                case "S1F1":
                 case "S1F13":
                 case "S1F17":
                 case "S1F15":
+                case "S2F17":
+                case "S6F11":
                     scenarioControllers[Scenarios.Intialize_Scenario].HandleSecsMessage(message);
                     break;
                 default:
@@ -73,14 +77,29 @@ namespace Granda.ATTS.CIMModule
                 return initi.LaunchOfflineProcess();
             }
         }
+        /// <summary>
+        /// local端设置online/offline状态
+        /// </summary>
+        /// <param name="onLine"></param>
+        /// <returns></returns>
+        public bool LaunchOnOffLineProcess1(bool onLine)
+        {
+            var initi = scenarioControllers[Scenarios.Intialize_Scenario] as InitializeScenario;
+            if (onLine)
+            {
+                return initi.LaunchOnlineProcess1();
+            }
+            else
+            {
+                return initi.LaunchOfflineProcess();
+            }
+        }
         #endregion
 
         private void SecsGemService_ConnectionChanged(object sender, TEventArgs<ConnectionState> e)
         {
             Debug.WriteLine("connection state change: " + e.Data.ToString());
         }
-
-
 
         public static SecsMessage SendMessage(byte s, byte f, bool replyExpected, int systemBytes, Item item = null, int ceid = 0)
         {
@@ -90,7 +109,14 @@ namespace Granda.ATTS.CIMModule
             }
             return null;
         }
-
+        public static SecsMessage SendMessage(byte s, byte f, bool replyExpected, Item item = null, int ceid = 0)
+        {
+            if (secsGemService.State == ConnectionState.Selected)
+            {
+                return secsGemService.SendMessage(DeviceId, s, f, replyExpected, -1, item, ceid);
+            }
+            return null;
+        }
         public void UpdateControlState(ControlState controlState)
         {
             ControlStateChanged?.Invoke(this, new TEventArgs<ControlState>(controlState));

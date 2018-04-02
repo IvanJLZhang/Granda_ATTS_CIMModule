@@ -14,5 +14,6 @@ namespace Granda.ATTS.CIMModule.Model
         OFFLINE = 111,
         ONLINE_LOCAL = 112,
         ONLINE_REMOTE = 113,
+        EQT_STATUS_CHANGE = 114
     }
 }

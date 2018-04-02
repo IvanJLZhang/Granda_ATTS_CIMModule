@@ -6,7 +6,7 @@ using static Secs4Net.Item;
 
 namespace Granda.ATTS.CIMModule.StreamType
 {
-    internal class Stream2_EquipmentControl
+    internal static class Stream2_EquipmentControl
     {
         /// <summary>
         /// Equipment Constants Request
@@ -82,7 +82,7 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// </summary>
         /// <param name="TIME"></param>
         /// <returns></returns>
-        public static SecsMessage S2F18(string TIME)
+        public static SecsMessage S2F18(this SecsMessage secsMessage, string TIME)
         {
             var stack = new Stack<List<Item>>();
             stack.Push(new List<Item>() {
@@ -90,7 +90,7 @@ namespace Granda.ATTS.CIMModule.StreamType
             });
             var item = ParseItem(stack);
 
-            return SendMessage(2, 18, false, item);
+            return SendMessage(2, 18, false, secsMessage.SystenBytes, item);
         }
         //  <L[5]
         //	1.<A[2] ‘2 Bytes’ [TRID]>

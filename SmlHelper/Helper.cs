@@ -5,8 +5,10 @@ using System.Globalization;
 using System.IO;
 using System.Collections.Concurrent;
 
-namespace Secs4Net {
-    public static class SecsMessageExtenstion {
+namespace Secs4Net
+{
+    public static class SecsMessageExtenstion
+    {
         const int SmlIndent = 2;
 
         /// <summary>
@@ -14,20 +16,24 @@ namespace Secs4Net {
         /// </summary>
         /// <param name="msg">SecsMessage实例</param>
         /// <returns>Sml文档</returns>
-        public static string ToSML(this SecsMessage msg) {
-            using (var sw = new StringWriter()) {
+        public static string ToSML(this SecsMessage msg)
+        {
+            using (var sw = new StringWriter())
+            {
                 msg.WriteTo(sw);
                 return sw.ToString();
             }
         }
 
-        public static void WriteTo(this SecsMessage msg, TextWriter writer) {
+        public static void WriteTo(this SecsMessage msg, TextWriter writer)
+        {
             writer.WriteLine(msg.ToString());
             Write(writer, msg.SecsItem, SmlIndent);
             writer.Write('.');
         }
 
-        static void Write(TextWriter writer, Item item, int indent) {
+        static void Write(TextWriter writer, Item item, int indent)
+        {
             if (item == null) return;
             var indentStr = new string(' ', indent);
             writer.Write(indentStr);
@@ -36,7 +42,8 @@ namespace Secs4Net {
             writer.Write(" [");
             writer.Write(item.Count);
             writer.Write("] ");
-            switch (item.Format) {
+            switch (item.Format)
+            {
                 case SecsFormat.List:
                     writer.WriteLine();
                     var items = item.Items;
@@ -58,8 +65,10 @@ namespace Secs4Net {
             writer.WriteLine('>');
         }
 
-        public static string ToSML(this SecsFormat format) {
-            switch (format) {
+        public static string ToSML(this SecsFormat format)
+        {
+            switch (format)
+            {
                 case SecsFormat.List: return "L";
                 case SecsFormat.Binary: return "B";
                 case SecsFormat.Boolean: return "Boolean";
@@ -83,17 +92,19 @@ namespace Secs4Net {
         /// </summary>
         /// <param name="str">字符串</param>
         /// <returns>SecsMessage实例</returns>
-        public static SecsMessage ToSecsMessage(this string str) {
+        public static SecsMessage ToSecsMessage(this string str)
+        {
             using (var sr = new StringReader(str))
                 return sr.ToSecsMessage();
         }
 
-        public static SecsMessage ToSecsMessage(this TextReader sr) {
+        public static SecsMessage ToSecsMessage(this TextReader sr)
+        {
             string line = sr.ReadLine();
             #region Parse First Line
             int i = line.IndexOf(':');
 
-            
+
             var name = line.Substring(0, i);
 
             i = line.IndexOf("'S", i + 1) + 2;
@@ -107,11 +118,13 @@ namespace Secs4Net {
             #endregion
             Item rootItem = null;
             var stack = new Stack<List<Item>>();
-            while ((line = sr.ReadLine()) != null) {
+            while ((line = sr.ReadLine()) != null)
+            {
 
                 // 删除头部的空格
                 line = line.TrimStart();
-                if (line[0] == '>') {
+                if (line[0] == '>')
+                {
                     var itemList = stack.Pop();
                     var item = itemList.Count > 0 ? Item.L(itemList) : Item.L();
                     if (stack.Count > 0)
@@ -128,10 +141,13 @@ namespace Secs4Net {
                 string format = line.Substring(index_Item_L, index_Size_L - index_Item_L).Trim();
 
 
-                if (format == "L") {
+                if (format == "L")
+                {
                     stack.Push(new List<Item>());
                     continue;
-                } else {
+                }
+                else
+                {
                     int index_Size_R = line.IndexOf(']', index_Size_L); //Debug.Assert(index_Size_R != -1);
                     int index_Item_R = line.LastIndexOf('>'); //Debug.Assert(index_Item_R != -1);
                     string valueStr = line.Substring(index_Size_R + 1, index_Item_R - index_Size_R - 1);
@@ -144,7 +160,7 @@ namespace Secs4Net {
                 #endregion
             }
 
-            return new SecsMessage(s, f, name, replyExpected, rootItem);
+            return new SecsMessage(0, s, f, name, replyExpected, -1, rootItem);
         }
 
         // Func委托，返回Item实例，绑定CreateSmlParser方法
@@ -164,7 +180,8 @@ namespace Secs4Net {
         static readonly Func<string, Item> SmlParser_F8 = CreateSmlParser<double>(Item.F8, Item.F8, double.Parse);
         static readonly ConcurrentDictionary<string, Item> Cache = new ConcurrentDictionary<string, Item>();
 
-        static byte HexStringToByte(string str) {
+        static byte HexStringToByte(string str)
+        {
             return byte.Parse(str, NumberStyles.HexNumber);
         }
 
@@ -174,9 +191,11 @@ namespace Secs4Net {
         /// <param name="itemCreator">元组</param>
         /// <param name="emptyCreator">空元组</param>
         /// <returns>元组</returns>
-        static Func<string, Item> CreateSmlParser(Func<string, Item> itemCreator, Func<Item> emptyCreator) {
+        static Func<string, Item> CreateSmlParser(Func<string, Item> itemCreator, Func<Item> emptyCreator)
+        {
             return valueStr =>
-                Cache.GetOrAdd(valueStr, str => {
+                Cache.GetOrAdd(valueStr, str =>
+                {
                     str = str.TrimStart(' ', '\'', '"').TrimEnd(' ', '\'', '"');
                     return string.IsNullOrEmpty(str) ?
                             emptyCreator() :
@@ -192,9 +211,11 @@ namespace Secs4Net {
         /// <param name="emptyCreator">空元组</param>
         /// <param name="converter">强制转换为指定泛型</param>
         /// <returns>元组</returns>
-        static Func<string, Item> CreateSmlParser<T>(Func<T[], Item> creator, Func<Item> emptyCreator, Converter<string, T> converter) where T : struct {
+        static Func<string, Item> CreateSmlParser<T>(Func<T[], Item> creator, Func<Item> emptyCreator, Converter<string, T> converter) where T : struct
+        {
             return valueStr =>
-                Cache.GetOrAdd(valueStr, str => {
+                Cache.GetOrAdd(valueStr, str =>
+                {
                     var valueStrs = str.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                     return (valueStrs.Length == 0) ?
                         emptyCreator() :
@@ -202,8 +223,10 @@ namespace Secs4Net {
                 });
         }
 
-        public static Item Create(this string format, string smlValue) {
-            switch (format) {
+        public static Item Create(this string format, string smlValue)
+        {
+            switch (format)
+            {
                 case "A": return SmlParser_A(smlValue);
                 case "JIS8":
                 case "J": return SmlParser_J(smlValue);
@@ -225,7 +248,8 @@ namespace Secs4Net {
                 default: throw new SecsException("Unknown SML format :" + format);
             }
         }
-        public static Item Create(this SecsFormat format, string smlValue) {
+        public static Item Create(this SecsFormat format, string smlValue)
+        {
             return Create(format.ToSML(), smlValue);
         }
     }

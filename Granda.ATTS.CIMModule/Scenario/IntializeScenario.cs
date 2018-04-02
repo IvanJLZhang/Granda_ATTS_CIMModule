@@ -76,19 +76,26 @@ namespace Granda.ATTS.CIMModule.Scenario
             primaryMessage = secsMessage;
             switch (primaryMessage.GetSFString())
             {
-                case "S1F13":
-                    SubScenarioName = Resource.Intialize_Scenario_3;
-                    S1F14("MDLN", "SOFTREV", "0");
+                case "S1F1":// are you there request
+                    SubScenarioName = Resource.Intialize_Scenario_1;
+                    secsMessage.S1F2("MDLN", "SOFTREV");// 作为unit端， 只考虑online的选项
                     break;
-                case "S1F17":
+                case "S1F13":// estublish communication request
                     SubScenarioName = Resource.Intialize_Scenario_3;
-                    S1F18("0");
-                    if (LaunchControlStateProcess(ControlState.ONLINE_REMOTE))
+                    secsMessage.S1F14("MDLN", "SOFTREV", "0");
+                    break;
+                case "S1F17":// request online by host
+                    SubScenarioName = Resource.Intialize_Scenario_3;
+                    secsMessage.S1F18("0");
+                    if (LaunchControlStateProcess((int)ControlState.ONLINE_REMOTE))
                     {
-                        LaunchDateTimeUpdateProcess();
+                        if (LaunchDateTimeUpdateProcess())
+                        {
+                            LaunchControlStateProcess((int)ControlState.EQT_STATUS_CHANGE);
+                        }
                     }
                     break;
-                case "S1F15":
+                case "S1F15":// request offline by host
                     SubScenarioName = Resource.Intialize_Scenario_4;
                     switch (EQT_ControlState)
                     {
@@ -99,13 +106,20 @@ namespace Granda.ATTS.CIMModule.Scenario
                         case ControlState.ONLINE_LOCAL:
                         case ControlState.ONLINE_REMOTE:
                             // send OFF_LINE Acknowledge
-                            S1F16("1");
+                            secsMessage.S1F16("1");
                             // send Control State Change(OFF_LINE)
-                            LaunchControlStateProcess(ControlState.OFFLINE);
+                            LaunchControlStateProcess((int)ControlState.OFFLINE);
                             break;
                         default:
                             break;
                     }
+                    break;
+                case "S2F17":// Date and Time Request
+                    string dataTime = DateTime.Now.ToString("yyyyMMddHHmmss");
+                    secsMessage.S2F18(dataTime);
+                    break;
+                case "S6F11":// Event Report Send (ERS)
+                    secsMessage.S6F12("0");
                     break;
                 default:
                     break;
@@ -120,28 +134,53 @@ namespace Granda.ATTS.CIMModule.Scenario
             SubScenarioName = Resource.Intialize_Scenario_1;
             // send estublish communication request
             var replyMsg = S1F13("MDLN", "SOFTREV");
-            //var replyMsg = S1F14("MDLN", "SOFTREV", "0");
 
             if (!(replyMsg != null && replyMsg.S == 1 && replyMsg.F == 14))
             {
+                Debug.WriteLine("receive S1F14 message.");
                 return false;
             }
-            replyMsg = S1F1();
+            //var replyMsg = S1F1();
+            //if (replyMsg == null || replyMsg.F == 0)
+            //{// host denies online request
+            //    return false;
+            //}
+            //if (LaunchControlStateProcess((int)ControlState.ONLINE_REMOTE))
+            //{
+            //    if (LaunchDateTimeUpdateProcess())
+            //    {
+            //        return LaunchControlStateProcess((int)ControlState.EQT_STATUS_CHANGE);
+            //    }
+            //}
+            return false;
+        }
+
+        /// <summary>
+        /// 启动建立连接进程 online by Unit
+        /// </summary>
+        /// <returns></returns>
+        public bool LaunchOnlineProcess1()
+        {
+            SubScenarioName = Resource.Intialize_Scenario_1;
+            // send estublish communication request
+            //var replyMsg = S1F13("MDLN", "SOFTREV");
+
+            //if (!(replyMsg != null && replyMsg.S == 1 && replyMsg.F == 14))
+            //{
+            //    return false;
+            //}
+            var replyMsg = S1F1();
             if (replyMsg == null || replyMsg.F == 0)
             {// host denies online request
                 return false;
             }
-
-            if (LaunchControlStateProcess(ControlState.ONLINE_REMOTE))
-            {
-                replyMsg = S2F17();
-                if (replyMsg != null && replyMsg.S == 2 && replyMsg.F == 18)
-                {
-                    var dateTimeStr = replyMsg.SecsItem.GetValue<string>();
-                    itializeScenario?.UpdateDateTime(dateTimeStr);
-                    return true;
-                }
-            }
+            //if (LaunchControlStateProcess((int)ControlState.ONLINE_REMOTE))
+            //{
+            //    if (LaunchDateTimeUpdateProcess())
+            //    {
+            //        return LaunchControlStateProcess((int)ControlState.EQT_STATUS_CHANGE);
+            //    }
+            //}
             return false;
         }
         /// <summary>
@@ -151,7 +190,7 @@ namespace Granda.ATTS.CIMModule.Scenario
         public bool LaunchOfflineProcess()
         {
             SubScenarioName = Resource.Intialize_Scenario_2;
-            var result = LaunchControlStateProcess(ControlState.OFFLINE);
+            var result = LaunchControlStateProcess((int)ControlState.OFFLINE);
             return result;
         }
         #endregion
@@ -165,37 +204,40 @@ namespace Granda.ATTS.CIMModule.Scenario
         /// </summary>
         /// <param name="controlState"></param>
         /// <returns></returns>
-        public bool LaunchControlStateProcess(ControlState controlState)
+        public bool LaunchControlStateProcess(int ceid)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>());
-            stack.Peek().Add(A("DATAID"));
-            stack.Peek().Add(A($"{controlState}"));
-            stack.Push(new List<Item>());
-            stack.Push(new List<Item>());
-            stack.Peek().Add(A("RPTID"));
-            stack.Push(new List<Item>());
-            stack.Peek().Add(A("CRST"));
-            stack.Peek().Add(A("EQST"));
-            stack.Peek().Add(A("EQSTCODE"));
-
-            var item = ParseItem(stack);
-            var replyMsg = S6F11(item, (int)controlState);
-            if (replyMsg != null && replyMsg.GetSFString() == "S6F12")
+            if (ceid >= 111 && ceid <= 114)
             {
-                try
+                var stack = new Stack<List<Item>>();
+                stack.Push(new List<Item>());
+                stack.Peek().Add(A("DATAID"));
+                stack.Peek().Add(A($"{ceid}"));
+                stack.Push(new List<Item>());
+                stack.Push(new List<Item>());
+                stack.Peek().Add(A("RPTID"));
+                stack.Push(new List<Item>());
+                stack.Peek().Add(A("CRST"));
+                stack.Peek().Add(A("EQST"));
+                stack.Peek().Add(A("EQSTCODE"));
+
+                var item = ParseItem(stack);
+                var replyMsg = S6F11(item, (int)ceid);
+                if (replyMsg != null && replyMsg.GetSFString() == "S6F12")
                 {
-                    string ack = replyMsg.SecsItem.GetString();
-                    if (ack == "0")
+                    try
                     {
-                        EQT_ControlState = controlState;
-                        itializeScenario?.UpdateControlState(controlState);
-                        return true;
+                        string ack = replyMsg.SecsItem.GetString();
+                        if (ack == "0")
+                        {
+                            EQT_ControlState = (ControlState)ceid;
+                            itializeScenario?.UpdateControlState((ControlState)ceid);
+                            return true;
+                        }
                     }
-                }
-                catch (InvalidOperationException)
-                {
-                    return false;
+                    catch (InvalidOperationException)
+                    {
+                        return false;
+                    }
                 }
             }
             return false;

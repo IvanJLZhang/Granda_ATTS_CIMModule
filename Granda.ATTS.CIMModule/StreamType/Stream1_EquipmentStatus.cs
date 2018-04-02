@@ -6,7 +6,7 @@ using static Granda.ATTS.CIMModule.Extension.SmlExtension;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIMModule.StreamType
 {
-    internal class Stream1_EquipmentStatus
+    internal static class Stream1_EquipmentStatus
     {
         /// <summary>
         /// Equipment denies requests
@@ -25,7 +25,7 @@ namespace Granda.ATTS.CIMModule.StreamType
             return SendMessage(1, 1, true, null, 0);
         }
 
-        public static SecsMessage S1F2(string MDLN, string SOFTREV)
+        public static SecsMessage S1F2(this SecsMessage secsMessage, string MDLN, string SOFTREV)
         {
             var stack = new Stack<List<Item>>();
             stack.Push(new List<Item>() {
@@ -34,7 +34,7 @@ namespace Granda.ATTS.CIMModule.StreamType
             });
             var item = ParseItem(stack);
 
-            return SendMessage(1, 2, false, item);
+            return SendMessage(1, 2, false, secsMessage.SystenBytes, item);
         }
         /// <summary>
         /// 待定
@@ -118,7 +118,7 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// Establish Communications Acknowledge
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S1F14(string MDLN, string SOFTREV, string ACK)
+        public static SecsMessage S1F14(this SecsMessage secsMessage, string MDLN, string SOFTREV, string ACK)
         {
             var stack = new Stack<List<Item>>();
             stack.Push(new List<Item>()
@@ -130,7 +130,7 @@ namespace Granda.ATTS.CIMModule.StreamType
                 A(SOFTREV),
             });
             var item = ParseItem(stack);
-            return SendMessage(1, 14, false, item);
+            return SendMessage(1, 14, false, secsMessage.SystenBytes, item);
         }
 
         /// <summary>
@@ -146,7 +146,7 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// OFF-LINE Acknowledge
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S1F16(string OFLACK)
+        public static SecsMessage S1F16(this SecsMessage secsMessage, string OFLACK)
         {
             var stack = new Stack<List<Item>>();
             stack.Push(new List<Item>()
@@ -154,7 +154,7 @@ namespace Granda.ATTS.CIMModule.StreamType
                 A(OFLACK),
             });
             var item = ParseItem(stack);
-            return SendMessage(1, 16, false, item);
+            return SendMessage(1, 16, false, secsMessage.SystenBytes, item);
         }
 
         /// <summary>
@@ -176,7 +176,7 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// </summary>
         /// <param name="ONLACK"></param>
         /// <returns></returns>
-        public static SecsMessage S1F18(string ONLACK)
+        public static SecsMessage S1F18(this SecsMessage secsMessage, string ONLACK)
         {
             var stack = new Stack<List<Item>>();
             stack.Push(new List<Item>()
@@ -184,7 +184,7 @@ namespace Granda.ATTS.CIMModule.StreamType
                 A(ONLACK),
             });
             var item = ParseItem(stack);
-            return SendMessage(1, 18, false, item);
+            return SendMessage(1, 18, false, secsMessage.SystenBytes, item);
         }
     }
 }

@@ -10,8 +10,9 @@ using System.Drawing;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
-namespace HelloWorld
+namespace SecsServer
 {
     public partial class Server : Form
     {
@@ -25,12 +26,24 @@ namespace HelloWorld
         SecsGem secsGem;
         private void Server_Load(object sender, EventArgs e)
         {
-            secsGem = new SecsGem(IPAddress.Parse("192.168.0.49"), 1024, false, 1024);
+            secsGem = new SecsGem(IPAddress.Parse("192.168.0.145"), 1024, false);
             secsGem.PrimaryMessageRecived += SecsGem_PrimaryMessageRecived;
             secsGem.ConnectionChanged += SecsGem_ConnectionChanged;
             cimModule = new CimModuleProcess(secsGem);
             cimModule.ControlStateChanged += CimModule_ControlStateChanged;
             cimModule.DateTimeUpdate += CimModule_DateTimeUpdate;
+            Application.ThreadException += Application_ThreadException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            MessageBox.Show(e.ExceptionObject.ToString());
+        }
+
+        private void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
+        {
+            MessageBox.Show(e.Exception.ToString());
         }
 
         private void CimModule_DateTimeUpdate(object sender, TEventArgs<string> e)
