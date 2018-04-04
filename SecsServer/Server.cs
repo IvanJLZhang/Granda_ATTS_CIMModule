@@ -1,4 +1,5 @@
 ﻿using Granda.ATTS.CIMModule;
+using Granda.ATTS.CIMModule.Extension;
 using Granda.ATTS.CIMModule.Model;
 using Granda.ATTS.CIMModule.Scenario;
 using Secs4Net;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net;
@@ -22,14 +24,15 @@ namespace SecsServer
             this.Load += Server_Load;
 
         }
-        CimModuleProcess cimModule;
+        CimModuleForHST cimModule;
         SecsGem secsGem;
         private void Server_Load(object sender, EventArgs e)
         {
             secsGem = new SecsGem(IPAddress.Parse("192.168.0.145"), 1024, false);
+            secsGem.Tracer = new MyTracer();
             secsGem.PrimaryMessageRecived += SecsGem_PrimaryMessageRecived;
             secsGem.ConnectionChanged += SecsGem_ConnectionChanged;
-            cimModule = new CimModuleProcess(secsGem);
+            cimModule = new CimModuleForHST(secsGem);
             cimModule.ControlStateChanged += CimModule_ControlStateChanged;
             cimModule.DateTimeUpdate += CimModule_DateTimeUpdate;
             Application.ThreadException += Application_ThreadException;
@@ -66,6 +69,7 @@ namespace SecsServer
             this.Invoke((MethodInvoker)delegate
             {
                 this.recvdMessage.Text = e.Data.ToSML();
+                Debug.WriteLine(e.Data.ToSML());
             });
         }
 

@@ -61,6 +61,24 @@ namespace Granda.ATTS.CIMModule {
         }
         
         /// <summary>
+        ///   查找类似 Alarm List Request 的本地化字符串。
+        /// </summary>
+        internal static string AMS_Alarm_List_Request {
+            get {
+                return ResourceManager.GetString("AMS_Alarm_List_Request", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Enable/Disable Alarms 的本地化字符串。
+        /// </summary>
+        internal static string AMS_Enable_Disable_Alarm {
+            get {
+                return ResourceManager.GetString("AMS_Enable_Disable_Alarm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Online Scenario (Offline -&gt; Online by Unit) 的本地化字符串。
         /// </summary>
         internal static string Intialize_Scenario_1 {
@@ -93,6 +111,60 @@ namespace Granda.ATTS.CIMModule {
         internal static string Intialize_Scenario_4 {
             get {
                 return ResourceManager.GetString("Intialize_Scenario_4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Host Command-Abort 的本地化字符串。
+        /// </summary>
+        internal static string RCS_Host_Command_Abort {
+            get {
+                return ResourceManager.GetString("RCS_Host_Command_Abort", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Host Command-Cancel 的本地化字符串。
+        /// </summary>
+        internal static string RCS_Host_Command_Cancel {
+            get {
+                return ResourceManager.GetString("RCS_Host_Command_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Host Command-Operator Call 的本地化字符串。
+        /// </summary>
+        internal static string RCS_Host_Command_Operator_Call {
+            get {
+                return ResourceManager.GetString("RCS_Host_Command_Operator_Call", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Host Command-Pause 的本地化字符串。
+        /// </summary>
+        internal static string RCS_Host_Command_Pause {
+            get {
+                return ResourceManager.GetString("RCS_Host_Command_Pause", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Host Command-Resume 的本地化字符串。
+        /// </summary>
+        internal static string RCS_Host_Command_Resume {
+            get {
+                return ResourceManager.GetString("RCS_Host_Command_Resume", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Host Command-Start 的本地化字符串。
+        /// </summary>
+        internal static string RCS_Host_Command_Start {
+            get {
+                return ResourceManager.GetString("RCS_Host_Command_Start", resourceCulture);
             }
         }
     }

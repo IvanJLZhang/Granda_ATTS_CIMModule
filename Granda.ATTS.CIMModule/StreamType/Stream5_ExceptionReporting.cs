@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Granda.ATTS.CIMModule.CimModuleProcess;
+using static Granda.ATTS.CIMModule.CimModuleBase;
 using static Granda.ATTS.CIMModule.Extension.SmlExtension;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIMModule.StreamType
 {
-    internal class Stream5_ExceptionReporting
+    internal static class Stream5_ExceptionReporting
     {
         /// <summary>
         /// Alarm Report Send
@@ -32,17 +32,22 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// Enable/Disable Alarm Send(EAS)
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S5F3()
+        public static SecsMessage S5F3(Item item)
         {
-            return SendMessage(5, 3, true, null);
+            return SendMessage(5, 3, true, item);
         }
         /// <summary>
         /// Enable/Disable Alarm Acknowledge(EAA)
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S5F4()
+        public static SecsMessage S5F4(this SecsMessage secsMessage, int ack)
         {
-            return SendMessage(5, 4, false, null);
+            var stack = new Stack<List<Item>>();
+            stack.Push(new List<Item>()
+            {
+                A(ack.ToString()),
+            });
+            return SendMessage(5, 4, secsMessage.SystenBytes, ParseItem(stack));
         }
 
         /// <summary>
@@ -66,17 +71,17 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// Current Alarm Set List Request
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S5F103()
+        public static SecsMessage S5F103(Item item)
         {
-            return SendMessage(5, 103, true, null);
+            return SendMessage(5, 103, true, item);
         }
         /// <summary>
         /// Current Alarm Set List Data
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S5F104()
+        public static SecsMessage S5F104(this SecsMessage secsMessage, Item item)
         {
-            return SendMessage(5, 104, false, null);
+            return SendMessage(5, 104, secsMessage.SystenBytes, item);
         }
     }
 }

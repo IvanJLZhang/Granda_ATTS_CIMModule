@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Granda.ATTS.CIMModule.CimModuleProcess;
+using static Granda.ATTS.CIMModule.CimModuleBase;
 using static Granda.ATTS.CIMModule.Extension.SmlExtension;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIMModule.StreamType
@@ -43,7 +43,7 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// <returns></returns>
         public static SecsMessage S6F11(Item item, int ceid)
         {
-            return SendMessage(6, 11, true, item, ceid);
+            return SendMessage(6, 11, true, item, ceid, "CEID");
         }
         /// <summary>
         /// Event Report Acknowledge
@@ -56,7 +56,7 @@ namespace Granda.ATTS.CIMModule.StreamType
                 A(ack),
             });
             var item = ParseItem(stack);
-            return SendMessage(6, 12, false, secsMessage.SystenBytes, item);
+            return SendMessage(6, 12, secsMessage.SystenBytes, item);
         }
 
         /// <summary>

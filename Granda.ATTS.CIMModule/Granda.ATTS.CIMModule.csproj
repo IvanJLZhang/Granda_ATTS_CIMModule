@@ -48,14 +48,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CimModuleProcess.cs" />
+    <Compile Include="CimModuleBase.cs" />
+    <Compile Include="CimModuleForHST.cs" />
+    <Compile Include="CimModuleForEQT.cs" />
     <Compile Include="Core\Item.cs" />
     <Compile Include="Core\MessageHeader.cs" />
     <Compile Include="Core\MessageType.cs" />
     <Compile Include="Data\StreamFunction.cs" />
     <Compile Include="Extension\ExtensionHelper.cs" />
+    <Compile Include="Extension\MyTracer.cs" />
     <Compile Include="Extension\SmlExtension.cs" />
     <Compile Include="Model\ControlState.cs" />
+    <Compile Include="Model\HostCommand.cs" />
     <Compile Include="Model\Scenarios.cs" />
     <Compile Include="Model\StreamType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -64,10 +68,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
-    <Compile Include="ScenarioTest.cs" />
+    <Compile Include="Scenario\AlarmManagement.cs" />
+    <Compile Include="Scenario\BaseScenario.cs" />
+    <Compile Include="Scenario\CassetteInfoDownload.cs" />
+    <Compile Include="Scenario\Clock.cs" />
+    <Compile Include="Scenario\DataCollection.cs" />
+    <Compile Include="Scenario\EqtTerminalService.cs" />
+    <Compile Include="Scenario\ErrorMessage.cs" />
     <Compile Include="Scenario\IntializeScenario.cs" />
     <Compile Include="Scenario\IScenario.cs" />
-    <Compile Include="SecsMessageParser.cs" />
+    <Compile Include="Scenario\OperationNormalSequence.cs" />
+    <Compile Include="Scenario\RecipeManagement.cs" />
+    <Compile Include="Scenario\RemoteControl.cs" />
     <Compile Include="StreamType\Stream10_TerminalServices.cs" />
     <Compile Include="StreamType\Stream1_EquipmentStatus.cs" />
     <Compile Include="StreamType\Stream2_EquipmentControl.cs" />

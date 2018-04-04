@@ -35,13 +35,14 @@ namespace Granda.ATTS.CIMModule.Data
         /// </summary>
         public String[] FunctionName { get; set; }
 
+        private static StreamFunction[] streamFunctions = null;
         /// <summary>
         /// load stream function list under default path
         /// </summary>
         /// <returns></returns>
-        public static StreamFunction[] LoadStreamFunctionArray()
+        public static StreamFunction[] GetStreamFunctionArray()
         {
-            return LoadStreamFunctionArray("./Data/StreamFunctionList.json");
+            return streamFunctions ?? LoadStreamFunctionArray("./Data/StreamFunctionList.json");
         }
         /// <summary>
         /// load stream function list under specified path.
@@ -52,9 +53,10 @@ namespace Granda.ATTS.CIMModule.Data
         {
             using (TextReader reader = File.OpenText(jsonPath))
             {
-                return JArray.Load(new JsonTextReader(reader)).Values<JObject>().Select((JObject Object) =>
+                streamFunctions = JArray.Load(new JsonTextReader(reader)).Values<JObject>().Select((JObject Object) =>
                     JsonConvert.DeserializeObject<StreamFunction>(Object.ToString())
                 ).ToArray();
+                return streamFunctions;
             }
         }
 

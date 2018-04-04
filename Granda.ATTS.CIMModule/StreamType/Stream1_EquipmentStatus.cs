@@ -1,7 +1,7 @@
 ﻿using Secs4Net;
 using System;
 using System.Collections.Generic;
-using static Granda.ATTS.CIMModule.CimModuleProcess;
+using static Granda.ATTS.CIMModule.CimModuleBase;
 using static Granda.ATTS.CIMModule.Extension.SmlExtension;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIMModule.StreamType
@@ -34,7 +34,7 @@ namespace Granda.ATTS.CIMModule.StreamType
             });
             var item = ParseItem(stack);
 
-            return SendMessage(1, 2, false, secsMessage.SystenBytes, item);
+            return SendMessage(1, 2, secsMessage.SystenBytes, item);
         }
         /// <summary>
         /// 待定
@@ -130,9 +130,26 @@ namespace Granda.ATTS.CIMModule.StreamType
                 A(SOFTREV),
             });
             var item = ParseItem(stack);
-            return SendMessage(1, 14, false, secsMessage.SystenBytes, item);
+            return SendMessage(1, 14, secsMessage.SystenBytes, item);
         }
-
+        /// <summary>
+        /// Establish Communications Acknowledge
+        /// </summary>
+        /// <returns></returns>
+        public static SecsMessage S1F14(int systemBytes, string MDLN, string SOFTREV, string ACK)
+        {
+            var stack = new Stack<List<Item>>();
+            stack.Push(new List<Item>()
+            {
+                A(ACK),
+            });
+            stack.Push(new List<Item>() {
+                A(MDLN),
+                A(SOFTREV),
+            });
+            var item = ParseItem(stack);
+            return SendMessage(1, 14, systemBytes, item);
+        }
         /// <summary>
         /// Request OFF-LINE
         /// </summary>
@@ -154,7 +171,7 @@ namespace Granda.ATTS.CIMModule.StreamType
                 A(OFLACK),
             });
             var item = ParseItem(stack);
-            return SendMessage(1, 16, false, secsMessage.SystenBytes, item);
+            return SendMessage(1, 16, secsMessage.SystenBytes, item);
         }
 
         /// <summary>
@@ -184,7 +201,7 @@ namespace Granda.ATTS.CIMModule.StreamType
                 A(ONLACK),
             });
             var item = ParseItem(stack);
-            return SendMessage(1, 18, false, secsMessage.SystenBytes, item);
+            return SendMessage(1, 18, secsMessage.SystenBytes, item);
         }
     }
 }

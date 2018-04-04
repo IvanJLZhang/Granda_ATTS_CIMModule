@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Granda.ATTS.CIMModule.CimModuleProcess;
+using static Granda.ATTS.CIMModule.CimModuleBase;
 using static Granda.ATTS.CIMModule.Extension.SmlExtension;
 using static Secs4Net.Item;
 

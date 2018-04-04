@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net;
@@ -20,14 +21,14 @@ namespace SecsClient
             InitializeComponent();
             this.Load += Client_Load;
         }
-        CimModuleProcess cimModule;
+        CimModuleForEQT cimModule;
         SecsGem secsGem = new SecsGem();
         private void Client_Load(object sender, EventArgs e)
         {
             secsGem = new SecsGem(IPAddress.Parse("192.168.0.145"), 1024, true);
             secsGem.PrimaryMessageRecived += SecsGem_PrimaryMessageRecived;
             secsGem.ConnectionChanged += SecsGem_ConnectionChanged;
-            cimModule = new CimModuleProcess(secsGem);
+            cimModule = new CimModuleForEQT(secsGem);
             cimModule.ControlStateChanged += CimModule_ControlStateChanged;
 
             Application.ThreadException += Application_ThreadException;
@@ -59,12 +60,12 @@ namespace SecsClient
             this.Invoke((MethodInvoker)delegate
             {
                 this.recvdMessage.Text = e.Data.ToSML();
+                Debug.WriteLine(e.Data.ToSML());
             });
         }
 
         private void btnSecSend_Click(object sender, EventArgs e)
         {
-            cimModule.LaunchOnOffLineProcess1(true);
         }
 
         private void btnSendPrimaryMsg_Click(object sender, EventArgs e)

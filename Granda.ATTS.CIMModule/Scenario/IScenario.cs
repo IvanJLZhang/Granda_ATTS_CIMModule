@@ -10,27 +10,8 @@ namespace Granda.ATTS.CIMModule.Scenario
     public interface IScenario
     {
         /// <summary>
-        /// 枚举类型属性，Scenario类型
-        /// </summary>
-        Scenarios ScenarioType { get;}
-
-        /// <summary>
-        /// 
-        /// </summary>
-        String ScenarioName { get; }
-        /// <summary>
-        /// 
-        /// </summary>
-        String SubScenarioName { get; set; }
-        /// <summary>
-        /// 
+        /// 处理primary message
         /// </summary>
         void HandleSecsMessage(SecsMessage secsMessage);
-        /// <summary>
-        /// 
-        /// </summary>
-        void PackSecsMessage();
-
-        SecsMessage primaryMessage { get; set; }
     }
 }

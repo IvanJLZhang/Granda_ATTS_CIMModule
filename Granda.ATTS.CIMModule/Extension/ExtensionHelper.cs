@@ -59,26 +59,26 @@ namespace Granda.ATTS.CIMModule.Extension
 
         public static string GetFunctionName(byte s, byte f)
         {
-            var streamFunctions = StreamFunction.LoadStreamFunctionArray();
-            return GetFunctionName(streamFunctions, s, f, 0);
+            var streamFunctions = StreamFunction.GetStreamFunctionArray();
+            return GetFunctionName(streamFunctions, s, f, "", 0);
         }
-        public static string GetFunctionName(byte s, byte f, int ceid)
+        public static string GetFunctionName(byte s, byte f, string key, int value)
         {
-            var streamFunctions = StreamFunction.LoadStreamFunctionArray();
-            return GetFunctionName(streamFunctions, s, f, ceid);
+            var streamFunctions = StreamFunction.GetStreamFunctionArray();
+            return GetFunctionName(streamFunctions, s, f, key, value);
         }
-        public static string GetFunctionName(StreamFunction[] streamFunctions, byte s, byte f, int ceid)
+        public static string GetFunctionName(StreamFunction[] streamFunctions, byte s, byte f, string key, int ceid)
         {
             foreach (var item in streamFunctions)
             {
                 if (s == item.S && (f == item.F_Pri || f == item.F_Sec))
                 {
-                    if (ceid == 0) return f % 2 == 0 ? item.FunctionName[ceid] + " Ack" : item.FunctionName[ceid];
+                    if (ceid == 0 && key.Equals(String.Empty)) return f % 2 == 0 ? item.FunctionName[ceid] + " Ack" : item.FunctionName[ceid];
                     else
                     {
                         foreach (var function in item.FunctionName)
                         {
-                            if (function.Contains($"CEID={ceid}"))
+                            if (function.Contains($"{key}={ceid}"))
                                 return f % 2 == 0 ? function + " Ack" : function;
                         }
                     }
@@ -88,16 +88,29 @@ namespace Granda.ATTS.CIMModule.Extension
         }
 
 
-        public static SecsMessage SendMessage(this SecsGem secsGem, short deviceId, byte s, byte f, bool replyExpected, int systemBytes, Item item = null, int ceid = 0)
+        public static SecsMessage SendMessage(this SecsGem secsGem, short deviceId, byte s, byte f, bool replyExpected, int systemBytes, Item item = null, string key = "", int value = 0)
         {
-            SecsMessage secsMessage = new SecsMessage(deviceId, s, f, GetFunctionName(s, f, ceid), replyExpected, systemBytes, item);
-            Debug.WriteLine(secsMessage.ToSML());
+            SecsMessage secsMessage = new SecsMessage(deviceId, s, f, GetFunctionName(s, f, key, value), replyExpected, systemBytes, item);
             return secsGem.Send(secsMessage);
         }
-
         public static String GetSFString(this SecsMessage secsMessage)
         {
             return $"S{secsMessage.S}F{secsMessage.F}";
+        }
+        /// <summary>
+        /// 获取secsMessage中的command位
+        /// </summary>
+        /// <param name="secsMessage"></param>
+        /// <returns></returns>
+        public static int GetCommandValue(this SecsMessage secsMessage)
+        {
+            var commandItem = secsMessage.SecsItem.Count >= 1 ? secsMessage.SecsItem.Items[0] : null;
+            if (commandItem != null)
+            {
+                Int32.TryParse(commandItem.GetString(), out int result);
+                return result;
+            }
+            return -1;
         }
     }
 }

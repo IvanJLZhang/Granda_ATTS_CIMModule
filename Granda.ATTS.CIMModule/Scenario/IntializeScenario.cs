@@ -13,59 +13,26 @@ using System.Diagnostics;
 using static Granda.ATTS.CIMModule.StreamType.Stream1_EquipmentStatus;
 using static Granda.ATTS.CIMModule.StreamType.Stream6_DataCollection;
 using static Granda.ATTS.CIMModule.StreamType.Stream2_EquipmentControl;
+using System.Threading;
+
 namespace Granda.ATTS.CIMModule.Scenario
 {
     /// <summary>
     /// 初始化场景处理类
     /// </summary>
-    internal class InitializeScenario : IScenario
+    internal class InitializeScenario : BaseScenario, IScenario
     {
-        /// <summary>
-        /// 构造函数： 用于处理接收消息时进行初始化
-        /// </summary>
-        /// <param name="message"></param>
-        public InitializeScenario(SecsMessage message)
-        {
-            primaryMessage = message;
-        }
         /// <summary>
         /// 默认构造函数
         /// </summary>
-        public InitializeScenario(IItializeScenario callBack)
+        public InitializeScenario(IItializeScenario callBack) : base()
         {
+            ScenarioType = Scenarios.Intialize_Scenario;
             itializeScenario = callBack;
         }
-        /// <summary>
-        /// primary message cache
-        /// </summary>
-        public SecsMessage primaryMessage { get; set; } = null;
-
-        /// <summary>
-        /// 场景类型
-        /// </summary>
-        public Scenarios ScenarioType { get; } = Scenarios.Intialize_Scenario;
-        /// <summary>
-        /// 场景类型名称
-        /// </summary>
-        public string ScenarioName { get => ScenarioType.ToString().Replace("_", " "); }
-        /// <summary>
-        /// 场景下功能名称
-        /// </summary>
-        public string SubScenarioName { get; set; } = String.Empty;
-        /// <summary>
-        /// 设备的控制状态
-        /// </summary>
         public ControlState EQT_ControlState { get; private set; } = ControlState.OFFLINE;
 
         private IItializeScenario itializeScenario = new DefaultIItializeScenario();
-
-        /// <summary>
-        /// 默认构造函数
-        /// </summary>
-        public void PackSecsMessage()
-        {
-            //secsGemService.Send()
-        }
 
         #region Initialize Scenario: 
         /// <summary>
@@ -82,7 +49,10 @@ namespace Granda.ATTS.CIMModule.Scenario
                     break;
                 case "S1F13":// estublish communication request
                     SubScenarioName = Resource.Intialize_Scenario_3;
+
+                    //Thread.Sleep(2000);
                     secsMessage.S1F14("MDLN", "SOFTREV", "0");
+                    //S1F14(secsMessage.SystenBytes, "MDLN", "SOFTREV", "0");
                     break;
                 case "S1F17":// request online by host
                     SubScenarioName = Resource.Intialize_Scenario_3;
@@ -137,52 +107,25 @@ namespace Granda.ATTS.CIMModule.Scenario
 
             if (!(replyMsg != null && replyMsg.S == 1 && replyMsg.F == 14))
             {
-                Debug.WriteLine("receive S1F14 message.");
                 return false;
             }
-            //var replyMsg = S1F1();
-            //if (replyMsg == null || replyMsg.F == 0)
-            //{// host denies online request
-            //    return false;
-            //}
-            //if (LaunchControlStateProcess((int)ControlState.ONLINE_REMOTE))
-            //{
-            //    if (LaunchDateTimeUpdateProcess())
-            //    {
-            //        return LaunchControlStateProcess((int)ControlState.EQT_STATUS_CHANGE);
-            //    }
-            //}
-            return false;
-        }
+            Debug.WriteLine("receive S1F14 message.");
 
-        /// <summary>
-        /// 启动建立连接进程 online by Unit
-        /// </summary>
-        /// <returns></returns>
-        public bool LaunchOnlineProcess1()
-        {
-            SubScenarioName = Resource.Intialize_Scenario_1;
-            // send estublish communication request
-            //var replyMsg = S1F13("MDLN", "SOFTREV");
-
-            //if (!(replyMsg != null && replyMsg.S == 1 && replyMsg.F == 14))
-            //{
-            //    return false;
-            //}
-            var replyMsg = S1F1();
+            replyMsg = S1F1();
             if (replyMsg == null || replyMsg.F == 0)
             {// host denies online request
                 return false;
             }
-            //if (LaunchControlStateProcess((int)ControlState.ONLINE_REMOTE))
-            //{
-            //    if (LaunchDateTimeUpdateProcess())
-            //    {
-            //        return LaunchControlStateProcess((int)ControlState.EQT_STATUS_CHANGE);
-            //    }
-            //}
+            if (LaunchControlStateProcess((int)ControlState.ONLINE_REMOTE))
+            {
+                if (LaunchDateTimeUpdateProcess())
+                {
+                    return LaunchControlStateProcess((int)ControlState.EQT_STATUS_CHANGE);
+                }
+            }
             return false;
         }
+
         /// <summary>
         /// 启动Offline进程 Offline by Unit
         /// </summary>
@@ -207,7 +150,7 @@ namespace Granda.ATTS.CIMModule.Scenario
         public bool LaunchControlStateProcess(int ceid)
         {
             if (ceid >= 111 && ceid <= 114)
-            {
+            {// control state change
                 var stack = new Stack<List<Item>>();
                 stack.Push(new List<Item>());
                 stack.Peek().Add(A("DATAID"));
@@ -226,8 +169,8 @@ namespace Granda.ATTS.CIMModule.Scenario
                 {
                     try
                     {
-                        string ack = replyMsg.SecsItem.GetString();
-                        if (ack == "0")
+                        int ack = replyMsg.GetCommandValue();
+                        if (ack == 0)
                         {
                             EQT_ControlState = (ControlState)ceid;
                             itializeScenario?.UpdateControlState((ControlState)ceid);

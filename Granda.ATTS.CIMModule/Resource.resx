@@ -117,6 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AMS_Alarm_List_Request" xml:space="preserve">
+    <value>Alarm List Request</value>
+  </data>
+  <data name="AMS_Enable_Disable_Alarm" xml:space="preserve">
+    <value>Enable/Disable Alarms</value>
+  </data>
   <data name="Intialize_Scenario_1" xml:space="preserve">
     <value>Online Scenario (Offline -&gt; Online by Unit)</value>
   </data>
@@ -128,5 +134,23 @@
   </data>
   <data name="Intialize_Scenario_4" xml:space="preserve">
     <value>Offline Scenario (Online -&gt; Offline by Host)</value>
+  </data>
+  <data name="RCS_Host_Command_Abort" xml:space="preserve">
+    <value>Host Command-Abort</value>
+  </data>
+  <data name="RCS_Host_Command_Cancel" xml:space="preserve">
+    <value>Host Command-Cancel</value>
+  </data>
+  <data name="RCS_Host_Command_Operator_Call" xml:space="preserve">
+    <value>Host Command-Operator Call</value>
+  </data>
+  <data name="RCS_Host_Command_Pause" xml:space="preserve">
+    <value>Host Command-Pause</value>
+  </data>
+  <data name="RCS_Host_Command_Resume" xml:space="preserve">
+    <value>Host Command-Resume</value>
+  </data>
+  <data name="RCS_Host_Command_Start" xml:space="preserve">
+    <value>Host Command-Start</value>
   </data>
 </root>

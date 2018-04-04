@@ -83,6 +83,8 @@ namespace Secs4Net
 
         private const int RECEIVE_BUFFER_SIZE = 0x4000;
 
+        public SecsTracer Tracer { get => _tracer; set => _tracer = value; }
+
         #endregion
 
         #region 字段
@@ -146,7 +148,6 @@ namespace Secs4Net
             T8 = 5000;
             LinkTestInterval = 60000;
             _tracer = new SecsTracer();
-
             #region Timer Action
             // Timer时间绑定委托
             _timer7.Elapsed += delegate
@@ -191,7 +192,10 @@ namespace Secs4Net
                         this._socket = socket;
                         // 发送Select请求
                         this.SendControlMessage(MessageType.Select_req, NewSystemByte());
-                        this._socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
+                        //   this._socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
+                        Thread rec = new Thread(Receive);
+                        rec.IsBackground = true;
+                        rec.Start();
                     }
                     catch (Exception ex)
                     {
@@ -214,7 +218,6 @@ namespace Secs4Net
             }
             else
             {
-
                 // 不是active状态
                 #region Passive Impl
                 var server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -231,7 +234,10 @@ namespace Secs4Net
                         {
                             this._socket = server.EndAccept(iar);
                             this.CommunicationStateChanging(ConnectionState.Connected);
-                            this._socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
+                            //   this._socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
+                            Thread rec = new Thread(Receive);
+                            rec.IsBackground = true;
+                            rec.Start();
                         }
                         catch (Exception ex)
                         {
@@ -317,7 +323,10 @@ namespace Secs4Net
                         this._socket = socket;
                         // 发送Select请求
                         this.SendControlMessage(MessageType.Select_req, NewSystemByte());
-                        this._socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
+                        //   this._socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
+                        Thread rec = new Thread(Receive);
+                        rec.IsBackground = true;
+                        rec.Start();
                     }
                     catch (Exception ex)
                     {
@@ -357,7 +366,10 @@ namespace Secs4Net
                         {
                             this._socket = server.EndAccept(iar);
                             this.CommunicationStateChanging(ConnectionState.Connected);
-                            this._socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
+                            //    this._socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
+                            Thread rec = new Thread(Receive);
+                            rec.IsBackground = true;
+                            rec.Start();
                         }
                         catch (Exception ex)
                         {
@@ -382,6 +394,15 @@ namespace Secs4Net
 
         #region Socket Receive Process  接收程序
         /// <summary>
+        /// 
+        /// </summary>
+        public void Receive()
+        {
+            //Debug.WriteLine("ready to receive new message");
+            _tracer.TraceInfo("ready to receive new message");
+            this._socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
+        }
+        /// <summary>
         /// 接收数据
         /// </summary>
         /// <param name="iar">异步操作状态参数</param>
@@ -400,7 +421,7 @@ namespace Secs4Net
                     this.CommunicationStateChanging(ConnectionState.Retry);
                     return;
                 }
-
+                _tracer.TraceInfo("receive message complete.");
                 //判断接收到的数据是否为不完整
                 if (_secsDecoder.Decode(_recvBuffer, 0, count))
                 {
@@ -409,7 +430,7 @@ namespace Secs4Net
                     _timer8.Enabled = true;
                 }
 
-                _socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
+
             }
             catch (NullReferenceException)
             {
@@ -493,6 +514,10 @@ namespace Secs4Net
                 case MessageType.Reject_req:
                     break;
             }
+
+            //_tracer.TraceInfo("ready to receive message.");
+            ////Array.Clear(_recvBuffer, 0, _recvBuffer.Length);
+            //_socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
         }
 
         /// <summary>
@@ -519,40 +544,25 @@ namespace Secs4Net
                 }
                 return;
             }
-
+            //_tracer.TraceInfo("ready to receive message.");
+            ////Array.Clear(_recvBuffer, 0, _recvBuffer.Length);
+            //_socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
             // 如果期待响应
             if (msg.F % 2 != 0)
             {
                 if (msg.S != 9)
                 {
                     // 触发message receive事件
-                    PrimaryMessageRecived?.Invoke(this, new TEventArgs<SecsMessage>(msg));
 
+                    PrimaryMessageRecived?.Invoke(this, new TEventArgs<SecsMessage>(msg));
                     //Primary message
                     _tracer.TraceMessageIn(msg, systembyte);
-                    //PrimaryMessageHandler(msg, secondary =>
-                    //{
-                    //    // 如果不需要返回消息，且不处于选择状态则返回
-                    //    if (!header.ReplyExpected || State != ConnectionState.Selected)
-                    //        return;
-
-                    //    secondary = secondary ?? new SecsMessage(msg.DeviceID, 9, 7, "Unknown", false, -1, Item.B(header.Bytes));
-                    //    try
-                    //    {
-                    //        this.SendDataMessage(secondary, null, null);
-                    //    }
-                    //    catch (Exception ex)
-                    //    {
-                    //        _tracer.TraceError("Reply Secondary Message Error:" + ex.Message);
-                    //    }
-                    //});
                     return;
                 }
                 // Error message
                 var headerBytes = (byte[])msg.SecsItem;
                 systembyte = BitConverter.ToInt32(new byte[] { headerBytes[9], headerBytes[8], headerBytes[7], headerBytes[6] }, 0);
             }
-
             // Secondary message
             SecsAsyncResult ar = null;
             if (_replyExpectedMsgs.TryGetValue(systembyte, out ar))
@@ -785,6 +795,7 @@ namespace Secs4Net
                     this._socket == null ? "N/A" : ((IPEndPoint)_socket.RemoteEndPoint).Address.ToString();
             }
         }
+
         #endregion
 
         #region Async Impl  异步

@@ -1,6 +1,6 @@
 ﻿using Secs4Net;
 using System.Collections.Generic;
-using static Granda.ATTS.CIMModule.CimModuleProcess;
+using static Granda.ATTS.CIMModule.CimModuleBase;
 using static Granda.ATTS.CIMModule.Extension.SmlExtension;
 using static Secs4Net.Item;
 
@@ -90,7 +90,7 @@ namespace Granda.ATTS.CIMModule.StreamType
             });
             var item = ParseItem(stack);
 
-            return SendMessage(2, 18, false, secsMessage.SystenBytes, item);
+            return SendMessage(2, 18, secsMessage.SystenBytes, item);
         }
         //  <L[5]
         //	1.<A[2] ‘2 Bytes’ [TRID]>
@@ -182,7 +182,7 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// </summary>
         /// <param name="TIACK"></param>
         /// <returns></returns>
-        public static SecsMessage S2F32(string TIACK)
+        public static SecsMessage S2F32(this SecsMessage secsMessage, string TIACK)
         {
             var stack = new Stack<List<Item>>();
             stack.Push(new List<Item>() {
@@ -190,7 +190,7 @@ namespace Granda.ATTS.CIMModule.StreamType
             });
             var item = ParseItem(stack);
 
-            return SendMessage(2, 32, false, item);
+            return SendMessage(2, 32, secsMessage.SystenBytes, item);
         }
         /// <summary>
         /// Enable or Disable Event Report
@@ -230,17 +230,22 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// Host Command Send
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S2F41()
+        public static SecsMessage S2F41(Item item, int rcmd)
         {
-            return SendMessage(2, 41, true, null);
+            return SendMessage(2, 41, true, item, rcmd, "RCMD");
         }
         /// <summary>
         /// Host Command Acknowledge
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S2F42()
+        public static SecsMessage S2F42(this SecsMessage secsMessage, int rcmd, int ack)
         {
-            return SendMessage(2, 42, false, null);
+            var stack = new Stack<List<Item>>();
+            stack.Push(new List<Item>() {
+                A(rcmd.ToString()),
+                A(ack.ToString()),
+            });
+            return SendMessage(2, 42, secsMessage.SystenBytes, ParseItem(stack));
         }
 
         /// <summary>
