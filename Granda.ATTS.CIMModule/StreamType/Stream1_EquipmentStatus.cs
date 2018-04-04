@@ -191,7 +191,6 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// <summary>
         /// ON-LINE Acknowledge
         /// </summary>
-        /// <param name="ONLACK"></param>
         /// <returns></returns>
         public static SecsMessage S1F18(this SecsMessage secsMessage, string ONLACK)
         {

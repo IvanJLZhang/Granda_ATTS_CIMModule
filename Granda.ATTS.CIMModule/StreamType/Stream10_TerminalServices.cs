@@ -10,40 +10,48 @@ using static Secs4Net.Item;
 
 namespace Granda.ATTS.CIMModule.StreamType
 {
-    internal class Stream10_TerminalServices
+    internal static class Stream10_TerminalServices
     {
         /// <summary>
         /// Terminal Request
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S10F1()
+        public static SecsMessage S10F1(Item item)
         {
-            return SendMessage(10, 1, true, null);
+            return SendMessage(10, 1, true, item);
         }
         /// <summary>
         /// Terminal Request Acknowledge
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S10F2()
+        public static SecsMessage S10F2(this SecsMessage secsMessage, int ack)
         {
-            return SendMessage(10, 2, false, null);
+            var stack = new Stack<List<Item>>();
+            stack.Push(new List<Item>() {
+                A(ack.ToString()),
+            });
+            return SendMessage(10, 2, secsMessage.SystenBytes, ParseItem(stack));
         }
 
         /// <summary>
         /// Terminal Display, Multi-block
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S10F5()
+        public static SecsMessage S10F5(Item item)
         {
-            return SendMessage(10, 5, true, null);
+            return SendMessage(10, 5, true, item);
         }
         /// <summary>
         /// Terminal Display, Multi-block Ack.
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S10F6()
+        public static SecsMessage S10F6(this SecsMessage secsMessage, int ack)
         {
-            return SendMessage(10, 6, false, null);
+            var stack = new Stack<List<Item>>();
+            stack.Push(new List<Item>() {
+                A(ack.ToString()),
+            });
+            return SendMessage(10, 6, secsMessage.SystenBytes, ParseItem(stack));
         }
     }
 }

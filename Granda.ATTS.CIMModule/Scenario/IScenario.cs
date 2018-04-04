@@ -7,6 +7,9 @@ using System.Text;
 
 namespace Granda.ATTS.CIMModule.Scenario
 {
+    /// <summary>
+    /// 场景接口
+    /// </summary>
     public interface IScenario
     {
         /// <summary>

@@ -10,23 +10,23 @@ using static Secs4Net.Item;
 
 namespace Granda.ATTS.CIMModule.StreamType
 {
-    internal class Stream7_ProcessProgramManagement
+    internal static class Stream7_ProcessProgramManagement
     {
         /// <summary>
         /// Current EPPD Request
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S7F19()
+        public static SecsMessage S7F19(Item item)
         {
-            return SendMessage(7, 19, true, null);
+            return SendMessage(7, 19, true, item);
         }
         /// <summary>
         /// Current EPPD Data
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S7F20()
+        public static SecsMessage S7F20(this SecsMessage secsMessage, Item item)
         {
-            return SendMessage(7, 20, false, null);
+            return SendMessage(7, 20, secsMessage.SystenBytes, item);
         }
 
         /// <summary>
@@ -50,17 +50,17 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// Formatted Process Program Request
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S7F25()
+        public static SecsMessage S7F25(Item item)
         {
-            return SendMessage(7, 25, true, null);
+            return SendMessage(7, 25, true, item);
         }
         /// <summary>
         /// Formatted Process Program Data
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S7F26()
+        public static SecsMessage S7F26(this SecsMessage secsMessage, Item item)
         {
-            return SendMessage(7, 26, false, null);
+            return SendMessage(7, 26, secsMessage.SystenBytes, item);
         }
 
         /// <summary>

@@ -80,7 +80,6 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// <summary>
         /// Date and Time Data
         /// </summary>
-        /// <param name="TIME"></param>
         /// <returns></returns>
         public static SecsMessage S2F18(this SecsMessage secsMessage, string TIME)
         {
@@ -180,7 +179,6 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// <summary>
         /// Date and Time Set Acknowledge (DTA)
         /// </summary>
-        /// <param name="TIACK"></param>
         /// <returns></returns>
         public static SecsMessage S2F32(this SecsMessage secsMessage, string TIACK)
         {

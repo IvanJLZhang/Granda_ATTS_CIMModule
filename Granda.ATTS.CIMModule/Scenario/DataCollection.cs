@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Granda.ATTS.CIMModule.Extension;
 using Granda.ATTS.CIMModule.Model;
 using Secs4Net;
 
@@ -28,8 +29,35 @@ namespace Granda.ATTS.CIMModule.Scenario
         {
             ScenarioType = Scenarios.Data_Collection;
         }
-
+        IDataCollection dataCollection = new DefaultDataCollection();
+        public DataCollection(IDataCollection callback) : this()
+        {
+            dataCollection = callback;
+        }
         public void HandleSecsMessage(SecsMessage secsMessage)
+        {
+            primaryMessage = secsMessage;
+            switch (primaryMessage.GetSFString())
+            {
+                case "S6F3":
+                case "S2F23":
+                case "S6F1":
+                case "S1F3":
+                case "S1F5":
+                case "S2F13":
+                case "S2F15":
+                case "S2F37":
+                default:
+                    break;
+            }
+        }
+
+        public interface IDataCollection
+        {
+
+        }
+
+        private class DefaultDataCollection : IDataCollection
         {
 
         }

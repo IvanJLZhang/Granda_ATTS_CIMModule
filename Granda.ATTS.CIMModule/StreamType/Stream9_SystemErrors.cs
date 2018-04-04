@@ -9,13 +9,13 @@ using static Granda.ATTS.CIMModule.Extension.SmlExtension;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIMModule.StreamType
 {
-    internal class Stream9_SystemErrors
+    internal static class Stream9_SystemErrors
     {
         /// <summary>
         /// Unrecognized Device ID
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S9F1()
+        public static SecsMessage S9F1(this SecsMessage secsMessage)
         {
             return SendMessage(9, 1, false, null);
         }
@@ -24,7 +24,7 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// Unrecognized Stream Type
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S9F3()
+        public static SecsMessage S9F3(this SecsMessage secsMessage)
         {
             return SendMessage(9, 3, false, null);
         }
@@ -33,7 +33,7 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// Unrecognized Function Type
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S9F5()
+        public static SecsMessage S9F5(this SecsMessage secsMessage)
         {
             return SendMessage(9, 5, false, null);
         }
@@ -42,7 +42,7 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// Illegal Data
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S9F7()
+        public static SecsMessage S9F7(this SecsMessage secsMessage)
         {
             return SendMessage(9, 7, false, null);
         }
@@ -51,7 +51,7 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// Transaction Timer Timeout
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S9F9()
+        public static SecsMessage S9F9(this SecsMessage secsMessage)
         {
             return SendMessage(9, 9, false, null);
         }
@@ -60,7 +60,7 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// Conversation Timeout
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S9F13()
+        public static SecsMessage S9F13(this SecsMessage secsMessage)
         {
             return SendMessage(9, 13, false, null);
         }

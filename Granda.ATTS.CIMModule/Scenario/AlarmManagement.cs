@@ -59,7 +59,7 @@ namespace Granda.ATTS.CIMModule.Scenario
         /// <summary>
         /// Host端测试接口：Enable/Disable Alarm
         /// </summary>
-        /// <param name="hostCommand"></param>
+        /// <param name="isEnable"></param>
         /// <returns></returns>
         public bool LaunchUpdateAlarmProcess(bool isEnable)
         {

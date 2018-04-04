@@ -79,6 +79,42 @@ namespace Granda.ATTS.CIMModule {
         }
         
         /// <summary>
+        ///   查找类似 Equipment Requests Time 的本地化字符串。
+        /// </summary>
+        internal static string CLKS_Equipment_Requests_Time {
+            get {
+                return ResourceManager.GetString("CLKS_Equipment_Requests_Time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Host Instructs Equipment to Set Time 的本地化字符串。
+        /// </summary>
+        internal static string CLKS_Host_Instructs_Time {
+            get {
+                return ResourceManager.GetString("CLKS_Host_Instructs_Time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Host sends a muiti-block display message 的本地化字符串。
+        /// </summary>
+        internal static string ETSS_Host_Send {
+            get {
+                return ResourceManager.GetString("ETSS_Host_Send", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Operator sends information to host 的本地化字符串。
+        /// </summary>
+        internal static string ETSS_Operator_Send_Info {
+            get {
+                return ResourceManager.GetString("ETSS_Operator_Send_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Online Scenario (Offline -&gt; Online by Unit) 的本地化字符串。
         /// </summary>
         internal static string Intialize_Scenario_1 {
@@ -165,6 +201,24 @@ namespace Granda.ATTS.CIMModule {
         internal static string RCS_Host_Command_Start {
             get {
                 return ResourceManager.GetString("RCS_Host_Command_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Host Attempts to Process Program Directory Request 的本地化字符串。
+        /// </summary>
+        internal static string RMS_Host_Attempts_To_Recipe_Mnt {
+            get {
+                return ResourceManager.GetString("RMS_Host_Attempts_To_Recipe_Mnt", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Process Program is changed(created/edited/deleted) by Operator 的本地化字符串。
+        /// </summary>
+        internal static string RMS_Recipe_Changed {
+            get {
+                return ResourceManager.GetString("RMS_Recipe_Changed", resourceCulture);
             }
         }
     }

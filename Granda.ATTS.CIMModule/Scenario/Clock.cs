@@ -43,6 +43,7 @@ namespace Granda.ATTS.CIMModule.Scenario
                              // 在initialize scenario中有处理此消息， 所以这里不再重复
                     break;
                 case "S2F31":// host instructs equipment to set time
+                    SubScenarioName = Resource.CLKS_Host_Instructs_Time;
                     string dateTimeStr = secsMessage.SecsItem.GetString();
                     if (!String.IsNullOrEmpty(dateTimeStr))
                     {

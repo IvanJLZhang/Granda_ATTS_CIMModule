@@ -12,7 +12,7 @@ namespace Granda.ATTS.CIMModule.Data
     /// <summary>
     /// 
     /// </summary>
-    public class StreamFunction
+    internal class StreamFunction
     {
         /// <summary>
         /// 

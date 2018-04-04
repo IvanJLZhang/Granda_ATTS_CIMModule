@@ -23,8 +23,7 @@
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile>bin\Debug\Granda.ATTS.CIMModule.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -60,6 +59,7 @@
     <Compile Include="Extension\SmlExtension.cs" />
     <Compile Include="Model\ControlState.cs" />
     <Compile Include="Model\HostCommand.cs" />
+    <Compile Include="Model\PPTYPE.cs" />
     <Compile Include="Model\Scenarios.cs" />
     <Compile Include="Model\StreamType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

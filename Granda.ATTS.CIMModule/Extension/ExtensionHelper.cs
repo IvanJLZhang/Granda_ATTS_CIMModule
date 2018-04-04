@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Granda.ATTS.CIMModule.Extension
 {
-    public static class ExtensionHelper
+    internal static class ExtensionHelper
     {
 
         public static string GetName(this SecsFormat format)

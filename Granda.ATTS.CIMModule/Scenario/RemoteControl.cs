@@ -92,6 +92,7 @@ namespace Granda.ATTS.CIMModule.Scenario
         /// CEID: 301=>start, 304=>cancel, 305=>abort, 306=>pause, 307=>resume
         /// </summary>
         /// <param name="ceid"></param>
+        /// <param name="hostCommand"></param>
         /// <returns></returns>
         public bool LaunchProcessReport(int ceid, HostCommand hostCommand)
         {

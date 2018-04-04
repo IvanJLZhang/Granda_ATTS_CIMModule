@@ -20,13 +20,34 @@ using System.Text;
 
 namespace Granda.ATTS.CIMModule.Model
 {
+    /// <summary>
+    /// Remote Control Host Command枚举
+    /// </summary>
     public enum HostCommand
     {
+        /// <summary>
+        /// Remote Control Host Command-START
+        /// </summary>
         START = 1,
+        /// <summary>
+        /// Remote Control Host Command-CANCEL
+        /// </summary>
         CANCEL,
+        /// <summary>
+        /// Remote Control Host Command-ABORT
+        /// </summary>
         ABORT,
+        /// <summary>
+        /// Remote Control Host Command-PAUSE
+        /// </summary>
         PAUSE,
+        /// <summary>
+        /// Remote Control Host Command-RESUME
+        /// </summary>
         RESUME,
+        /// <summary>
+        /// Remote Control Host Command-OPERATOR_CALL
+        /// </summary>
         OPERATOR_CALL,
 
     }

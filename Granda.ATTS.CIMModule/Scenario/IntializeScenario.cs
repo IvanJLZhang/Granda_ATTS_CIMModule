@@ -145,7 +145,7 @@ namespace Granda.ATTS.CIMModule.Scenario
         ///      112==>ONLINE LOCAL
         ///      111==>OFFLINE
         /// </summary>
-        /// <param name="controlState"></param>
+        /// <param name="ceid"></param>
         /// <returns></returns>
         public bool LaunchControlStateProcess(int ceid)
         {
