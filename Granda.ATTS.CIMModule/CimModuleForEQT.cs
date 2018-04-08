@@ -37,7 +37,8 @@ namespace Granda.ATTS.CIMModule
         /// 构造方法， 提供SecsGem参数
         /// </summary>
         /// <param name="secsGem"></param>
-        public CimModuleForEQT(SecsGem secsGem) : base(secsGem)
+        /// <param name="deviceId">设备Id号， 默认为1<</param>
+        public CimModuleForEQT(SecsGem secsGem, short deviceId = 1) : base(secsGem, deviceId)
         {
         }
         /// <summary>
@@ -46,7 +47,8 @@ namespace Granda.ATTS.CIMModule
         /// <param name="ipAddress"></param>
         /// <param name="port"></param>
         /// <param name="isActive"></param>
-        public CimModuleForEQT(string ipAddress, int port, bool isActive) : base(ipAddress, port, isActive)
+        /// <param name="deviceId">设备Id号， 默认为1</param>
+        public CimModuleForEQT(string ipAddress, int port, bool isActive, short deviceId = 1) : base(ipAddress, port, isActive, deviceId)
         {
         }
 
@@ -54,7 +56,7 @@ namespace Granda.ATTS.CIMModule
         /// <summary>
         /// local端设置online/offline状态
         /// </summary>
-        /// <param name="onLine"></param>
+        /// <param name="onLine">true表示请求在线，反之离线</param>
         /// <returns></returns>
         public bool LaunchOnOffLineProcess(bool onLine)
         {
@@ -86,6 +88,56 @@ namespace Granda.ATTS.CIMModule
         {
             var eqt = scenarioControllers[Scenarios.Equipment_Terminal_Service] as EqtTerminalService;
             return eqt.SendMessages(messages);
+        }
+
+        /// <summary>
+        /// report Glass Process data
+        /// </summary>
+        /// <returns></returns>
+        public bool ReportGlassProcessData()
+        {
+            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
+            return dc.ReportGlassProcessData();
+        }
+
+        /// <summary>
+        /// report Lot Process data
+        /// </summary>
+        /// <returns></returns>
+        public bool ReportLotProcessData()
+        {
+            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
+            return dc.ReportLotProcessData();
+        }
+
+        /// <summary>
+        /// report Mask Process data
+        /// </summary>
+        /// <returns></returns>
+        public bool ReportMaskProcessData()
+        {
+            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
+            return dc.ReportMaskProcessData();
+        }
+
+        /// <summary>
+        /// Equipment Constant Change
+        /// </summary>
+        /// <returns></returns>
+        public bool EquipmentConstantChangeProcess()
+        {
+            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
+            return dc.EquipmentConstantChangeProcess();
+        }
+
+        /// <summary>
+        /// local端recipe发生变化时向host发送通知
+        /// </summary>
+        /// <returns></returns>
+        public bool LaunchRecipeChangeProcess()
+        {
+            var rm = scenarioControllers[Scenarios.Data_Collection] as RecipeManagement;
+            return rm.LaunchRecipeChangeProcess();
         }
         #endregion
     }

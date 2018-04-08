@@ -24,17 +24,22 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// Discrete Variable Data Send
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S6F3()
+        public static SecsMessage S6F3(Item item, int ceid)
         {
-            return SendMessage(6, 3, true, null);
+            return SendMessage(6, 3, true, item, ceid, "CEID");
         }
         /// <summary>
         /// Discrete Variable Data Acknowledge
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S6F4()
+        public static SecsMessage S6F4(this SecsMessage secsMessage, int ack)
         {
-            return SendMessage(6, 4, false, null);
+            var stack = new Stack<List<Item>>();
+            stack.Push(new List<Item>() {
+                A(ack.ToString()),
+            });
+            var item = ParseItem(stack);
+            return SendMessage(6, 4, secsMessage.SystenBytes, item);
         }
 
         /// <summary>

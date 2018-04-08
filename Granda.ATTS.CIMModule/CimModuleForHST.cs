@@ -16,6 +16,7 @@
 using Granda.ATTS.CIMModule.Model;
 using Granda.ATTS.CIMModule.Scenario;
 using Secs4Net;
+using System;
 
 namespace Granda.ATTS.CIMModule
 {
@@ -37,7 +38,8 @@ namespace Granda.ATTS.CIMModule
         /// 构造方法， 提供SecsGem参数
         /// </summary>
         /// <param name="secsGem"></param>
-        public CimModuleForHST(SecsGem secsGem) : base(secsGem)
+        /// <param name="deviceId">设备Id号， 默认为1</param>
+        public CimModuleForHST(SecsGem secsGem, short deviceId = 1) : base(secsGem, deviceId)
         {
         }
         /// <summary>
@@ -46,11 +48,37 @@ namespace Granda.ATTS.CIMModule
         /// <param name="ipAddress"></param>
         /// <param name="port"></param>
         /// <param name="isActive"></param>
-        public CimModuleForHST(string ipAddress, int port, bool isActive) : base(ipAddress, port, isActive)
+        /// <param name="deviceId">设备Id号， 默认为1</param>
+        public CimModuleForHST(string ipAddress, int port, bool isActive, short deviceId = 1) : base(ipAddress, port, isActive, deviceId)
         {
         }
+        /// <summary>
+        /// Host收到SelectedEquipmnentStatusData响应事件
+        /// </summary>
+        public event EventHandler<TEventArgs<string[]>> SelectedEquipmnentStatusDataReceived;
+        /// <summary>
+        /// Host收到FormattedStatusData响应事件
+        /// </summary>
+        public event EventHandler<TEventArgs<object>> FormattedStatusDataReceived;
 
         #region host端测试用例
+        /// <summary>
+        /// Host端设置online/offline状态
+        /// </summary>
+        /// <param name="onLine">true表示请求在线，反之离线</param>
+        /// <returns></returns>
+        public bool LaunchOnOffLineProcess(bool onLine)
+        {
+            var initi = scenarioControllers[Scenarios.Intialize_Scenario] as InitializeScenario;
+            if (onLine)
+            {
+                return initi.LaunchOnlineByHostProcess();
+            }
+            else
+            {
+                return initi.LaunchOfflineByHostProcess();
+            }
+        }
         /// <summary>
         /// host端测试Remote Control场景相关功能
         /// </summary>
@@ -100,6 +128,88 @@ namespace Granda.ATTS.CIMModule
             var eqt = scenarioControllers[Scenarios.Equipment_Terminal_Service] as EqtTerminalService;
             return eqt.SendMessages(messages, false);
         }
+
+        /// <summary>
+        /// Host requests the value of Status Variables(SV)
+        /// </summary>
+        /// <returns></returns>
+        public bool RequestValueOfSV()
+        {
+            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
+            return dc.RequestValueOfSV();
+        }
+
+        /// <summary>
+        /// Host Request formatted status
+        /// </summary>
+        /// <param name="SFCD"></param>
+        /// <returns></returns>
+        public bool RequestFormattedStatus(int SFCD)
+        {
+            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
+            return dc.RequestFormattedStatus(SFCD);
+        }
+
+        /// <summary>
+        /// Host requests the new value of Equipment Constants Variables(ECV)
+        /// </summary>
+        /// <returns></returns>
+        public bool EquipmentConstantsRequest()
+        {
+            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
+            return dc.EquipmentConstantsRequest();
+        }
+        /// <summary>
+        /// Host requests Enable or Disable Events
+        /// </summary>
+        /// <param name="CEED">1=>Disable Event, 0=>Enable Event</param>
+        /// <returns></returns>
+        public bool EnableDisableEventRequest(int CEED)
+        {
+            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
+            return dc.EnableDisableEventRequest(CEED);
+        }
+
+        /// <summary>
+        /// Host端尝试直接进行Recipe管理
+        /// </summary>
+        /// <param name="pptype"></param>
+        /// <param name="UnitId"></param>
+        /// <returns></returns>
+        public bool LaunchCurrentEPPDRequestProcess(PPTYPE pptype, string UnitId)
+        {
+            var rm = scenarioControllers[Scenarios.Data_Collection] as RecipeManagement;
+            return rm.LaunchCurrentEPPDRequestProcess(pptype, UnitId);
+        }
+        /// <summary>
+        /// Host端发送Formatted Process Program Request
+        /// </summary>
+        /// <returns></returns>
+        public bool LaunchFormattedRecipeRequestProcess()
+        {
+            var rm = scenarioControllers[Scenarios.Data_Collection] as RecipeManagement;
+            return rm.LaunchFormattedRecipeRequestProcess();
+        }
         #endregion
+        /// <summary>
+        /// 接口方法，触发事件，无需调用
+        /// </summary>
+        /// <param name="data"></param>
+        public override void ReceivedSelectedEquipmnentStatusData(string[] data)
+        {
+            base.ReceivedSelectedEquipmnentStatusData(data);
+            SelectedEquipmnentStatusDataReceived?.Invoke(this, new TEventArgs<string[]>(data));
+        }
+        /// <summary>
+        /// 接口方法，触发事件，无需调用
+        /// </summary>
+        /// <param name="data"></param>
+        public override void ReceivedFormattedStatusData(object data)
+        {
+            base.ReceivedFormattedStatusData(data);
+            FormattedStatusDataReceived?.Invoke(this, new TEventArgs<object>(data));
+        }
+
+
     }
 }

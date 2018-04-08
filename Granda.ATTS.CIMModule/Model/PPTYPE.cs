@@ -20,7 +20,7 @@ using System.Text;
 
 namespace Granda.ATTS.CIMModule.Model
 {
-    internal enum PPTYPE
+    public enum PPTYPE
     {
         E, // EQT
         U, // UNIT

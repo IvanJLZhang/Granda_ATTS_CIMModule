@@ -1,19 +1,16 @@
-﻿using System;
+﻿using Secs4Net;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Granda.ATTS.CIMModule.Core;
-using Granda.ATTS.CIMModule.Extension;
-using static Granda.ATTS.CIMModule.Extension.SmlExtension;
-using static Granda.ATTS.CIMModule.Extension.ExtensionHelper;
-using Granda.ATTS.CIMModule.Model;
-using Secs4Net;
-using static Secs4Net.Item;
 using System.Diagnostics;
+using Granda.ATTS.CIMModule.Extension;
+using Granda.ATTS.CIMModule.Model;
+using static Granda.ATTS.CIMModule.Extension.ExtensionHelper;
+using static Granda.ATTS.CIMModule.Extension.SmlExtension;
 using static Granda.ATTS.CIMModule.StreamType.Stream1_EquipmentStatus;
-using static Granda.ATTS.CIMModule.StreamType.Stream6_DataCollection;
 using static Granda.ATTS.CIMModule.StreamType.Stream2_EquipmentControl;
-using System.Threading;
+using static Granda.ATTS.CIMModule.StreamType.Stream6_DataCollection;
+using static Secs4Net.Item;
+using Granda.ATTS.CIMModule.Data;
 
 namespace Granda.ATTS.CIMModule.Scenario
 {
@@ -49,10 +46,7 @@ namespace Granda.ATTS.CIMModule.Scenario
                     break;
                 case "S1F13":// estublish communication request
                     SubScenarioName = Resource.Intialize_Scenario_3;
-
-                    //Thread.Sleep(2000);
                     secsMessage.S1F14("MDLN", "SOFTREV", "0");
-                    //S1F14(secsMessage.SystenBytes, "MDLN", "SOFTREV", "0");
                     break;
                 case "S1F17":// request online by host
                     SubScenarioName = Resource.Intialize_Scenario_3;
@@ -105,11 +99,10 @@ namespace Granda.ATTS.CIMModule.Scenario
             // send estublish communication request
             var replyMsg = S1F13("MDLN", "SOFTREV");
 
-            if (!(replyMsg != null && replyMsg.S == 1 && replyMsg.F == 14))
+            if (!(replyMsg != null && replyMsg.GetSFString() == "S1F14"))
             {
                 return false;
             }
-            Debug.WriteLine("receive S1F14 message.");
 
             replyMsg = S1F1();
             if (replyMsg == null || replyMsg.F == 0)
@@ -136,6 +129,61 @@ namespace Granda.ATTS.CIMModule.Scenario
             var result = LaunchControlStateProcess((int)ControlState.OFFLINE);
             return result;
         }
+        /// <summary>
+        /// 启动online by host 进程
+        /// </summary>
+        /// <returns></returns>
+        public bool LaunchOnlineByHostProcess()
+        {
+            SubScenarioName = Resource.Intialize_Scenario_3;
+            // send estublish communication request
+            var replyMsg = S1F13("MDLN", "SOFTREV");
+            if (replyMsg != null && replyMsg.GetSFString() == "S1F14")
+            {
+                var ack = replyMsg.GetCommandValue();
+                if (ack == 0)
+                {
+                    // send ON_LINE request
+                    replyMsg = S1F17("CRST");
+                    if (replyMsg != null && replyMsg.GetSFString() == "S1F18")
+                    {
+                        ack = replyMsg.GetCommandValue();
+                        if (ack == 0)
+                        {
+                            EQT_ControlState = ControlState.ONLINE_REMOTE;
+                            itializeScenario?.UpdateControlState(ControlState.ONLINE_REMOTE);
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+        /// <summary>
+        /// 启动offline by host 进程
+        /// </summary>
+        /// <returns></returns>
+        public bool LaunchOfflineByHostProcess()
+        {
+            SubScenarioName = Resource.Intialize_Scenario_4;
+            // send Off-line request
+            var replyMsg = S1F15();
+            if (replyMsg != null && replyMsg.GetSFString() == "S1F0")
+            {// equipment denies requests
+
+            }
+            else if (replyMsg.GetSFString() == "S1F16")
+            {
+                var ack = replyMsg.GetCommandValue();
+                if (ack == 1)
+                {
+                    EQT_ControlState = ControlState.OFFLINE;
+                    itializeScenario?.UpdateControlState(ControlState.OFFLINE);
+                    return true;
+                }
+            }
+            return false;
+        }
         #endregion
 
         #region 其他可公开的控制进程
@@ -144,6 +192,7 @@ namespace Granda.ATTS.CIMModule.Scenario
         /// CEID 113==>ONLINE REMOTE
         ///      112==>ONLINE LOCAL
         ///      111==>OFFLINE
+        ///      114==>EQUIPMENT STATUS CHANGE
         /// </summary>
         /// <param name="ceid"></param>
         /// <returns></returns>
@@ -218,38 +267,6 @@ namespace Granda.ATTS.CIMModule.Scenario
             public void UpdateDateTime(string dateTimeStr)
             {
                 Debug.WriteLine("date and time update: " + dateTimeStr);
-            }
-        }
-
-        public void CustomMethod()
-        {
-            //Stack<List<Item>> stack = new Stack<List<Item>>();
-            //stack.Push(new List<Item>());
-            //var item = A("0");
-            //stack.Peek().Add(item);
-            //stack.Push(new List<Item>());
-            //stack.Peek().Add(A("MDLN"));
-            //stack.Peek().Add(A("SOFTREV"));
-            //item = ParseItem(stack);
-
-            //string str = item.ToString();
-            //GetItemStr(item);
-            //SecsMessage secsMessage = new SecsMessage(1, 1, 14, ExtensionHelper.GetFunctionName(1, 14), false,, item);
-            //string sml = secsMessage.ToSML();
-        }
-
-        public void GetItemStr(Item item)
-        {
-            for (int index = 0; index < item.Count; index++)
-            {
-                var ite = item.Items[index];
-                if (ite.Count > 1)
-                    GetItemStr(ite);
-                else if (ite.Count == 1)
-                {
-                    var str = ite.GetString();
-                    Debug.WriteLine(str);
-                }
             }
         }
     }

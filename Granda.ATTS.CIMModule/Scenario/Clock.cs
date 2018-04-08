@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using Granda.ATTS.CIMModule.Data;
 using Granda.ATTS.CIMModule.Extension;
 using Secs4Net;
 using static Granda.ATTS.CIMModule.StreamType.Stream2_EquipmentControl;

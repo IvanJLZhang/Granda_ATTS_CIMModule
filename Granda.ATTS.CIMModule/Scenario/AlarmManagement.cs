@@ -26,6 +26,7 @@ using static Granda.ATTS.CIMModule.Extension.ExtensionHelper;
 using static Granda.ATTS.CIMModule.StreamType.Stream5_ExceptionReporting;
 using static Secs4Net.Item;
 using static Granda.ATTS.CIMModule.Extension.SmlExtension;
+using Granda.ATTS.CIMModule.Data;
 
 namespace Granda.ATTS.CIMModule.Scenario
 {

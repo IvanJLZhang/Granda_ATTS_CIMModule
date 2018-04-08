@@ -53,52 +53,17 @@ namespace Granda.ATTS.CIMModule
         IRecipeManagement,
         IDataCollection
     {
+        #region 属性
         /// <summary>
         /// 设备ID
         /// </summary>
-        public static short DeviceId { get; set; } = 1;
+        private static short DeviceId { get; set; } = 1;
         private static SecsGem secsGemService = null;
         /// <summary>
         /// 场景控制器集合
         /// </summary>
         protected readonly Dictionary<Scenarios, IScenario> scenarioControllers = new Dictionary<Scenarios, IScenario>();
-        /// <summary>
-        /// 默认构造方法
-        /// </summary>
-        public CimModuleBase()
-        {
-            scenarioControllers.Add(Scenarios.Intialize_Scenario, new InitializeScenario(this));
-            scenarioControllers.Add(Scenarios.Remote_Control, new RemoteControl(this));
-            scenarioControllers.Add(Scenarios.Alarm_Management, new AlarmManagement(this));
-            scenarioControllers.Add(Scenarios.Clock, new Clock(this));
-            scenarioControllers.Add(Scenarios.Equipment_Terminal_Service, new EqtTerminalService(this));
-            scenarioControllers.Add(Scenarios.Recipe_Management, new RecipeManagement(this));
-            scenarioControllers.Add(Scenarios.Data_Collection, new DataCollection(this));
-        }
-        /// <summary>
-        /// 构造方法， 提供SecsGem参数
-        /// </summary>
-        /// <param name="secsGem"></param>
-        public CimModuleBase(SecsGem secsGem) : this()
-        {
-            secsGemService = secsGem;
-            secsGemService.Tracer = new MyTracer();
-            secsGemService.ConnectionChanged += SecsGemService_ConnectionChanged;
-            secsGemService.PrimaryMessageRecived += SecsGemService_PrimaryMessageRecived;
-        }
-        /// <summary>
-        /// 构造方法，提供创建SecsGem所需参数
-        /// </summary>
-        /// <param name="ipAddress"></param>
-        /// <param name="port"></param>
-        /// <param name="isActive"></param>
-        public CimModuleBase(string ipAddress, int port, bool isActive) : this()
-        {
-            secsGemService = new SecsGem(IPAddress.Parse(ipAddress), port, isActive);
-            secsGemService.Tracer = new MyTracer();
-            secsGemService.ConnectionChanged += SecsGemService_ConnectionChanged;
-            secsGemService.PrimaryMessageRecived += SecsGemService_PrimaryMessageRecived;
-        }
+
         #region 公开的事件
         /// <summary>
         /// 设备控制状态变化事件
@@ -138,7 +103,63 @@ namespace Granda.ATTS.CIMModule
         /// （消息有每次最大十条限制）
         /// </summary>
         public event EventHandler<TEventArgs<string[]>> SendDisplayMessageDone;
+        /// <summary>
+        /// 连接状态变化事件
+        /// </summary>
+        public event EventHandler<TEventArgs<ConnectionState>> ConnectionChanged;
+        /// <summary>
+        /// 发生错误事件, 此为静态事件， 通过类名直接注册
+        /// </summary>
+        public static event EventHandler<TEventArgs<Exception>> ErrorOccured;
         #endregion
+
+        #endregion
+
+        #region 构造方法
+        /// <summary>
+        /// 默认构造方法
+        /// </summary>
+        public CimModuleBase()
+        {
+            scenarioControllers.Add(Scenarios.Intialize_Scenario, new InitializeScenario(this));
+            scenarioControllers.Add(Scenarios.Remote_Control, new RemoteControl(this));
+            scenarioControllers.Add(Scenarios.Alarm_Management, new AlarmManagement(this));
+            scenarioControllers.Add(Scenarios.Clock, new Clock(this));
+            scenarioControllers.Add(Scenarios.Equipment_Terminal_Service, new EqtTerminalService(this));
+            scenarioControllers.Add(Scenarios.Recipe_Management, new RecipeManagement(this));
+            scenarioControllers.Add(Scenarios.Data_Collection, new DataCollection(this));
+        }
+        /// <summary>
+        /// 构造方法， 提供SecsGem参数
+        /// </summary>
+        /// <param name="secsGem"></param>
+        /// <param name="deviceId">设备Id号， 默认为1</param>
+        public CimModuleBase(SecsGem secsGem, short deviceId) : this()
+        {
+            secsGemService = secsGem;
+            secsGemService.Tracer = new MyTracer();
+            secsGemService.ConnectionChanged += SecsGemService_ConnectionChanged;
+            secsGemService.PrimaryMessageRecived += SecsGemService_PrimaryMessageRecived;
+            DeviceId = deviceId;
+        }
+        /// <summary>
+        /// 构造方法，提供创建SecsGem所需参数
+        /// </summary>
+        /// <param name="ipAddress"></param>
+        /// <param name="port"></param>
+        /// <param name="isActive"></param>
+        /// <param name="deviceId">设备Id号， 默认为1</param>
+        public CimModuleBase(string ipAddress, int port, bool isActive, short deviceId) : this()
+        {
+            secsGemService = new SecsGem(IPAddress.Parse(ipAddress), port, isActive);
+            secsGemService.Tracer = new MyTracer();
+            secsGemService.ConnectionChanged += SecsGemService_ConnectionChanged;
+            secsGemService.PrimaryMessageRecived += SecsGemService_PrimaryMessageRecived;
+            DeviceId = deviceId;
+        }
+        #endregion
+
+        #region 事件响应方法
         private void SecsGemService_PrimaryMessageRecived(object sender, TEventArgs<SecsMessage> e)
         {
             var message = e.Data;
@@ -187,11 +208,9 @@ namespace Granda.ATTS.CIMModule
             }
             scenario?.HandleSecsMessage(message);
         }
+        #endregion
 
-        private void SecsGemService_ConnectionChanged(object sender, TEventArgs<ConnectionState> e)
-        {
-            Debug.WriteLine("connection state change: " + e.Data.ToString());
-        }
+        #region 静态方法
         /// <summary>
         /// 发送secondary message
         /// </summary>
@@ -204,7 +223,15 @@ namespace Granda.ATTS.CIMModule
         /// <returns></returns>
         public static SecsMessage SendMessage(byte s, byte f, int systemBytes, Item item = null, int value = 0, string key = "")
         {
-            return secsGemService.SendMessage(DeviceId, s, f, false, systemBytes, item, key, value);
+            try
+            {
+                return secsGemService.SendMessage(DeviceId, s, f, false, systemBytes, item, key, value);
+            }
+            catch (Exception ex)
+            {
+                ErrorOccured?.Invoke(secsGemService, new TEventArgs<Exception>(ex));
+                return null;
+            }
         }
         /// <summary>
         /// 发送primary message
@@ -218,61 +245,93 @@ namespace Granda.ATTS.CIMModule
         /// <returns></returns>
         public static SecsMessage SendMessage(byte s, byte f, bool replyExpected, Item item = null, int value = 0, string key = "")
         {
-            return secsGemService.SendMessage(DeviceId, s, f, replyExpected, -1, item, key, value);
-        }
+            try
+            {
+                return secsGemService.SendMessage(DeviceId, s, f, replyExpected, -1, item, key, value);
+            }
+            catch (Exception ex)
+            {
+                ErrorOccured?.Invoke(secsGemService, new TEventArgs<Exception>(ex));
+                return null;
+            }
 
+        }
+        #endregion
+
+        #region 接口方法，触发事件，无需调用
         /// <summary>
-        /// 
+        /// 接口方法，触发事件，无需调用
         /// </summary>
-        /// <param name="controlState"></param>
         public void UpdateControlState(ControlState controlState)
         {
             ControlStateChanged?.Invoke(this, new TEventArgs<ControlState>(controlState));
         }
 
         /// <summary>
-        /// 
+        /// 接口方法，触发事件，无需调用
         /// </summary>
-        /// <param name="dateTimeStr"></param>
         public void UpdateDateTime(string dateTimeStr)
         {
             DateTimeUpdate?.Invoke(this, new TEventArgs<string>(dateTimeStr));
         }
 
         /// <summary>
-        /// 
+        /// 接口方法，触发事件，无需调用
         /// </summary>
-        /// <param name="hostCommand"></param>
         public void UpdateProcessReportState(HostCommand hostCommand)
         {
             ProcessStateReport?.Invoke(this, new TEventArgs<HostCommand>(hostCommand));
         }
 
         /// <summary>
-        /// 
+        /// 接口方法，触发事件，无需调用
         /// </summary>
-        /// <param name="isEnable"></param>
         public void UpdateAlarmStatus(bool isEnable)
         {
             AlarmStatusUpdated?.Invoke(this, new TEventArgs<bool>(isEnable));
         }
 
         /// <summary>
-        /// 
+        /// 接口方法，触发事件，无需调用
         /// </summary>
-        /// <param name="messages"></param>
         public void ReceiveTestMessage(string[] messages)
         {
             ReceiveDisplayMessage?.Invoke(this, new TEventArgs<string[]>(messages));
         }
 
         /// <summary>
-        /// 
+        /// 接口方法，触发事件，无需调用
         /// </summary>
-        /// <param name="messages"></param>
         public void SendMessageDone(string[] messages)
         {
             SendDisplayMessageDone?.Invoke(this, new TEventArgs<string[]>(messages));
         }
+        /// <summary>
+        /// 接口方法，触发事件，无需调用
+        /// </summary>
+        public virtual void ReceivedSelectedEquipmnentStatusData(string[] data)
+        {
+            //throw new NotImplementedException();
+        }
+        /// <summary>
+        /// 接口方法，触发事件，无需调用
+        /// </summary>
+        public virtual void ReceivedFormattedStatusData(object data) { }
+        /// <summary>
+        /// 接口方法，触发事件，无需调用
+        /// </summary>
+        public void UpdateEventStatus(bool enable, string[] ceidArr)
+        {
+            throw new NotImplementedException();
+        }
+        /// <summary>
+        /// 接口方法，触发事件，无需调用
+        /// </summary>
+        private void SecsGemService_ConnectionChanged(object sender, TEventArgs<ConnectionState> e)
+        {
+            Debug.WriteLine("connection state change: " + e.Data.ToString());
+            ConnectionChanged?.Invoke(this, new TEventArgs<ConnectionState>(e.Data));
+        }
+        #endregion
     }
 }

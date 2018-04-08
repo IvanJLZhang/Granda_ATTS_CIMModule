@@ -22,7 +22,6 @@ namespace SecsServer
         {
             InitializeComponent();
             this.Load += Server_Load;
-
         }
         CimModuleForHST cimModule;
         SecsGem secsGem;
@@ -35,8 +34,14 @@ namespace SecsServer
             cimModule = new CimModuleForHST(secsGem);
             cimModule.ControlStateChanged += CimModule_ControlStateChanged;
             cimModule.DateTimeUpdate += CimModule_DateTimeUpdate;
+            CimModuleForHST.ErrorOccured += CimModuleForHST_ErrorOccured;
             Application.ThreadException += Application_ThreadException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        }
+
+        private void CimModuleForHST_ErrorOccured(object sender, TEventArgs<Exception> e)
+        {
+            MessageBox.Show(e.Data.Message);
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)

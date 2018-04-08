@@ -37,40 +37,41 @@ namespace Granda.ATTS.CIMModule.StreamType
             return SendMessage(1, 2, secsMessage.SystenBytes, item);
         }
         /// <summary>
-        /// 待定
+        /// Selected Equipment Status Request
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S1F3()
+        public static SecsMessage S1F3(Item item)
         {
-            return null;
+            return SendMessage(1, 3, true, item);
         }
         /// <summary>
-        /// 待定
+        /// Selected Equipment Status Data
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S1F4()
+        public static SecsMessage S1F4(this SecsMessage secsMessage, Item item)
         {
-            return null;
+            return SendMessage(1, 4, secsMessage.SystenBytes, item);
         }
-        public static SecsMessage S1F5(string SFCD)
+        /// <summary>
+        /// Formatted Status Request (FSR)
+        /// </summary>
+        /// <returns></returns>
+        public static SecsMessage S1F5(int SFCD)
         {
             var stack = new Stack<List<Item>>();
             stack.Push(new List<Item>() {
-                A(SFCD),
+                A(SFCD.ToString()),
             });
             var item = ParseItem(stack);
-            return SendMessage(1, 5, true, item);
+            return SendMessage(1, 5, true, item, SFCD, "SFCD");
         }
         /// <summary>
-        /// 待定
+        /// Formatted Status Request (FSR) ack
         /// </summary>
-        /// <param name="SFCD"></param>
-        /// <param name="arr"></param>
         /// <returns></returns>
-        public static SecsMessage S1F6(string SFCD, params String[] arr)
+        public static SecsMessage S1F6(this SecsMessage secsMessage, Item item)
         {
-
-            return SendMessage(1, 6, false, null);
+            return SendMessage(1, 6, secsMessage.SystenBytes, item);
         }
         /// <summary>
         /// 待定

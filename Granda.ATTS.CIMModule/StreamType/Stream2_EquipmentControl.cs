@@ -12,29 +12,17 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// Equipment Constants Request
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S2F13(string ECID)
+        public static SecsMessage S2F13(Item item)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(ECID),
-            });
-            var item = ParseItem(stack);
-
             return SendMessage(2, 13, true, item);
         }
         /// <summary>
         /// Equipment Constant Data
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S2F14(string ECID)
+        public static SecsMessage S2F14(this SecsMessage secsMessage, Item item)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(ECID),
-            });
-            var item = ParseItem(stack);
-
-            return SendMessage(2, 14, false, item);
+            return SendMessage(2, 14, secsMessage.SystenBytes, item);
         }
         /// <summary>
         /// New Equipment Constants Send
@@ -194,17 +182,22 @@ namespace Granda.ATTS.CIMModule.StreamType
         /// Enable or Disable Event Report
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S2F37()
+        public static SecsMessage S2F37(Item item)
         {
-            return SendMessage(2, 37, true, null);
+            return SendMessage(2, 37, true, item);
         }
         /// <summary>
         /// Enable or Disable Event Report Acknowledge
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S2F38()
+        public static SecsMessage S2F38(this SecsMessage secsMessage, int ack)
         {
-            return SendMessage(2, 38, false, null);
+            var stack = new Stack<List<Item>>();
+            stack.Push(new List<Item>() {
+                A(ack.ToString()),
+            });
+            var item = ParseItem(stack);
+            return SendMessage(2, 38, secsMessage.SystenBytes, item);
         }
 
         /// <summary>

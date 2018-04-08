@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Granda.ATTS.CIMModule {
+namespace Granda.ATTS.CIMModule.Data {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace Granda.ATTS.CIMModule {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Granda.ATTS.CIMModule.Resource", typeof(Resource).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Granda.ATTS.CIMModule.Data.Resource", typeof(Resource).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -93,6 +93,69 @@ namespace Granda.ATTS.CIMModule {
         internal static string CLKS_Host_Instructs_Time {
             get {
                 return ResourceManager.GetString("CLKS_Host_Instructs_Time", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Equipment reports Glass data or Lot data or Mask data for processed result 的本地化字符串。
+        /// </summary>
+        internal static string DCS_Discrete_Variable_Data_Send {
+            get {
+                return ResourceManager.GetString("DCS_Discrete_Variable_Data_Send", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Equipment Constants Change by Operator 的本地化字符串。
+        /// </summary>
+        internal static string DCS_Equipment_Constants_Change {
+            get {
+                return ResourceManager.GetString("DCS_Equipment_Constants_Change", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Host requests the new value of Equipment Constants Variables(ECV) 的本地化字符串。
+        /// </summary>
+        internal static string DCS_Equipment_Constants_Request {
+            get {
+                return ResourceManager.GetString("DCS_Equipment_Constants_Request", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Host Initiates Trace Report 的本地化字符串。
+        /// </summary>
+        internal static string DCS_Host_Initiates_Trace_Report {
+            get {
+                return ResourceManager.GetString("DCS_Host_Initiates_Trace_Report", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Host requests the formatted status 的本地化字符串。
+        /// </summary>
+        internal static string DCS_Host_request_Formatted_status {
+            get {
+                return ResourceManager.GetString("DCS_Host_request_Formatted_status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Host requests the value of Status Variables (SV) 的本地化字符串。
+        /// </summary>
+        internal static string DCS_Host_request_value_status {
+            get {
+                return ResourceManager.GetString("DCS_Host_request_value_status", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Host requests Enable or Disable Events 的本地化字符串。
+        /// </summary>
+        internal static string DCS_Host_Requests_Enable_Disable_Event {
+            get {
+                return ResourceManager.GetString("DCS_Host_Requests_Enable_Disable_Event", resourceCulture);
             }
         }
         

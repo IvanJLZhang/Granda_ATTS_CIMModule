@@ -129,6 +129,27 @@
   <data name="CLKS_Host_Instructs_Time" xml:space="preserve">
     <value>Host Instructs Equipment to Set Time</value>
   </data>
+  <data name="DCS_Discrete_Variable_Data_Send" xml:space="preserve">
+    <value>Equipment reports Glass data or Lot data or Mask data for processed result</value>
+  </data>
+  <data name="DCS_Equipment_Constants_Change" xml:space="preserve">
+    <value>Equipment Constants Change by Operator</value>
+  </data>
+  <data name="DCS_Equipment_Constants_Request" xml:space="preserve">
+    <value>Host requests the new value of Equipment Constants Variables(ECV)</value>
+  </data>
+  <data name="DCS_Host_Initiates_Trace_Report" xml:space="preserve">
+    <value>Host Initiates Trace Report</value>
+  </data>
+  <data name="DCS_Host_Requests_Enable_Disable_Event" xml:space="preserve">
+    <value>Host requests Enable or Disable Events</value>
+  </data>
+  <data name="DCS_Host_request_Formatted_status" xml:space="preserve">
+    <value>Host requests the formatted status</value>
+  </data>
+  <data name="DCS_Host_request_value_status" xml:space="preserve">
+    <value>Host requests the value of Status Variables (SV)</value>
+  </data>
   <data name="ETSS_Host_Send" xml:space="preserve">
     <value>Host sends a muiti-block display message</value>
   </data>

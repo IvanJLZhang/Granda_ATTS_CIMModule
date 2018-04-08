@@ -63,7 +63,7 @@
     <Compile Include="Model\Scenarios.cs" />
     <Compile Include="Model\StreamType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Resource.Designer.cs">
+    <Compile Include="Data\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource.resx</DependentUpon>
@@ -89,12 +89,12 @@
     <Compile Include="StreamType\Stream9_SystemErrors.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\StreamFunctionList.json">
+    <Content Include="StreamFunctionList.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resource.resx">
+    <EmbeddedResource Include="Data\Resource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>

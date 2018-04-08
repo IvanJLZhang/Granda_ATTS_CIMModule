@@ -26,6 +26,7 @@ using static Secs4Net.Item;
 using static Granda.ATTS.CIMModule.Extension.ExtensionHelper;
 using static Granda.ATTS.CIMModule.Extension.SmlExtension;
 using System.Diagnostics;
+using Granda.ATTS.CIMModule.Data;
 
 namespace Granda.ATTS.CIMModule.Scenario
 {
@@ -94,7 +95,7 @@ namespace Granda.ATTS.CIMModule.Scenario
         /// <param name="ceid"></param>
         /// <param name="hostCommand"></param>
         /// <returns></returns>
-        public bool LaunchProcessReport(int ceid, HostCommand hostCommand)
+        private bool LaunchProcessReport(int ceid, HostCommand hostCommand)
         {
             if (ceid == 301 ||
                 ceid == 304 ||

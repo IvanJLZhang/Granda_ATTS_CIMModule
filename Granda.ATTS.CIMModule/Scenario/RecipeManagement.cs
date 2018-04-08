@@ -25,6 +25,7 @@ using static Granda.ATTS.CIMModule.Extension.SmlExtension;
 using static Granda.ATTS.CIMModule.StreamType.Stream7_ProcessProgramManagement;
 using static Granda.ATTS.CIMModule.StreamType.Stream6_DataCollection;
 using Granda.ATTS.CIMModule.Model;
+using Granda.ATTS.CIMModule.Data;
 
 namespace Granda.ATTS.CIMModule.Scenario
 {
@@ -132,6 +133,8 @@ namespace Granda.ATTS.CIMModule.Scenario
             }
             return false;
         }
+
+
         void handleS7F19Message()
         {
             if (primaryMessage.SecsItem.Count == 2)
