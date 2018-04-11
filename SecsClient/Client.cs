@@ -1,5 +1,6 @@
-﻿using Granda.ATTS.CIMModule;
-using Granda.ATTS.CIMModule.Model;
+﻿using Granda.ATTS.CIM.Data.ENUM;
+using Granda.ATTS.CIM;
+using Granda.ATTS.CIM.Model;
 using Secs4Net;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Windows.Forms;
+using Granda.ATTS.CIM.Data.Report;
 
 namespace SecsClient
 {
@@ -22,7 +24,7 @@ namespace SecsClient
             this.Load += Client_Load;
         }
         CimModuleForEQT cimModule;
-        SecsGem secsGem = new SecsGem();
+        SecsGem secsGem;
         private void Client_Load(object sender, EventArgs e)
         {
             secsGem = new SecsGem(IPAddress.Parse("192.168.0.145"), 1024, true);
@@ -30,9 +32,14 @@ namespace SecsClient
             secsGem.ConnectionChanged += SecsGem_ConnectionChanged;
             cimModule = new CimModuleForEQT(secsGem);
             cimModule.ControlStateChanged += CimModule_ControlStateChanged;
-
+            CimModuleForEQT.ErrorOccured += CimModuleForEQT_ErrorOccured;
             Application.ThreadException += Application_ThreadException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+        }
+
+        private void CimModuleForEQT_ErrorOccured(object sender, TEventArgs<Exception> e)
+        {
+            MessageBox.Show(e.Data.Message.ToString());
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -71,7 +78,7 @@ namespace SecsClient
         private void btnSendPrimaryMsg_Click(object sender, EventArgs e)
         {
             //secsGem.Send(this.primaryMsgToSend.Text.ToSecsMessage());
-            cimModule.LaunchOnOffLineProcess(true);
+            //cimModule.LaunchOnOffLineProcess(true);
         }
 
         private void LogMsg(string msg)

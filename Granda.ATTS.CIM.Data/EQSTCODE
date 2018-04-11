@@ -1,0 +1,55 @@
+﻿#EQST : MAINT
+1000 : PM_TBM, CBM (Regular)
+1001 : PM_NSP (Non-regular)
+1002 : Recovery from BM
+1100 : Unit Test
+1200 : Process condition change
+1201 : Process Test
+1300 : Tool change
+1301 : Tool adjustment
+1400 : Utility adjustment
+1500 : Operator decision
+1600 : Software update
+1900 : Others
+
+#EQST : DOWN
+2000 : Emergency Stop
+2100 : Caused by its own unit down
+2101 : Caused by one of its own subunit down
+2102 : Caused by one of its own subsub-unit down
+2103 : Glass broken detected
+2104 : VCR Reading error
+2105 : Other device error
+2121 : Caused by its own upstream or downstream unit - H/W Interface problem
+2122 : Caused by its own upstream or downstream unit Link signal time out
+2123 : Caused by its own upstream or downstream unit PIO safety signal
+2124 : Caused by its own upstream or downstream unit Loading stop
+2130 : Caused by Host No response for important request
+2131 : Caused by Host command(SPC Interlock)
+2132 : Caused by Host command(RMS parameter check NG)
+2133 : Caused by Host command(Others)
+2200 : Critical process failure detected
+2201 : Continuous critical NG detected in inspection unit
+2300 : Invalid Material loaded by MGV
+2301 : Material broken detected
+2302 : Tool use count expired
+2303 : Material use count expired
+2400 : Utility problem
+2500 : Operator decision
+2900 : Others
+
+#EQST : PAUSE
+3300 : Material change
+3500 : Operator decision
+
+#EQST : IDLE
+4000 : No CST to process
+4001 : Waiting for CST unloaded
+4002 : No Glass to process
+4003 : Waiting for Glass transferred
+4300 : No Support Tool
+4301 : No Material
+4500 : No Operator
+
+#EQST : RUN
+1	 : running

@@ -1,7 +1,8 @@
-﻿using Granda.ATTS.CIMModule;
-using Granda.ATTS.CIMModule.Extension;
-using Granda.ATTS.CIMModule.Model;
-using Granda.ATTS.CIMModule.Scenario;
+﻿using Granda.ATTS.CIM.Data.ENUM;
+using Granda.ATTS.CIM;
+using Granda.ATTS.CIM.Extension;
+using Granda.ATTS.CIM.Model;
+using Granda.ATTS.CIM.Scenario;
 using Secs4Net;
 using System;
 using System.Collections.Generic;
@@ -80,6 +81,7 @@ namespace SecsServer
 
         private void btnSendPrimaryMsg_Click(object sender, EventArgs e)
         {
+            cimModule.LaunchOnOffLineProcess(true);
         }
 
         private void btnSecSend_Click(object sender, EventArgs e)

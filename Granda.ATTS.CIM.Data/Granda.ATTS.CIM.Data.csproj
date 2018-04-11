@@ -4,15 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{55EF156D-1DF2-4D32-9266-BD256118F1DF}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <RootNamespace>SecsClient</RootNamespace>
-    <AssemblyName>SecsClient</AssemblyName>
+    <ProjectGuid>{A992048F-AE2A-4B95-894A-76E4F955E986}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Granda.ATTS.CIM.Data</RootNamespace>
+    <AssemblyName>Granda.ATTS.CIM.Data</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,7 +22,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -37,51 +36,19 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Client.Designer.cs">
-      <DependentUpon>Client.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="ENUM\ControlState.cs" />
+    <Compile Include="ENUM\EEquipmentStatus.cs" />
+    <Compile Include="Helper.cs" />
+    <Compile Include="IDataItem.cs" />
+    <Compile Include="IMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Client.resx">
-      <DependentUpon>Client.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
+    <Compile Include="Report\EquipmentStatus.cs" />
+    <Compile Include="Report\EquipmentBaseInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Granda.ATTS.CIM.Data\Granda.ATTS.CIM.Data.csproj">
-      <Project>{a992048f-ae2a-4b95-894a-76e4f955e986}</Project>
-      <Name>Granda.ATTS.CIM.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Granda.ATTS.CIM\Granda.ATTS.CIM.csproj">
-      <Project>{4717c255-74a3-4000-97ba-06c544dbd6a8}</Project>
-      <Name>Granda.ATTS.CIM</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Secs4Net\SecsCore.csproj">
       <Project>{3c8c67b8-3746-4d26-b3a8-dcb01b5aa66b}</Project>
       <Name>SecsCore</Name>
@@ -90,6 +57,14 @@
       <Project>{36a2c439-8771-4f98-b33f-390e6d7821a2}</Project>
       <Name>SmlHelper</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Message\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="EQSTCODE">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

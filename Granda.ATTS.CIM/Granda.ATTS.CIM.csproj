@@ -4,16 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{59B27FD7-D199-43F8-9942-BA4183D9C0C4}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <RootNamespace>SecsServer</RootNamespace>
-    <AssemblyName>SecsServer</AssemblyName>
+    <ProjectGuid>{4717C255-74A3-4000-97BA-06C544DBD6A8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Granda.ATTS.CIM</RootNamespace>
+    <AssemblyName>Granda.ATTS.CIM</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -21,10 +21,11 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Debug\Granda.ATTS.CIM.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -43,53 +44,68 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Server.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Server.Designer.cs">
-      <DependentUpon>Server.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
+    <Compile Include="CimModuleBase.cs" />
+    <Compile Include="CimModuleForHST.cs" />
+    <Compile Include="CimModuleForEQT.cs" />
+    <Compile Include="Core\Item.cs" />
+    <Compile Include="Core\MessageHeader.cs" />
+    <Compile Include="Core\MessageType.cs" />
+    <Compile Include="Data\StreamFunction.cs" />
+    <Compile Include="Extension\ExtensionHelper.cs" />
+    <Compile Include="Extension\MyTracer.cs" />
+    <Compile Include="Extension\SmlExtension.cs" />
+    <Compile Include="Model\HostCommand.cs" />
+    <Compile Include="Model\PPTYPE.cs" />
+    <Compile Include="Model\Scenarios.cs" />
+    <Compile Include="Model\StreamType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Server.resx">
-      <DependentUpon>Server.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
+    <Compile Include="Data\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
-    <None Include="app.config" />
+    <Compile Include="Scenario\AlarmManagement.cs" />
+    <Compile Include="Scenario\BaseScenario.cs" />
+    <Compile Include="Scenario\CassetteInfoDownload.cs" />
+    <Compile Include="Scenario\Clock.cs" />
+    <Compile Include="Scenario\DataCollection.cs" />
+    <Compile Include="Scenario\EqtTerminalService.cs" />
+    <Compile Include="Scenario\ErrorMessage.cs" />
+    <Compile Include="Scenario\IntializeScenario.cs" />
+    <Compile Include="Scenario\IScenario.cs" />
+    <Compile Include="Scenario\OperationNormalSequence.cs" />
+    <Compile Include="Scenario\RecipeManagement.cs" />
+    <Compile Include="Scenario\RemoteControl.cs" />
+    <Compile Include="StreamType\Stream10_TerminalServices.cs" />
+    <Compile Include="StreamType\Stream1_EquipmentStatus.cs" />
+    <Compile Include="StreamType\Stream2_EquipmentControl.cs" />
+    <Compile Include="StreamType\Stream5_ExceptionReporting.cs" />
+    <Compile Include="StreamType\Stream6_DataCollection.cs" />
+    <Compile Include="StreamType\Stream7_ProcessProgramManagement.cs" />
+    <Compile Include="StreamType\Stream9_SystemErrors.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="StreamFunctionList.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Data\Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Data\TestMessage.sml" />
     <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Granda.ATTS.CIM.Data\Granda.ATTS.CIM.Data.csproj">
       <Project>{a992048f-ae2a-4b95-894a-76e4f955e986}</Project>
       <Name>Granda.ATTS.CIM.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Granda.ATTS.CIM\Granda.ATTS.CIM.csproj">
-      <Project>{4717c255-74a3-4000-97ba-06c544dbd6a8}</Project>
-      <Name>Granda.ATTS.CIM</Name>
     </ProjectReference>
     <ProjectReference Include="..\Secs4Net\SecsCore.csproj">
       <Project>{3c8c67b8-3746-4d26-b3a8-dcb01b5aa66b}</Project>

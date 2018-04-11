@@ -91,7 +91,9 @@ namespace Secs4Net
         readonly bool _isActive;
         readonly IPAddress _ip;
         readonly int _port;
+
         Socket _socket;
+        Socket _listener;
 
         readonly SecsDecoder _secsDecoder;
         readonly ConcurrentDictionary<int, SecsAsyncResult> _replyExpectedMsgs = new ConcurrentDictionary<int, SecsAsyncResult>();
@@ -104,7 +106,7 @@ namespace Secs4Net
         readonly Action StartImpl;
         readonly Action StopImpl;
 
-        readonly byte[] _recvBuffer;
+        byte[] _recvBuffer;
         static SecsMessage ControlMessage = new SecsMessage(0, 0, 0, string.Empty, true);
         static ArraySegment<byte> ControlMessageLengthBytes = new ArraySegment<byte>(new byte[] { 0, 0, 0, 10 });
         static readonly SecsTracer DefaultTracer = new SecsTracer();
@@ -119,9 +121,136 @@ namespace Secs4Net
         #endregion
 
         #region Socket Start Process 网络连接启动
-        public SecsGem()
+        /// <summary>
+        /// 使用指定的IP地址，端口号，通信模式，处理主消息的委托方法，SecsMessage消息调试对象，内部调用的sorket实例的缓冲区大小，初始化SecsGem类的新实例
+        /// </summary>
+        /// <param name="ip">IP地址</param>
+        /// <param name="port">端口号</param>
+        /// <param name="isActive">活动模式</param>
+        public SecsGem(IPAddress ip, int port, bool isActive)
+            : this(ip, port, isActive, null, null, 0)
         {
+            #region
+            //_ip = ip ?? throw new ArgumentNullException("ip");
+            //_port = port;
+            //_isActive = isActive;
+            //_recvBuffer = new byte[RECEIVE_BUFFER_SIZE];
+            //_secsDecoder = new SecsDecoder(HandleControlMessage, HandleDataMessage);
+            //T3 = 45000;
+            //T5 = 10000;
+            //T6 = 5000;
+            //T7 = 10000;
+            //T8 = 5000;
+            //LinkTestInterval = 60000;
+            //_tracer = new SecsTracer();
+            //#region Timer Action
+            //// Timer时间绑定委托
+            //_timer7.Elapsed += delegate
+            //{
+            //    _tracer.TraceError("T7 Timeout");
+            //    this.CommunicationStateChanging(ConnectionState.Retry);
+            //};
 
+            //_timer8.Elapsed += delegate
+            //{
+            //    _tracer.TraceError("T8 Timeout");
+            //    this.CommunicationStateChanging(ConnectionState.Retry);
+            //};
+
+            //_timerLinkTest.Elapsed += delegate
+            //{
+            //    if (this.State == ConnectionState.Selected)
+            //        this.SendControlMessage(MessageType.Linktest_req, NewSystemByte());
+            //};
+            //#endregion
+            //// 是否为Active状态
+            //if (_isActive)
+            //{
+            //    #region Active Impl
+            //    var timer5 = new System.Timers.Timer();
+            //    timer5.Elapsed += delegate
+            //    {
+            //        timer5.Enabled = false;
+            //        _tracer.TraceError("T5 Timeout");
+            //        this.CommunicationStateChanging(ConnectionState.Retry);
+            //    };
+
+            //    // StartImpl事务绑定委托事件
+            //    StartImpl = delegate
+            //    {
+            //        this.CommunicationStateChanging(ConnectionState.Connecting);
+            //        try
+            //        {
+            //            var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            //            socket.Connect(_ip, _port);
+            //            this.CommunicationStateChanging(ConnectionState.Connected);
+            //            this._socket = socket;
+            //            // 发送Select请求
+            //            this.SendControlMessage(MessageType.Select_req, NewSystemByte());
+            //            //   this._socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
+            //            Thread rec = new Thread(Receive);
+            //            rec.IsBackground = true;
+            //            rec.Start();
+            //        }
+            //        catch (Exception ex)
+            //        {
+            //            if (_isDisposed) return;
+            //            _tracer.TraceError(ex.Message);
+            //            _tracer.TraceInfo("Start T5 Timer");
+            //            timer5.Interval = T5;
+            //            timer5.Enabled = true;
+            //        }
+            //    };
+
+            //    // StopImpl事务绑定委托事件
+            //    StopImpl = delegate
+            //    {
+            //        timer5.Stop();
+            //        if (_isDisposed) timer5.Dispose();
+            //    };
+            //    #endregion
+            //    StartImpl.BeginInvoke(null, null);
+            //}
+            //else
+            //{
+            //    // 不是active状态
+            //    #region Passive Impl
+            //    var server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            //    server.Bind(new IPEndPoint(_ip, _port));
+            //    server.Listen(0);
+
+            //    // StartImpl事务绑定委托事件
+            //    StartImpl = delegate
+            //    {
+            //        this.CommunicationStateChanging(ConnectionState.Connecting);
+            //        server.BeginAccept(iar =>
+            //        {
+            //            try
+            //            {
+            //                this._socket = server.EndAccept(iar);
+            //                this.CommunicationStateChanging(ConnectionState.Connected);
+            //                //   this._socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
+            //                Thread rec = new Thread(Receive);
+            //                rec.IsBackground = true;
+            //                rec.Start();
+            //            }
+            //            catch (Exception ex)
+            //            {
+            //                _tracer.TraceError("System Exception:" + ex.Message);
+            //                this.CommunicationStateChanging(ConnectionState.Retry);
+            //            }
+            //        }, null);
+            //    };
+
+            //    StopImpl = delegate
+            //    {
+            //        if (_isDisposed && server != null)
+            //            server.Close();
+            //    };
+            //    #endregion
+            //    StartImpl();
+            //}
+            #endregion
         }
         /// <summary>
         /// 使用指定的IP地址，端口号，通信模式，处理主消息的委托方法，SecsMessage消息调试对象，内部调用的sorket实例的缓冲区大小，初始化SecsGem类的新实例
@@ -130,142 +259,12 @@ namespace Secs4Net
         /// <param name="port">端口号</param>
         /// <param name="isActive">活动模式</param>
         /// <param name="receiveBufferSize">构造函数内部的Socket接收区缓存大小</param>
-        public SecsGem(IPAddress ip, int port, bool isActive)
-        {
-            if (ip == null)
-                throw new ArgumentNullException("ip");
-
-            _ip = ip;
-            _port = port;
-            _isActive = isActive;
-            _recvBuffer = new byte[RECEIVE_BUFFER_SIZE];
-            _secsDecoder = new SecsDecoder(HandleControlMessage, HandleDataMessage);
-            // PrimaryMessageHandler = primaryMsgHandler ?? ((primary, reply) => reply(null));
-            T3 = 45000;
-            T5 = 10000;
-            T6 = 5000;
-            T7 = 10000;
-            T8 = 5000;
-            LinkTestInterval = 60000;
-            _tracer = new SecsTracer();
-            #region Timer Action
-            // Timer时间绑定委托
-            _timer7.Elapsed += delegate
-            {
-                _tracer.TraceError("T7 Timeout");
-                this.CommunicationStateChanging(ConnectionState.Retry);
-            };
-
-            _timer8.Elapsed += delegate
-            {
-                _tracer.TraceError("T8 Timeout");
-                this.CommunicationStateChanging(ConnectionState.Retry);
-            };
-
-            _timerLinkTest.Elapsed += delegate
-            {
-                if (this.State == ConnectionState.Selected)
-                    this.SendControlMessage(MessageType.Linktest_req, NewSystemByte());
-            };
-            #endregion
-            // 是否为Active状态
-            if (_isActive)
-            {
-                #region Active Impl
-                var timer5 = new System.Timers.Timer();
-                timer5.Elapsed += delegate
-                {
-                    timer5.Enabled = false;
-                    _tracer.TraceError("T5 Timeout");
-                    this.CommunicationStateChanging(ConnectionState.Retry);
-                };
-
-                // StartImpl事务绑定委托事件
-                StartImpl = delegate
-                {
-                    this.CommunicationStateChanging(ConnectionState.Connecting);
-                    try
-                    {
-                        var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                        socket.Connect(_ip, _port);
-                        this.CommunicationStateChanging(ConnectionState.Connected);
-                        this._socket = socket;
-                        // 发送Select请求
-                        this.SendControlMessage(MessageType.Select_req, NewSystemByte());
-                        //   this._socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
-                        Thread rec = new Thread(Receive);
-                        rec.IsBackground = true;
-                        rec.Start();
-                    }
-                    catch (Exception ex)
-                    {
-                        if (_isDisposed) return;
-                        _tracer.TraceError(ex.Message);
-                        _tracer.TraceInfo("Start T5 Timer");
-                        timer5.Interval = T5;
-                        timer5.Enabled = true;
-                    }
-                };
-
-                // StopImpl事务绑定委托事件
-                StopImpl = delegate
-                {
-                    timer5.Stop();
-                    if (_isDisposed) timer5.Dispose();
-                };
-                #endregion
-                StartImpl.BeginInvoke(null, null);
-            }
-            else
-            {
-                // 不是active状态
-                #region Passive Impl
-                var server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                server.Bind(new IPEndPoint(_ip, _port));
-                server.Listen(0);
-
-                // StartImpl事务绑定委托事件
-                StartImpl = delegate
-                {
-                    this.CommunicationStateChanging(ConnectionState.Connecting);
-                    server.BeginAccept(iar =>
-                    {
-                        try
-                        {
-                            this._socket = server.EndAccept(iar);
-                            this.CommunicationStateChanging(ConnectionState.Connected);
-                            //   this._socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
-                            Thread rec = new Thread(Receive);
-                            rec.IsBackground = true;
-                            rec.Start();
-                        }
-                        catch (Exception ex)
-                        {
-                            _tracer.TraceError("System Exception:" + ex.Message);
-                            this.CommunicationStateChanging(ConnectionState.Retry);
-                        }
-                    }, null);
-                };
-
-                StopImpl = delegate
-                {
-                    if (_isDisposed && server != null)
-                        server.Close();
-                };
-                #endregion
-                StartImpl();
-            }
-        }
-
         public SecsGem(IPAddress ip, int port, bool isActive, Action<SecsMessage, Action<SecsMessage>> primaryMsgHandler, SecsTracer tracer, int receiveBufferSize)
         {
-            if (ip == null)
-                throw new ArgumentNullException("ip");
-
-            _ip = ip;
+            _ip = ip ?? throw new ArgumentNullException("ip");
             _port = port;
             _isActive = isActive;
-            _recvBuffer = new byte[receiveBufferSize < 0x4000 ? 0x4000 : receiveBufferSize];
+            _recvBuffer = new byte[receiveBufferSize < RECEIVE_BUFFER_SIZE ? RECEIVE_BUFFER_SIZE : receiveBufferSize];
             _secsDecoder = new SecsDecoder(HandleControlMessage, HandleDataMessage);
             _tracer = tracer ?? DefaultTracer;
             PrimaryMessageHandler = primaryMsgHandler ?? ((primary, reply) => reply(null));
@@ -276,8 +275,6 @@ namespace Secs4Net
             T8 = 5000;
             LinkTestInterval = 60000;
 
-            int systemByte = new Random(Guid.NewGuid().GetHashCode()).Next();
-            //NewSystemByte = () => Interlocked.Increment(ref systemByte);
 
             #region Timer Action
             // Timer时间绑定委托
@@ -317,16 +314,12 @@ namespace Secs4Net
                     this.CommunicationStateChanging(ConnectionState.Connecting);
                     try
                     {
-                        var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                        socket.Connect(_ip, _port);
+                        this._socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                        _socket.Connect(_ip, _port);
                         this.CommunicationStateChanging(ConnectionState.Connected);
-                        this._socket = socket;
+                        StartSocketReceive();
                         // 发送Select请求
                         this.SendControlMessage(MessageType.Select_req, NewSystemByte());
-                        //   this._socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
-                        Thread rec = new Thread(Receive);
-                        rec.IsBackground = true;
-                        rec.Start();
                     }
                     catch (Exception ex)
                     {
@@ -343,110 +336,107 @@ namespace Secs4Net
                 {
                     timer5.Stop();
                     if (_isDisposed) timer5.Dispose();
+                    if (_socket != null && _socket.Connected)
+                    {
+                        _socket.Close();
+                        this.CommunicationStateChanging(ConnectionState.Disconnected);
+                    }
                 };
                 #endregion
                 StartImpl.BeginInvoke(null, null);
             }
             else
             {
-
                 // 不是active状态
                 #region Passive Impl
-                var server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                server.Bind(new IPEndPoint(_ip, _port));
-                server.Listen(0);
+                _listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                _listener.Bind(new IPEndPoint(_ip, _port));
+                _listener.Listen(0);
 
                 // StartImpl事务绑定委托事件
                 StartImpl = delegate
                 {
                     this.CommunicationStateChanging(ConnectionState.Connecting);
-                    server.BeginAccept(iar =>
+                    _listener.BeginAccept(iar =>
                     {
                         try
                         {
-                            this._socket = server.EndAccept(iar);
+                            Socket socket = (Socket)iar.AsyncState;
+                            this._socket = socket.EndAccept(iar);
                             this.CommunicationStateChanging(ConnectionState.Connected);
-                            //    this._socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
-                            Thread rec = new Thread(Receive);
-                            rec.IsBackground = true;
-                            rec.Start();
+                            StartSocketReceive();
                         }
                         catch (Exception ex)
                         {
                             _tracer.TraceError("System Exception:" + ex.Message);
                             this.CommunicationStateChanging(ConnectionState.Retry);
                         }
-                    }, null);
+                    }, _listener);
                 };
 
                 StopImpl = delegate
                 {
-                    if (_isDisposed && server != null)
-                        server.Close();
+                    if (_isDisposed && _listener != null)
+                        _listener.Close();
                 };
                 #endregion
                 StartImpl();
             }
         }
-
-        //public SecsGem(IPAddress ip, int port, bool isActive) : this(ip, port, isActive, 0) { }
         #endregion
 
         #region Socket Receive Process  接收程序
         /// <summary>
-        /// 
+        /// 开始接收数据
         /// </summary>
-        public void Receive()
+        private void StartSocketReceive()
         {
-            //Debug.WriteLine("ready to receive new message");
-            _tracer.TraceInfo("ready to receive new message");
-            this._socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
-        }
-        /// <summary>
-        /// 接收数据
-        /// </summary>
-        /// <param name="iar">异步操作状态参数</param>
-        void ReceiveComplete(IAsyncResult iar)
-        {
-            try
+            _tracer.TraceInfo("ready to receive new message.");
+            _recvBuffer = new byte[RECEIVE_BUFFER_SIZE];
+            this._socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, _socket);
+
+            void ReceiveComplete(IAsyncResult iar)
             {
-                //返回接受到的字节长度
-                int count = _socket.EndReceive(iar);
-
-                _timer8.Enabled = false;
-
-                if (count == 0)
+                try
                 {
-                    _tracer.TraceError("Received 0 byte data. Close the socket.");
+                    //返回接受到的字节长度
+                    Socket socket = (Socket)iar.AsyncState;
+                    int count = socket.EndReceive(iar);
+
+                    _timer8.Enabled = false;
+
+                    if (count == 0)
+                    {
+                        _tracer.TraceError("Received 0 byte data. Close the socket.");
+                        this.CommunicationStateChanging(ConnectionState.Retry);
+                        return;
+                    }
+                    _tracer.TraceInfo("receive message complete.");
+                    //判断接收到的数据是否为不完整
+                    if (_secsDecoder.Decode(_recvBuffer, 0, count))
+                    {
+                        _tracer.TraceInfo("Start T8 Timer");
+                        _timer8.Interval = T8;
+                        _timer8.Enabled = true;
+                    }
+                    // 继续接收
+                    StartSocketReceive();
+                }
+                catch (NullReferenceException)
+                {
+                }
+                catch (SocketException ex)
+                {
+                    _tracer.TraceError("RecieveComplete socket error:" + ex.Message);
                     this.CommunicationStateChanging(ConnectionState.Retry);
-                    return;
                 }
-                _tracer.TraceInfo("receive message complete.");
-                //判断接收到的数据是否为不完整
-                if (_secsDecoder.Decode(_recvBuffer, 0, count))
+                catch (Exception ex)
                 {
-                    _tracer.TraceInfo("Start T8 Timer");
-                    _timer8.Interval = T8;
-                    _timer8.Enabled = true;
+                    _tracer.TraceError(ex.ToString());
+                    this.CommunicationStateChanging(ConnectionState.Retry);
                 }
-
-
-            }
-            catch (NullReferenceException)
-            {
-            }
-            catch (SocketException ex)
-            {
-                _tracer.TraceError("RecieveComplete socket error:" + ex.Message);
-                this.CommunicationStateChanging(ConnectionState.Retry);
-            }
-            catch (Exception ex)
-            {
-                _tracer.TraceError(ex.ToString());
-                this.CommunicationStateChanging(ConnectionState.Retry);
             }
         }
-
         /// <summary>
         /// 处理控制消息
         /// </summary>
@@ -514,10 +504,6 @@ namespace Secs4Net
                 case MessageType.Reject_req:
                     break;
             }
-
-            //_tracer.TraceInfo("ready to receive message.");
-            ////Array.Clear(_recvBuffer, 0, _recvBuffer.Length);
-            //_socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
         }
 
         /// <summary>
@@ -544,9 +530,6 @@ namespace Secs4Net
                 }
                 return;
             }
-            //_tracer.TraceInfo("ready to receive message.");
-            ////Array.Clear(_recvBuffer, 0, _recvBuffer.Length);
-            //_socket.BeginReceive(_recvBuffer, 0, _recvBuffer.Length, SocketFlags.None, ReceiveComplete, null);
             // 如果期待响应
             if (msg.F % 2 != 0)
             {
@@ -684,8 +667,7 @@ namespace Secs4Net
         void CommunicationStateChanging(ConnectionState newState)
         {
             State = newState;
-            if (ConnectionChanged != null)
-                ConnectionChanged(this, new TEventArgs<ConnectionState>(State));
+            ConnectionChanged?.Invoke(this, new TEventArgs<ConnectionState>(State));
 
             switch (State)
             {
@@ -799,7 +781,7 @@ namespace Secs4Net
         #endregion
 
         #region Async Impl  异步
-        sealed class SecsAsyncResult : IAsyncResult
+        public sealed class SecsAsyncResult : IAsyncResult
         {
             readonly ManualResetEvent _ev = new ManualResetEvent(false);
             readonly SecsMessage Primary;
