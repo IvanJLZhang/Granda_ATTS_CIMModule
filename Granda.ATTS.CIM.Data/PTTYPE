@@ -1,0 +1,5 @@
+﻿#Some values of PTTYPE could be add or change.
+PB: Both Port(Load/Unload),
+PL: Load Port,
+PU: Unload Port,
+PS: Sorter Port

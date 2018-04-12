@@ -57,7 +57,6 @@
     <Compile Include="Extension\ExtensionHelper.cs" />
     <Compile Include="Extension\MyTracer.cs" />
     <Compile Include="Extension\SmlExtension.cs" />
-    <Compile Include="Model\HostCommand.cs" />
     <Compile Include="Model\PPTYPE.cs" />
     <Compile Include="Model\Scenarios.cs" />
     <Compile Include="Model\StreamType.cs" />

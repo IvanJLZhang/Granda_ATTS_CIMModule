@@ -1,0 +1,13 @@
+﻿#Some values of PTTYPE could be add or change.
+OO: Normal using type,
+DM: Dummy,
+GG: Good,
+NG: Not Good,
+RW: ReWork,
+RP: RePair,
+SC: Scrap.
+MS: Mask,
+EN: Encap,
+CR: Crate Port type Loader,
+CL: cassette cleaner type loader and Unloader,
+MX: Good and Not Good mix port Type (only Port Unload Type),

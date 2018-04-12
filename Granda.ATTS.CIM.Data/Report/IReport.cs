@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Granda.ATTS.CIM.Data
 {
-    public interface IDataItem
+    public interface IReport
     {
         /// <summary>
         /// 将数据结构体转换成Item

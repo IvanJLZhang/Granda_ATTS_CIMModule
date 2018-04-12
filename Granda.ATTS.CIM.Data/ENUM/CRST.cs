@@ -3,8 +3,8 @@
 // Copyright © 2018 Granda. All Rights Reserved.
 // 苏州广林达电子科技有限公司 版权所有
 //------------------------------------------------------------------------------
-// File Name: EquipmentStatus
-// Author: Ivan JL Zhang    Date: 2018/4/11 13:59:49    Version: 1.0.0
+// File Name: CRST
+// Author: Ivan JL Zhang    Date: 2018/4/11 12:33:50    Version: 1.0.0
 // Description: 
 //   
 // 
@@ -21,29 +21,25 @@ using System.Text;
 namespace Granda.ATTS.CIM.Data.ENUM
 {
     /// <summary>
-    /// EQST
+    /// 描述Control State的三种状态枚举
     /// </summary>
-    public enum EEquipmentStatus
+    public enum CRST
     {
         /// <summary>
-        /// IDLE
+        /// offline
         /// </summary>
-        I,
+        O = 111,
         /// <summary>
-        /// RUN
+        /// online local
         /// </summary>
-        R,
+        L = 112,
         /// <summary>
-        /// DOWN
+        /// online remote
         /// </summary>
-        D,
+        R = 113,
         /// <summary>
-        /// MAINT
+        /// equipment status change
         /// </summary>
-        M,
-        /// <summary>
-        /// PAUSE
-        /// </summary>
-        P,
+        EQT_STATUS_CHANGE = 114
     }
 }

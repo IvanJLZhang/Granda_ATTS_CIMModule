@@ -1,20 +1,13 @@
-﻿using Granda.ATTS.CIM.Data.ENUM;
-using Granda.ATTS.CIM;
+﻿using Granda.ATTS.CIM;
+using Granda.ATTS.CIM.Data.Report;
 using Granda.ATTS.CIM.Extension;
-using Granda.ATTS.CIM.Model;
-using Granda.ATTS.CIM.Scenario;
 using Secs4Net;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+
 namespace SecsServer
 {
     public partial class Server : Form
@@ -60,7 +53,7 @@ namespace SecsServer
             LogMsg("Date and Time Update: " + e.Data.ToString());
         }
 
-        private void CimModule_ControlStateChanged(object sender, TEventArgs<ControlState> e)
+        private void CimModule_ControlStateChanged(object sender, TEventArgs<EquipmentStatus> e)
         {
             LogMsg("Control State Change: " + e.Data.ToString());
         }

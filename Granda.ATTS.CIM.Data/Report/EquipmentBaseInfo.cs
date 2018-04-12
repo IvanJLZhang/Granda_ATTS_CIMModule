@@ -25,7 +25,7 @@ namespace Granda.ATTS.CIM.Data.Report
     /// <summary>
     /// 在初始化场景中用到的，提供Equipment Model Type和Software revision code的结构
     /// </summary>
-    public struct EquipmentBaseInfo : IDataItem, IMessage
+    public struct EquipmentBaseInfo : IReport, IMessage
     {
         /// <summary>
         /// Equipment Model Type

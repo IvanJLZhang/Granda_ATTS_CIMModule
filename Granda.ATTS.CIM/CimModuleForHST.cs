@@ -13,6 +13,7 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
+using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.Scenario;
 using Secs4Net;
@@ -34,6 +35,7 @@ namespace Granda.ATTS.CIM
     /// </summary>
     public class CimModuleForHST : CimModuleBase
     {
+        #region 构造方法
         /// <summary>
         /// 构造方法， 提供SecsGem参数
         /// </summary>
@@ -52,6 +54,9 @@ namespace Granda.ATTS.CIM
         public CimModuleForHST(string ipAddress, int port, bool isActive, short deviceId = 1) : base(ipAddress, port, isActive, deviceId)
         {
         }
+        #endregion
+
+        #region Event
         /// <summary>
         /// Host收到SelectedEquipmnentStatusData响应事件
         /// </summary>
@@ -60,6 +65,25 @@ namespace Granda.ATTS.CIM
         /// Host收到FormattedStatusData响应事件
         /// </summary>
         public event EventHandler<TEventArgs<object>> FormattedStatusDataReceived;
+        /// <summary>
+        /// 接口方法，触发事件，无需调用
+        /// </summary>
+        /// <param name="data"></param>
+        public override void ReceivedSelectedEquipmnentStatusData(string[] data)
+        {
+            base.ReceivedSelectedEquipmnentStatusData(data);
+            SelectedEquipmnentStatusDataReceived?.Invoke(this, new TEventArgs<string[]>(data));
+        }
+        /// <summary>
+        /// 接口方法，触发事件，无需调用
+        /// </summary>
+        /// <param name="data"></param>
+        public override void ReceivedFormattedStatusData(object data)
+        {
+            base.ReceivedFormattedStatusData(data);
+            FormattedStatusDataReceived?.Invoke(this, new TEventArgs<object>(data));
+        }
+        #endregion
 
         #region host端测试用例
         /// <summary>
@@ -83,7 +107,7 @@ namespace Granda.ATTS.CIM
         /// host端测试Remote Control场景相关功能
         /// </summary>
         /// <returns></returns>
-        public bool LaunchHostCommandProcess(HostCommand hostCommand)
+        public bool LaunchHostCommandProcess(RCMD hostCommand)
         {
             //var hostCommand = HostCommand.START;
             var rcs = scenarioControllers[Scenarios.Recipe_Management] as RemoteControl;
@@ -191,24 +215,8 @@ namespace Granda.ATTS.CIM
             return rm.LaunchFormattedRecipeRequestProcess();
         }
         #endregion
-        /// <summary>
-        /// 接口方法，触发事件，无需调用
-        /// </summary>
-        /// <param name="data"></param>
-        public override void ReceivedSelectedEquipmnentStatusData(string[] data)
-        {
-            base.ReceivedSelectedEquipmnentStatusData(data);
-            SelectedEquipmnentStatusDataReceived?.Invoke(this, new TEventArgs<string[]>(data));
-        }
-        /// <summary>
-        /// 接口方法，触发事件，无需调用
-        /// </summary>
-        /// <param name="data"></param>
-        public override void ReceivedFormattedStatusData(object data)
-        {
-            base.ReceivedFormattedStatusData(data);
-            FormattedStatusDataReceived?.Invoke(this, new TEventArgs<object>(data));
-        }
+
+
 
 
     }

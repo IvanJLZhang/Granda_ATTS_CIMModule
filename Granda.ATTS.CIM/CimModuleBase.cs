@@ -30,6 +30,8 @@ using static Granda.ATTS.CIM.Scenario.RemoteControl;
 using static Granda.ATTS.CIM.Scenario.RecipeManagement;
 using static Granda.ATTS.CIM.Scenario.DataCollection;
 using Granda.ATTS.CIM.Data.ENUM;
+using Granda.ATTS.CIM.Data.Report;
+using Granda.ATTS.CIM.Data.Message;
 
 namespace Granda.ATTS.CIM
 {
@@ -64,17 +66,13 @@ namespace Granda.ATTS.CIM
         /// 场景控制器集合
         /// </summary>
         protected readonly Dictionary<Scenarios, IScenario> scenarioControllers = new Dictionary<Scenarios, IScenario>();
+        #endregion
 
         #region 公开的事件
         /// <summary>
         /// 设备控制状态变化事件
-        /// ControlState:         
-        /// OFFLINE = 111，
-        /// ONLINE_LOCAL = 112，
-        /// ONLINE_REMOTE = 113，
-        /// EQT_STATUS_CHANGE = 114
         /// </summary>
-        public event EventHandler<TEventArgs<ControlState>> ControlStateChanged;
+        public event EventHandler<TEventArgs<EquipmentStatus>> ControlStateChanged;
         /// <summary>
         /// Date and Time 更新事件
         /// </summary>
@@ -89,7 +87,7 @@ namespace Granda.ATTS.CIM
         /// RESUME,
         /// OPERATOR_CALL,
         /// </summary>
-        public event EventHandler<TEventArgs<HostCommand>> ProcessStateReport;
+        public event EventHandler<TEventArgs<RemoteControlCommandJob>> ProcessStateReport;
         /// <summary>
         /// Host发送Enable/Disable Alarm指令事件
         /// </summary>
@@ -112,8 +110,6 @@ namespace Granda.ATTS.CIM
         /// 发生错误事件, 此为静态事件， 通过类名直接注册
         /// </summary>
         public static event EventHandler<TEventArgs<Exception>> ErrorOccured;
-        #endregion
-
         #endregion
 
         #region 构造方法
@@ -263,9 +259,9 @@ namespace Granda.ATTS.CIM
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void UpdateControlState(ControlState controlState)
+        public void UpdateControlState(EquipmentStatus controlState)
         {
-            ControlStateChanged?.Invoke(this, new TEventArgs<ControlState>(controlState));
+            ControlStateChanged?.Invoke(this, new TEventArgs<EquipmentStatus>(controlState));
         }
 
         /// <summary>
@@ -279,9 +275,9 @@ namespace Granda.ATTS.CIM
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void UpdateProcessReportState(HostCommand hostCommand)
+        public void UpdateProcessReportState(RemoteControlCommandJob hostCommand)
         {
-            ProcessStateReport?.Invoke(this, new TEventArgs<HostCommand>(hostCommand));
+            ProcessStateReport?.Invoke(this, new TEventArgs<RemoteControlCommandJob>(hostCommand));
         }
 
         /// <summary>

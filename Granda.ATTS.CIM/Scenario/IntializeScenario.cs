@@ -12,7 +12,6 @@ using static Granda.ATTS.CIM.StreamType.Stream6_DataCollection;
 using static Secs4Net.Item;
 using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Data.ENUM;
-using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Data.Report;
 
 namespace Granda.ATTS.CIM.Scenario
@@ -33,15 +32,23 @@ namespace Granda.ATTS.CIM.Scenario
         /// <summary>
         /// 保存Equipment当前基本信息
         /// </summary>
-        public EquipmentBaseInfo EquipmentBaseInfo { get; set; }
+        private EquipmentBaseInfo _equipmentBaseInfo = new EquipmentBaseInfo();
         /// <summary>
         /// 保存设备当前的状态信息
         /// </summary>
-        public EquipmentStatus EquipmentStatusInfo { get; set; }
+        private EquipmentStatus _equipmentStatusInfo = new EquipmentStatus();
 
         private IItializeScenario itializeScenario = new DefaultIItializeScenario();
+        ///// <summary>
+        ///// 保存Equipment当前基本信息
+        ///// </summary>
+        //public EquipmentBaseInfo EquipmentBaseInfo { get => _equipmentBaseInfo; set => _equipmentBaseInfo = value; }
+        ///// <summary>
+        ///// 保存设备当前的状态信息
+        ///// </summary>
+        //public EquipmentStatus EquipmentStatusInfo { get => _equipmentStatusInfo; set => _equipmentStatusInfo = value; }
 
-        #region Initialize Scenario: 
+
         /// <summary>
         /// handle online/offline request by host
         /// </summary>
@@ -52,36 +59,28 @@ namespace Granda.ATTS.CIM.Scenario
             {
                 case "S1F1":// are you there request
                     SubScenarioName = Resource.Intialize_Scenario_1;
-                    secsMessage.S1F2(this.EquipmentBaseInfo.MDLN, this.EquipmentBaseInfo.SOFTREV);// 作为unit端， 只考虑online的选项
+                    secsMessage.S1F2(this._equipmentBaseInfo.MDLN, this._equipmentBaseInfo.SOFTREV);// 作为unit端， 只考虑online的选项
                     break;
                 case "S1F13":// estublish communication request
                     handleS1F13();
                     break;
                 case "S1F17":// request online by host
-                    SubScenarioName = Resource.Intialize_Scenario_3;
-                    secsMessage.S1F18("0");
-                    if (LaunchControlStateProcess((int)ControlState.R, this.EquipmentStatusInfo))
-                    {
-                        if (LaunchDateTimeUpdateProcess())
-                        {
-                            LaunchControlStateProcess((int)ControlState.EQT_STATUS_CHANGE, this.EquipmentStatusInfo);
-                        }
-                    }
+                    handleS1F17();
                     break;
                 case "S1F15":// request offline by host
                     SubScenarioName = Resource.Intialize_Scenario_4;
-                    switch (this.EquipmentStatusInfo.CRST)
+                    switch (this._equipmentStatusInfo.CRST)
                     {
-                        case ControlState.O:
+                        case CRST.O:
                             //send equipment denies requests
                             S1F0();
                             break;
-                        case ControlState.L:
-                        case ControlState.R:
+                        case CRST.L:
+                        case CRST.R:
                             // send OFF_LINE Acknowledge
-                            secsMessage.S1F16("1");
+                            secsMessage.S1F16("0");
                             // send Control State Change(OFF_LINE)
-                            LaunchControlStateProcess((int)ControlState.O, this.EquipmentStatusInfo);
+                            launchControlStateProcess((int)CRST.O, this._equipmentStatusInfo);
                             break;
                         default:
                             break;
@@ -98,17 +97,18 @@ namespace Granda.ATTS.CIM.Scenario
                     break;
             }
         }
+        #region Initialize Scenario: 
         /// <summary>
         /// 启动建立连接进程 online by Unit
         /// </summary>
         /// <returns></returns>
-        public bool LaunchOnlineProcess(IDataItem eqtBaseInfo, IDataItem eqtStatus)
+        public bool LaunchOnlineProcess(EquipmentInfo equipmentInfo)
         {
             SubScenarioName = Resource.Intialize_Scenario_1;
-            this.EquipmentBaseInfo = (EquipmentBaseInfo)eqtBaseInfo;
-            this.EquipmentStatusInfo = (EquipmentStatus)eqtStatus;
+            this._equipmentBaseInfo = equipmentInfo.EquipmentBase;
+            this._equipmentStatusInfo = equipmentInfo.EquipmentStatus;
             // send estublish communication request
-            var replyMsg = S1F13(EquipmentBaseInfo.SecsItem);
+            var replyMsg = S1F13(_equipmentBaseInfo.SecsItem);
 
             if (!(replyMsg != null && replyMsg.GetSFString() == "S1F14"))
             {
@@ -120,13 +120,11 @@ namespace Granda.ATTS.CIM.Scenario
             {// host denies online request
                 return false;
             }
-            var equipmentStatus = (eqtStatus as EquipmentStatus);
-            equipmentStatus.CRST = ControlState.R;
-            if (LaunchControlStateProcess((int)ControlState.R, equipmentStatus))
+            if (launchControlStateProcess((int)CRST.R, this._equipmentStatusInfo))
             {
                 if (LaunchDateTimeUpdateProcess())
                 {
-                    return LaunchControlStateProcess((int)ControlState.EQT_STATUS_CHANGE, equipmentStatus);
+                    return launchControlStateProcess((int)CRST.EQT_STATUS_CHANGE, this._equipmentStatusInfo);
                 }
             }
             return false;
@@ -136,12 +134,10 @@ namespace Granda.ATTS.CIM.Scenario
         /// 启动Offline进程 Offline by Unit
         /// </summary>
         /// <returns></returns>
-        public bool LaunchOfflineProcess(IDataItem eqtStatus)
+        public bool LaunchOfflineProcess()
         {
             SubScenarioName = Resource.Intialize_Scenario_2;
-            var equipmentStatus = (eqtStatus as EquipmentStatus);
-            equipmentStatus.CRST = ControlState.O;
-            var result = LaunchControlStateProcess((int)ControlState.O, equipmentStatus);
+            var result = launchControlStateProcess((int)CRST.O, this._equipmentStatusInfo);
             return result;
         }
         /// <summary>
@@ -152,21 +148,21 @@ namespace Granda.ATTS.CIM.Scenario
         {
             SubScenarioName = Resource.Intialize_Scenario_3;
             // send estublish communication request
-            var replyMsg = S1F13(this.EquipmentBaseInfo.SecsItem);
+            var replyMsg = S1F13(this._equipmentBaseInfo.SecsItem);
             if (replyMsg != null && replyMsg.GetSFString() == "S1F14")
             {
                 var ack = replyMsg.GetCommandValue();
                 if (ack == 0)
                 {
                     // send ON_LINE request
-                    replyMsg = S1F17(ControlState.R.ToString());
+                    replyMsg = S1F17(CRST.R.ToString());
                     if (replyMsg != null && replyMsg.GetSFString() == "S1F18")
                     {
                         ack = replyMsg.GetCommandValue();
                         if (ack == 0)
                         {
-                            this.EquipmentStatusInfo.CRST = ControlState.R;
-                            itializeScenario?.UpdateControlState(ControlState.R);
+                            this._equipmentStatusInfo.CRST = CRST.R;
+                            itializeScenario?.UpdateControlState(this._equipmentStatusInfo);
                             return true;
                         }
                     }
@@ -190,10 +186,10 @@ namespace Granda.ATTS.CIM.Scenario
             else if (replyMsg.GetSFString() == "S1F16")
             {
                 var ack = replyMsg.GetCommandValue();
-                if (ack == 1)
+                if (ack == 0)
                 {
-                    this.EquipmentStatusInfo.CRST = ControlState.O;
-                    itializeScenario?.UpdateControlState(ControlState.O);
+                    this._equipmentStatusInfo.CRST = CRST.O;
+                    itializeScenario?.UpdateControlState(this._equipmentStatusInfo);
                     return true;
                 }
             }
@@ -210,22 +206,34 @@ namespace Granda.ATTS.CIM.Scenario
         ///      114==>EQUIPMENT STATUS CHANGE
         /// </summary>
         /// <param name="ceid"></param>
-        /// <param name="dataItem"></param>
+        /// <param name="equipmentStatus"></param>
         /// <returns></returns>
-        public bool LaunchControlStateProcess(int ceid, IDataItem dataItem)
+        private bool launchControlStateProcess(int ceid, EquipmentStatus equipmentStatus)
         {
             if (ceid >= 111 && ceid <= 114)
             {// control state change
-                var stack = new Stack<List<Item>>();
-                stack.Push(new List<Item>());
-                stack.Peek().Add(A("0"));// DATAID 始终设为0
-                stack.Peek().Add(A($"{ceid}"));
-                stack.Push(new List<Item>());
-                stack.Push(new List<Item>());
-                stack.Peek().Add(A("100"));// RPTID 设为100
-                stack.Push(new List<Item>(dataItem.SecsItem.Items));
-                var item = ParseItem(stack);
-                var replyMsg = S6F11(item, (int)ceid);
+                EquipmentStatus newEquipmentStatus = new EquipmentStatus()
+                {
+                    CRST = equipmentStatus.CRST,
+                    EQST = equipmentStatus.EQST,
+                    EQSTCODE = equipmentStatus.EQSTCODE,
+                };
+                if (ceid == 114)
+                {
+                    newEquipmentStatus.CRST = CRST.R;
+                }
+                else
+                {
+                    newEquipmentStatus.CRST = (CRST)ceid;
+                }
+                ControlStateChangeReport controlStateChangeReport = new ControlStateChangeReport()
+                {
+                    CEID = ceid,
+                    EquipmentStatus = newEquipmentStatus,
+                    DATAID = 0,
+                    RPTID = 100,
+                };
+                var replyMsg = S6F11(controlStateChangeReport.SecsItem, (int)ceid);
                 if (replyMsg != null && replyMsg.GetSFString() == "S6F12")
                 {
                     try
@@ -233,8 +241,12 @@ namespace Granda.ATTS.CIM.Scenario
                         int ack = replyMsg.GetCommandValue();
                         if (ack == 0)
                         {
-                            EquipmentStatusInfo = (EquipmentStatus)dataItem;
-                            itializeScenario?.UpdateControlState((ControlState)ceid);
+                            if (ceid != 114)
+                            {
+                                this._equipmentStatusInfo = newEquipmentStatus;
+                                itializeScenario?.UpdateControlState(this._equipmentStatusInfo);
+                            }
+
                             return true;
                         }
                     }
@@ -263,32 +275,64 @@ namespace Granda.ATTS.CIM.Scenario
         }
         #endregion
 
-
+        #region message handler methods
         void handleS1F13()
         {
             SubScenarioName = Resource.Intialize_Scenario_3;
             EquipmentBaseInfo message = new EquipmentBaseInfo();
             message.Parse(PrimaryMessage.SecsItem);
-            this.EquipmentBaseInfo = message;
+            this._equipmentBaseInfo = message;
             PrimaryMessage.S1F14(message.MDLN, message.SOFTREV, "0");
         }
+
+        void handleS1F17()
+        {
+            SubScenarioName = Resource.Intialize_Scenario_3;
+            string ONLACK = String.Empty;
+            switch (this._equipmentStatusInfo.CRST)
+            {
+                case CRST.O:
+                    ONLACK = "0";
+                    break;
+                case CRST.L:
+                    ONLACK = "2";
+                    break;
+                case CRST.R:
+                    ONLACK = "3";
+                    break;
+                case CRST.EQT_STATUS_CHANGE:
+                default:
+                    break;
+            }
+            PrimaryMessage.S1F18(ONLACK);
+            if (launchControlStateProcess((int)CRST.R, this._equipmentStatusInfo))
+            {
+                if (LaunchDateTimeUpdateProcess())
+                {
+                    launchControlStateProcess((int)CRST.EQT_STATUS_CHANGE, this._equipmentStatusInfo);
+                }
+            }
+        }
+        #endregion
+
+        #region 接口
         public interface IItializeScenario
         {
-            void UpdateControlState(ControlState controlState);
+            void UpdateControlState(EquipmentStatus controlState);
             void UpdateDateTime(string dateTimeStr);
         }
 
         private class DefaultIItializeScenario : IItializeScenario
         {
-            public void UpdateControlState(ControlState controlState)
+            public void UpdateControlState(EquipmentStatus controlState)
             {
-                Debug.WriteLine("Control State Changed: " + controlState.ToString());
+                Debug.WriteLine("Control State Changed: " + controlState.CRST.ToString());
             }
-
             public void UpdateDateTime(string dateTimeStr)
             {
                 Debug.WriteLine("date and time update: " + dateTimeStr);
             }
         }
+        #endregion
     }
 }

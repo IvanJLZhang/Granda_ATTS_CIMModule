@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Granda.ATTS.CIM", "Granda.A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestApp", "TestApp", "{6C0B3B33-80E8-445C-9B79-3B4E8BA8EDCD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Granda.AATS.Log", "..\Granda.AATS.Log\Granda.AATS.Log.csproj", "{57E0A100-47FD-43DE-BBDA-7908B0DC5DDF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +77,14 @@ Global
 		{4717C255-74A3-4000-97BA-06C544DBD6A8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4717C255-74A3-4000-97BA-06C544DBD6A8}.Release|x86.ActiveCfg = Release|Any CPU
 		{4717C255-74A3-4000-97BA-06C544DBD6A8}.Release|x86.Build.0 = Release|Any CPU
+		{57E0A100-47FD-43DE-BBDA-7908B0DC5DDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57E0A100-47FD-43DE-BBDA-7908B0DC5DDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57E0A100-47FD-43DE-BBDA-7908B0DC5DDF}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{57E0A100-47FD-43DE-BBDA-7908B0DC5DDF}.Debug|x86.Build.0 = Debug|Any CPU
+		{57E0A100-47FD-43DE-BBDA-7908B0DC5DDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57E0A100-47FD-43DE-BBDA-7908B0DC5DDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57E0A100-47FD-43DE-BBDA-7908B0DC5DDF}.Release|x86.ActiveCfg = Release|Any CPU
+		{57E0A100-47FD-43DE-BBDA-7908B0DC5DDF}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,9 +94,10 @@ Global
 		{59B27FD7-D199-43F8-9942-BA4183D9C0C4} = {6C0B3B33-80E8-445C-9B79-3B4E8BA8EDCD}
 		{3C8C67B8-3746-4D26-B3A8-DCB01B5AA66B} = {16008574-CE8D-40D0-9284-D06E36972F9E}
 		{36A2C439-8771-4F98-B33F-390E6D7821A2} = {16008574-CE8D-40D0-9284-D06E36972F9E}
+		{57E0A100-47FD-43DE-BBDA-7908B0DC5DDF} = {16008574-CE8D-40D0-9284-D06E36972F9E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		VisualSVNWorkingCopyRoot = .
 		SolutionGuid = {577001C8-85F5-4171-9ED7-2563F13102B6}
+		VisualSVNWorkingCopyRoot = .
 	EndGlobalSection
 EndGlobal

@@ -27,6 +27,9 @@ using static Granda.ATTS.CIM.Extension.ExtensionHelper;
 using static Granda.ATTS.CIM.Extension.SmlExtension;
 using System.Diagnostics;
 using Granda.ATTS.CIM.Data;
+using Granda.ATTS.CIM.Data.ENUM;
+using Granda.ATTS.CIM.Data.Message;
+using Granda.ATTS.CIM.Data.Report;
 
 namespace Granda.ATTS.CIM.Scenario
 {
@@ -54,92 +57,88 @@ namespace Granda.ATTS.CIM.Scenario
             }
         }
 
-        private bool handleRCMDMessage(int rcmd)
+        private void handleRCMDMessage(int rcmd)
         {
             PrimaryMessage.S2F42(rcmd, 0);// 立即回复S2F42
-            int ceid = 0;
-            switch ((HostCommand)rcmd)
+            switch ((RCMD)rcmd)
             {
-                case HostCommand.START:
-                    ceid = 301;
+                case RCMD.START:
                     SubScenarioName = Resource.RCS_Host_Command_Start;
                     break;
-                case HostCommand.CANCEL:
-                    ceid = 304;
+                case RCMD.CANCEL:
                     SubScenarioName = Resource.RCS_Host_Command_Cancel;
                     break;
-                case HostCommand.ABORT:
+                case RCMD.ABORT:
                     SubScenarioName = Resource.RCS_Host_Command_Abort;
-                    ceid = 305;
                     break;
-                case HostCommand.PAUSE:
+                case RCMD.PAUSE:
                     SubScenarioName = Resource.RCS_Host_Command_Pause;
-                    ceid = 306;
                     break;
-                case HostCommand.RESUME:
+                case RCMD.RESUME:
                     SubScenarioName = Resource.RCS_Host_Command_Resume;
-                    ceid = 307;
                     break;
-                case HostCommand.OPERATOR_CALL:
+                case RCMD.OPERATOR_CALL:
                     SubScenarioName = Resource.RCS_Host_Command_Operator_Call;
                     break;
                 default:
                     break;
             }
-            return LaunchProcessReport(ceid, (HostCommand)rcmd);
+            RemoteControlCommandJob remoteControlCommandJob = new RemoteControlCommandJob();
+            remoteControlCommandJob.Parse(PrimaryMessage.SecsItem);
+            remoteControlScenario.UpdateProcessReportState(remoteControlCommandJob);
         }
         /// <summary>
         /// Process Report
         /// CEID: 301=>start, 304=>cancel, 305=>abort, 306=>pause, 307=>resume
         /// </summary>
-        /// <param name="ceid"></param>
-        /// <param name="hostCommand"></param>
         /// <returns></returns>
-        private bool LaunchProcessReport(int ceid, HostCommand hostCommand)
+        public bool LaunchProcessReport(RCMD rcmd, ProcessLaunchReport processLaunchReport, EquipmentBaseInfo equipmentBaseInfo)
         {
-            if (ceid == 301 ||
-                ceid == 304 ||
-                ceid == 305 ||
-                ceid == 306 ||
-                ceid == 307)
+            int ceid = 0;
+            switch ((RCMD)rcmd)
             {
-                var stack = new Stack<List<Item>>();
-                stack.Push(new List<Item>());
-                stack.Peek().Add(A("DATAID"));
-                stack.Peek().Add(A($"{ceid}"));
-                stack.Push(new List<Item>());
-                stack.Push(new List<Item>());
-                stack.Peek().Add(A("fix RPTID"));
-                stack.Push(new List<Item>());
-                stack.Peek().Add(A("CRST"));
-                stack.Peek().Add(A("EQST"));
-                stack.Peek().Add(A("EQSTCODE"));
-                stack.Push(new List<Item>());
-                stack.Peek().Add(A("fix RPTID"));
-                stack.Push(new List<Item>());
-                stack.Peek().Add(A("LOTID"));
-                stack.Peek().Add(A("P01"));
-                stack.Peek().Add(A("PB"));
-                stack.Peek().Add(A("OO"));
-                stack.Peek().Add(A("CST001"));
-                stack.Peek().Add(A("TestRecipe"));
-                var item = ParseItem(stack);
-                var replyMsg = S6F11(item, (int)ceid);
-                if (replyMsg != null && replyMsg.GetSFString() == "S6F12")
+                case RCMD.START:
+                    ceid = 301;
+                    break;
+                case RCMD.CANCEL:
+                    ceid = 304;
+                    break;
+                case RCMD.ABORT:
+                    ceid = 305;
+                    break;
+                case RCMD.PAUSE:
+                    ceid = 306;
+                    break;
+                case RCMD.RESUME:
+                    ceid = 307;
+                    break;
+                case RCMD.OPERATOR_CALL:
+                default:
+                    break;
+            }
+            ProcessLaunchReport newReport = new ProcessLaunchReport(0, ceid, 100, equipmentBaseInfo, 301)
+            {
+                LOTID = processLaunchReport.LOTID,
+                PTID = processLaunchReport.PTID,
+                PTTYPE = processLaunchReport.PTTYPE,
+                PTUSETYPE = processLaunchReport.PTUSETYPE,
+                CSTID = processLaunchReport.CSTID,
+                PPID = processLaunchReport.PPID,
+            };
+            var replyMsg = S6F11(newReport.SecsItem, (int)ceid);
+            if (replyMsg != null && replyMsg.GetSFString() == "S6F12")
+            {
+                try
                 {
-                    try
+                    int ack = replyMsg.GetCommandValue();
+                    if (ack == 0)
                     {
-                        int ack = replyMsg.GetCommandValue();
-                        if (ack == 0)
-                        {
-                            remoteControlScenario.UpdateProcessReportState(hostCommand);
-                            return true;
-                        }
+                        return true;
                     }
-                    catch (InvalidOperationException)
-                    {
-                        return false;
-                    }
+                }
+                catch (InvalidOperationException)
+                {
+                    return false;
                 }
             }
             return false;
@@ -149,20 +148,20 @@ namespace Granda.ATTS.CIM.Scenario
         /// </summary>
         /// <param name="hostCommand"></param>
         /// <returns></returns>
-        public bool LaunchHostCommand(HostCommand hostCommand)
+        public bool LaunchHostCommand(RCMD hostCommand)
         {
             var stack = new Stack<List<Item>>();
             stack.Push(new List<Item>());
             stack.Peek().Add(A($"{hostCommand}"));
             stack.Push(new List<Item>());
             stack.Push(new List<Item>());
-            stack.Peek().Add(A("fixed PTID"));
+            stack.Peek().Add(A("PTID"));
             stack.Peek().Add(A("PTID"));
             stack.Push(new List<Item>());
-            stack.Peek().Add(A("fixed CSTID"));
+            stack.Peek().Add(A("CSTID"));
             stack.Peek().Add(A("CSTID"));
             stack.Push(new List<Item>());
-            stack.Peek().Add(A("fixed LOTID"));
+            stack.Peek().Add(A("LOTID"));
             stack.Peek().Add(A("CSTID"));
             var item = ParseItem(stack);
 
@@ -174,7 +173,6 @@ namespace Granda.ATTS.CIM.Scenario
                     int ack = replyMsg.GetCommandValue();
                     if (ack == (int)hostCommand)
                     {
-                        remoteControlScenario.UpdateProcessReportState(hostCommand);
                         return true;
                     }
                 }
@@ -188,14 +186,14 @@ namespace Granda.ATTS.CIM.Scenario
 
         public interface IRCSCallBack
         {
-            void UpdateProcessReportState(HostCommand hostCommand);
+            void UpdateProcessReportState(RemoteControlCommandJob remoteControlCommandJob);
         }
 
         private class DefaultRemoteControlScenario : IRCSCallBack
         {
-            public void UpdateProcessReportState(HostCommand hostCommand)
+            public void UpdateProcessReportState(RemoteControlCommandJob remoteControlCommandJob)
             {
-                Debug.WriteLine("Update Process Report State: " + hostCommand.ToString());
+                Debug.WriteLine("Update Process Report State: " + remoteControlCommandJob.RCMD.ToString());
             }
         }
     }

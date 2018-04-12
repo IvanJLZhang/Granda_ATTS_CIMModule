@@ -3,8 +3,8 @@
 // Copyright © 2018 Granda. All Rights Reserved.
 // 苏州广林达电子科技有限公司 版权所有
 //------------------------------------------------------------------------------
-// File Name: EQSTCODE
-// Author: Ivan JL Zhang    Date: 2018/4/11 14:53:50    Version: 1.0.0
+// File Name: ControlStateChangeReport
+// Author: Ivan JL Zhang    Date: 2018/4/12 14:10:31    Version: 1.0.0
 // Description: 
 //   
 // 
@@ -13,45 +13,49 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
-using Granda.ATTS.CIM.Data.ENUM;
-using Secs4Net;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
+using Secs4Net;
 using static Secs4Net.Item;
 using static Granda.ATTS.CIM.Data.Helper;
 namespace Granda.ATTS.CIM.Data.Report
 {
-    /// <summary>
-    /// Equipment status reason code（EQSTCODE）
-    /// </summary>
-    public struct EquipmentStatus : IReport
+    public struct ControlStateChangeReport : IReport
     {
         /// <summary>
-        /// Control State
+        /// 数据ID
         /// </summary>
-        public CRST CRST { get; set; }
+        public int DATAID { get; set; }
         /// <summary>
-        /// Equipment Status
+        /// Collected event ID
         /// </summary>
-        public EQST EQST { get; set; }
+        public int CEID { get; set; }
         /// <summary>
-        /// equipment status reason code
+        /// Report ID
         /// </summary>
-        public Int32 EQSTCODE { get; set; }
+        public int RPTID { get; set; }
+        /// <summary>
+        /// 设备的基本状态
+        /// </summary>
+        public EquipmentStatus EquipmentStatus { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public Item SecsItem
         {
             get
             {
                 var stack = new Stack<List<Item>>();
-                stack.Push(new List<Item>()
-                {
-                    A(CRST.ToString()),
-                    A(EQST.ToString()),
-                    A(EQSTCODE.ToString()),
-                });
+                stack.Push(new List<Item>());
+                stack.Peek().Add(A(DATAID.ToString()));// DATAID 始终设为0
+                stack.Peek().Add(A(CEID.ToString()));
+                stack.Push(new List<Item>());
+                stack.Push(new List<Item>());
+                stack.Peek().Add(A(RPTID == 0 ? "100" : RPTID.ToString()));// RPTID 设为100
+                stack.Push(new List<Item>(this.EquipmentStatus.SecsItem.Items));
+
                 return ParseItem(stack);
             }
         }

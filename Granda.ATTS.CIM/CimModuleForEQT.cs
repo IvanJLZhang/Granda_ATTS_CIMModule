@@ -14,6 +14,7 @@
 //----------------------------------------------------------------------------*/
 #endregion
 using Granda.ATTS.CIM.Data;
+using Granda.ATTS.CIM.Data.Report;
 using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.Scenario;
 using Secs4Net;
@@ -34,6 +35,7 @@ namespace Granda.ATTS.CIM
     /// </summary>
     public class CimModuleForEQT : CimModuleBase
     {
+        #region 构造方法
         /// <summary>
         /// 构造方法， 提供SecsGem参数
         /// </summary>
@@ -52,25 +54,25 @@ namespace Granda.ATTS.CIM
         public CimModuleForEQT(string ipAddress, int port, bool isActive, short deviceId = 1) : base(ipAddress, port, isActive, deviceId)
         {
         }
+        #endregion
 
         #region 公开的方法
         /// <summary>
         /// local端设置online/offline状态
         /// </summary>
         /// <param name="onLine">true表示请求在线，反之离线</param>
-        /// <param name="eqtBaseInfo">设备当前基本信息</param>
-        /// <param name="eqtStatus">设备当前基本状态</param>
+        /// <param name="equipmentInfo">设备当前信息</param>
         /// <returns></returns>
-        public bool LaunchOnOffLineProcess(bool onLine, IDataItem eqtBaseInfo, IDataItem eqtStatus)
+        public bool LaunchOnOffLineProcess(bool onLine, EquipmentInfo equipmentInfo)
         {
             var initi = scenarioControllers[Scenarios.Intialize_Scenario] as InitializeScenario;
             if (onLine)
             {
-                return initi.LaunchOnlineProcess(eqtBaseInfo, eqtStatus);
+                return initi.LaunchOnlineProcess(equipmentInfo);
             }
             else
             {
-                return initi.LaunchOfflineProcess(eqtStatus);
+                return initi.LaunchOfflineProcess();
             }
         }
         /// <summary>
