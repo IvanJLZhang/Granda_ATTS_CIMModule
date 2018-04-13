@@ -14,6 +14,8 @@
 //----------------------------------------------------------------------------*/
 #endregion
 using Granda.ATTS.CIM.Data;
+using Granda.ATTS.CIM.Data.ENUM;
+using Granda.ATTS.CIM.Data.Message;
 using Granda.ATTS.CIM.Data.Report;
 using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.Scenario;
@@ -94,37 +96,17 @@ namespace Granda.ATTS.CIM
             var eqt = scenarioControllers[Scenarios.Equipment_Terminal_Service] as EqtTerminalService;
             return eqt.SendMessages(messages);
         }
-
+        #region Data Collection
         /// <summary>
         /// report Glass Process data
         /// </summary>
         /// <returns></returns>
-        public bool ReportGlassProcessData()
+        public bool LaunchProcessResultReportProcess(ProcessResultReport report)
         {
             var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
-            return dc.ReportGlassProcessData();
+            return dc.LaunchProcessResultReportProcess(report);
         }
-
-        /// <summary>
-        /// report Lot Process data
-        /// </summary>
-        /// <returns></returns>
-        public bool ReportLotProcessData()
-        {
-            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
-            return dc.ReportLotProcessData();
-        }
-
-        /// <summary>
-        /// report Mask Process data
-        /// </summary>
-        /// <returns></returns>
-        public bool ReportMaskProcessData()
-        {
-            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
-            return dc.ReportMaskProcessData();
-        }
-
+        #endregion
         /// <summary>
         /// Equipment Constant Change
         /// </summary>
@@ -135,15 +117,70 @@ namespace Granda.ATTS.CIM
             return dc.EquipmentConstantChangeProcess();
         }
 
+        #region Process Program Management
         /// <summary>
         /// local端recipe发生变化时向host发送通知
         /// </summary>
         /// <returns></returns>
-        public bool LaunchRecipeChangeProcess()
+        public bool LaunchRecipeChangeProcess(RecipeChangeReport report)
         {
             var rm = scenarioControllers[Scenarios.Data_Collection] as RecipeManagement;
-            return rm.LaunchRecipeChangeProcess();
+            return rm.LaunchRecipeChangeReportProcess(report);
         }
+
+        /// <summary>
+        /// 对CurrentEPPDRequest的回复
+        /// </summary>
+        /// <param name="report"></param>
+        /// <returns></returns>
+        public bool LaunchCurrentEPPDReportProcess(CurrentEPPDReport report)
+        {
+            var rm = scenarioControllers[Scenarios.Data_Collection] as RecipeManagement;
+            return rm.LaunchCurrentEPPDReportProcess(report);
+        }
+
+        /// <summary>
+        /// 对 Formatted Process Program Request 的回复
+        /// </summary>
+        /// <param name="report"></param>
+        /// <returns></returns>
+        public bool LaunchFormattedProcessProgramReport(FormattedProcessProgramReport report)
+        {
+            var rm = scenarioControllers[Scenarios.Data_Collection] as RecipeManagement;
+            return rm.LaunchFormattedProcessProgramReport(report);
+        }
+        #endregion
+
+        #region Alarm Management
+        /// <summary>
+        /// 对RequestAlarmList的回复
+        /// </summary>
+        /// <param name="currentAlarmListReport"></param>
+        /// <returns></returns>
+        public bool LaunchCurrentAlarmListReport(CurrentAlarmListReport currentAlarmListReport)
+        {
+            var am = scenarioControllers[Scenarios.Alarm_Management] as AlarmManagement;
+            return am.LaunchCurrentAlarmListReport(currentAlarmListReport);
+        }
+        #endregion
+
+        #region Remote Control
+        /// <summary>
+        /// Remote Control Scenario: 
+        /// Process (Start/Cancel/Abort/Pause/Resume/Operator Call) 
+        /// Report
+        /// </summary>
+        /// <param name="rcmd"></param>
+        /// <param name="processLaunchReport"></param>
+        /// <param name="equipmentInfo"></param>
+        /// <returns></returns>
+        public bool LaunchProcessReport(RCMD rcmd, ProcessLaunchReport processLaunchReport, EquipmentInfo equipmentInfo)
+        {
+            var rc = scenarioControllers[Scenarios.Remote_Control] as RemoteControl;
+            return rc.LaunchProcessReport(rcmd, processLaunchReport, equipmentInfo.EquipmentBase);
+        }
+        #endregion
+
         #endregion
     }
 }

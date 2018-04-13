@@ -26,6 +26,8 @@ using static Granda.ATTS.CIM.StreamType.Stream7_ProcessProgramManagement;
 using static Granda.ATTS.CIM.StreamType.Stream6_DataCollection;
 using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.Data;
+using Granda.ATTS.CIM.Data.Message;
+using Granda.ATTS.CIM.Data.Report;
 
 namespace Granda.ATTS.CIM.Scenario
 {
@@ -51,24 +53,19 @@ namespace Granda.ATTS.CIM.Scenario
                     break;
                 case "S725":
                     SubScenarioName = Resource.RMS_Host_Attempts_To_Recipe_Mnt;
+                    handleS7F25Message();
                     break;
                 default:
                     break;
             }
         }
         /// <summary>
-        /// local端recipe发生变化时向host发送通知
+        /// local端Process Program or Recipe发生变化时向host发送通知
         /// </summary>
         /// <returns></returns>
-        public bool LaunchRecipeChangeProcess()
+        public bool LaunchRecipeChangeReportProcess(IReport report)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>());
-            stack.Peek().Add(A("DATAID"));
-            stack.Peek().Add(A("401"));
-            //需要具体实现
-            var item = ParseItem(stack);
-            var replyMsg = S6F11(item, 401);
+            var replyMsg = S6F11(report.SecsItem, 401);
             if (replyMsg != null && replyMsg.GetSFString() == "S6F12")
             {
                 try
@@ -87,26 +84,46 @@ namespace Granda.ATTS.CIM.Scenario
             return false;
         }
         /// <summary>
+        /// 对CurrentEPPDRequest的回复
+        /// </summary>
+        /// <param name="report"></param>
+        /// <returns></returns>
+        public bool LaunchCurrentEPPDReportProcess(IReport report)
+        {
+            PrimaryMessage.S7F20(report.SecsItem);
+            return true;
+        }
+        /// <summary>
+        /// 对 Formatted Process Program Request 的回复
+        /// </summary>
+        /// <param name="report"></param>
+        /// <returns></returns>
+        public bool LaunchFormattedProcessProgramReport(IReport report)
+        {
+            PrimaryMessage.S7F26(report.SecsItem);
+            return true;
+        }
+        /// <summary>
         /// Host端尝试直接进行Recipe管理
         /// </summary>
         /// <param name="pptype"></param>
         /// <param name="UnitId"></param>
         /// <returns></returns>
-        public bool LaunchCurrentEPPDRequestProcess(PPTYPE pptype, string UnitId)
+        public bool LaunchCurrentEPPDRequestProcess()
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-                {
-                    A(UnitId),
-                    A(pptype.ToString()),
-                });
+            //var stack = new Stack<List<Item>>();
+            //stack.Push(new List<Item>()
+            //    {
+            //        A(UnitId),
+            //        A(pptype.ToString()),
+            //    });
 
-            var replyMsg = S7F19(ParseItem(stack));
-            if (replyMsg != null && replyMsg.GetSFString() == "S19F20")
-            {
-                // 需要相应实现
-                return true;
-            }
+            //var replyMsg = S7F19(ParseItem(stack));
+            //if (replyMsg != null && replyMsg.GetSFString() == "S19F20")
+            //{
+            //    // 需要相应实现
+            //    return true;
+            //}
             return false;
         }
         /// <summary>
@@ -137,44 +154,35 @@ namespace Granda.ATTS.CIM.Scenario
 
         void handleS7F19Message()
         {
-            if (PrimaryMessage.SecsItem.Count == 2)
-            {
-                string unitId = PrimaryMessage.SecsItem.Items[0].GetString();
-                string pptype = PrimaryMessage.SecsItem.Items[1].GetString();
-
-                var stack = new Stack<List<Item>>();
-                stack.Push(new List<Item>()
-                {
-                    A(unitId),
-                    A(pptype),
-                });
-                stack.Push(new List<Item>()
-                {
-                    A("PPID"),
-                });
-                PrimaryMessage.S7F20(ParseItem(stack));
-            }
+            CurrentEPPDRequest currentEPPDRequest = new CurrentEPPDRequest();
+            currentEPPDRequest.Parse(PrimaryMessage.SecsItem);
+            recipeManagement.CurrentEPPDRequestEvent(currentEPPDRequest);
         }
 
         void handleS7F25Message()
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-                {
-                    A("TestRecipe"),
-                });// 需要具体实现
-
-            PrimaryMessage.S7F26(ParseItem(stack));
+            FormattedProcessProgramRequest formattedProcessProgramRequest = new FormattedProcessProgramRequest();
+            formattedProcessProgramRequest.Parse(PrimaryMessage.SecsItem);
+            recipeManagement.FormattedProcessProgramRequestEvent(formattedProcessProgramRequest);
         }
 
         public interface IRecipeManagement
         {
-
+            void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest);
+            void FormattedProcessProgramRequestEvent(FormattedProcessProgramRequest formattedProcessProgramRequest);
         }
 
         private class DefaultRecipeManagement : IRecipeManagement
         {
+            public void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest)
+            {
+                throw new NotImplementedException();
+            }
 
+            public void FormattedProcessProgramRequestEvent(FormattedProcessProgramRequest formattedProcessProgramRequest)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

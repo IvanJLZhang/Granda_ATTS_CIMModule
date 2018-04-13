@@ -32,6 +32,8 @@ using static Granda.ATTS.CIM.Scenario.DataCollection;
 using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Data.Report;
 using Granda.ATTS.CIM.Data.Message;
+using System.Threading;
+using Granda.AATS.Log;
 
 namespace Granda.ATTS.CIM
 {
@@ -87,7 +89,7 @@ namespace Granda.ATTS.CIM
         /// RESUME,
         /// OPERATOR_CALL,
         /// </summary>
-        public event EventHandler<TEventArgs<RemoteControlCommandJob>> ProcessStateReport;
+        public event EventHandler<TEventArgs<RemoteControlCommandRequest>> ProcessStateReport;
         /// <summary>
         /// Host发送Enable/Disable Alarm指令事件
         /// </summary>
@@ -118,6 +120,8 @@ namespace Granda.ATTS.CIM
         /// </summary>
         public CimModuleBase()
         {
+            Thread.CurrentThread.Name = "Main";
+            LogAdapter.WriteLog(new LogRecord(LogLevel.INFO, "Initialize CIM Module."));
             scenarioControllers.Add(Scenarios.Intialize_Scenario, new InitializeScenario(this));
             scenarioControllers.Add(Scenarios.Remote_Control, new RemoteControl(this));
             scenarioControllers.Add(Scenarios.Alarm_Management, new AlarmManagement(this));
@@ -275,9 +279,9 @@ namespace Granda.ATTS.CIM
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void UpdateProcessReportState(RemoteControlCommandJob hostCommand)
+        public void UpdateProcessReportState(RemoteControlCommandRequest hostCommand)
         {
-            ProcessStateReport?.Invoke(this, new TEventArgs<RemoteControlCommandJob>(hostCommand));
+            ProcessStateReport?.Invoke(this, new TEventArgs<RemoteControlCommandRequest>(hostCommand));
         }
 
         /// <summary>

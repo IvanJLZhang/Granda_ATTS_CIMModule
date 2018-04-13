@@ -27,6 +27,7 @@ using static Granda.ATTS.CIM.StreamType.Stream5_ExceptionReporting;
 using static Secs4Net.Item;
 using static Granda.ATTS.CIM.Extension.SmlExtension;
 using Granda.ATTS.CIM.Data;
+using Granda.ATTS.CIM.Data.Message;
 
 namespace Granda.ATTS.CIM.Scenario
 {
@@ -45,18 +46,32 @@ namespace Granda.ATTS.CIM.Scenario
             {
                 case "S5F3":// enable or disable alarm
                     SubScenarioName = Resource.AMS_Enable_Disable_Alarm;
-                    int command = secsMessage.GetCommandValue();
-                    AMSCallBack.UpdateAlarmStatus(command == 0);
+                    AlarmEnableDisableRequest alarmEnableDisableJob = new AlarmEnableDisableRequest();
+                    alarmEnableDisableJob.Parse(PrimaryMessage.SecsItem);
+                    AMSCallBack.UpdateAlarmStatus(alarmEnableDisableJob);
                     secsMessage.S5F4(0);
                     break;
                 case "S5F103":// current alarm set list request
                     SubScenarioName = Resource.AMS_Alarm_List_Request;
-                    secsMessage.S5F104(null);
+                    CurrentAlarmListRequest currentAlarmListJob = new CurrentAlarmListRequest();
+                    currentAlarmListJob.Parse(PrimaryMessage.SecsItem);
+                    AMSCallBack.AlarmSetListRequest(currentAlarmListJob);
                     break;
                 default:
                     break;
             }
         }
+        /// <summary>
+        /// 对RequestAlarmList的回复
+        /// </summary>
+        /// <param name="report"></param>
+        /// <returns></returns>
+        public bool LaunchCurrentAlarmListReport(IReport report)
+        {
+            PrimaryMessage.S5F104(report.SecsItem);
+            return true;
+        }
+
         /// <summary>
         /// Host端测试接口：Enable/Disable Alarm
         /// </summary>
@@ -64,19 +79,19 @@ namespace Granda.ATTS.CIM.Scenario
         /// <returns></returns>
         public bool LaunchUpdateAlarmProcess(bool isEnable)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>());
-            stack.Peek().Add(A(isEnable ? "0" : "1"));
-            stack.Peek().Add(A("UNITID"));
-            stack.Push(new List<Item>());
-            stack.Peek().Add(A("ALID"));
+            //var stack = new Stack<List<Item>>();
+            //stack.Push(new List<Item>());
+            //stack.Peek().Add(A(isEnable ? "0" : "1"));
+            //stack.Peek().Add(A("UNITID"));
+            //stack.Push(new List<Item>());
+            //stack.Peek().Add(A("ALID"));
 
-            var replyMsg = S5F3(ParseItem(stack));
-            if (replyMsg != null && replyMsg.GetSFString() == "S5F4")
-            {
-                AMSCallBack.UpdateAlarmStatus(isEnable);
-                return true;
-            }
+            //var replyMsg = S5F3(ParseItem(stack));
+            //if (replyMsg != null && replyMsg.GetSFString() == "S5F4")
+            //{
+            //    AMSCallBack.UpdateAlarmStatus(isEnable);
+            //    return true;
+            //}
             return false;
         }
         /// <summary>
@@ -97,13 +112,19 @@ namespace Granda.ATTS.CIM.Scenario
         }
         public interface IAMSCallBack
         {
-            void UpdateAlarmStatus(bool isEnable);
+            void UpdateAlarmStatus(AlarmEnableDisableRequest alarmEnableDisableJob);
+            void AlarmSetListRequest(CurrentAlarmListRequest currentAlarmListJob);
         }
         private class DefaultAMSCallBack : IAMSCallBack
         {
-            public void UpdateAlarmStatus(bool isEnable)
+            public void AlarmSetListRequest(CurrentAlarmListRequest currentAlarmListJob)
             {
-                Debug.WriteLine("is enable alarm: " + isEnable);
+                //throw new NotImplementedException();
+            }
+
+            public void UpdateAlarmStatus(AlarmEnableDisableRequest alarmEnableDisableJob)
+            {
+                Debug.WriteLine("is enable alarm: " + alarmEnableDisableJob.ALED);
             }
         }
     }

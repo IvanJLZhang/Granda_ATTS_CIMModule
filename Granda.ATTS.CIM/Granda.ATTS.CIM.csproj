@@ -57,7 +57,6 @@
     <Compile Include="Extension\ExtensionHelper.cs" />
     <Compile Include="Extension\MyTracer.cs" />
     <Compile Include="Extension\SmlExtension.cs" />
-    <Compile Include="Model\PPTYPE.cs" />
     <Compile Include="Model\Scenarios.cs" />
     <Compile Include="Model\StreamType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -102,6 +101,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Granda.AATS.Log\Granda.AATS.Log.csproj">
+      <Project>{57e0a100-47fd-43de-bbda-7908b0dc5ddf}</Project>
+      <Name>Granda.AATS.Log</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Granda.ATTS.CIM.Data\Granda.ATTS.CIM.Data.csproj">
       <Project>{a992048f-ae2a-4b95-894a-76e4f955e986}</Project>
       <Name>Granda.ATTS.CIM.Data</Name>

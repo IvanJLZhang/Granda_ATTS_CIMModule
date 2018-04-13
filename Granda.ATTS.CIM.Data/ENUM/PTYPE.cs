@@ -3,8 +3,8 @@
 // Copyright © 2018 Granda. All Rights Reserved.
 // 苏州广林达电子科技有限公司 版权所有
 //------------------------------------------------------------------------------
-// File Name: PPTYPE
-// Author: Ivan JL Zhang    Date: 2018/4/4 15:35:43    Version: 1.0.0
+// File Name: PTYPE
+// Author: Ivan JL Zhang    Date: 2018/4/13 17:14:36    Version: 1.0.0
 // Description: 
 //   
 // 
@@ -18,12 +18,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Granda.ATTS.CIM.Model
+namespace Granda.ATTS.CIM.Data.ENUM
 {
-    public enum PPTYPE
+    /// <summary>
+    /// Process Type
+    /// </summary>
+    public enum PTYPE
     {
-        E, // EQT
-        U, // UNIT
-        S, // Sub-UNIT
+        /// <summary>
+        /// Glass
+        /// </summary>
+        Glass = 500,
+        /// <summary>
+        /// Lot
+        /// </summary>
+        Lot = 501,
+        /// <summary>
+        /// Mask
+        /// </summary>
+        Mask = 502,
     }
 }

@@ -29,16 +29,14 @@ namespace SecsClient
         SecsGem secsGem;
         private void Client_Load(object sender, EventArgs e)
         {
-            Thread.CurrentThread.Name = "Main";
-            LogAdapter.WriteLog(new LogRecord(LogLevel.DEBUG, "Hello World"));
-            //secsGem = new SecsGem(IPAddress.Parse("192.168.0.145"), 1024, true);
-            //secsGem.PrimaryMessageRecived += SecsGem_PrimaryMessageRecived;
-            //secsGem.ConnectionChanged += SecsGem_ConnectionChanged;
-            //cimModule = new CimModuleForEQT(secsGem);
-            //cimModule.ControlStateChanged += CimModule_ControlStateChanged;
-            //CimModuleForEQT.ErrorOccured += CimModuleForEQT_ErrorOccured;
-            //Application.ThreadException += Application_ThreadException;
-            //AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            secsGem = new SecsGem(IPAddress.Parse("192.168.0.145"), 1024, true);
+            secsGem.PrimaryMessageRecived += SecsGem_PrimaryMessageRecived;
+            secsGem.ConnectionChanged += SecsGem_ConnectionChanged;
+            cimModule = new CimModuleForEQT(secsGem);
+            cimModule.ControlStateChanged += CimModule_ControlStateChanged;
+            CimModuleForEQT.ErrorOccured += CimModuleForEQT_ErrorOccured;
+            Application.ThreadException += Application_ThreadException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
         }
 
         private void CimModuleForEQT_ErrorOccured(object sender, TEventArgs<Exception> e)

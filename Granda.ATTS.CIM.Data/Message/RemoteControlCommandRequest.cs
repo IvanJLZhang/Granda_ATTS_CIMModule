@@ -22,7 +22,10 @@ using Secs4Net;
 
 namespace Granda.ATTS.CIM.Data.Message
 {
-    public struct RemoteControlCommandJob : IMessage
+    /// <summary>
+    /// 
+    /// </summary>
+    public struct RemoteControlCommandRequest : IMessage
     {
         /// <summary>
         /// Remote Control Command

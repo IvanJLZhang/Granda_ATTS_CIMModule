@@ -43,19 +43,29 @@
     <Compile Include="ENUM\CRST.cs" />
     <Compile Include="ENUM\EQST.cs" />
     <Compile Include="ENUM\EQSTCODE.cs" />
+    <Compile Include="ENUM\PPCINFO.cs" />
+    <Compile Include="ENUM\PPTYPE.cs" />
     <Compile Include="ENUM\PTTYPE.cs" />
     <Compile Include="ENUM\PTUSETYPE.cs" />
+    <Compile Include="ENUM\PTYPE.cs" />
     <Compile Include="ENUM\RCMD.cs" />
     <Compile Include="Helper.cs" />
+    <Compile Include="Message\AlarmEnableDisableRequest.cs" />
+    <Compile Include="Message\CurrentAlarmListRequestReport.cs" />
+    <Compile Include="Message\CurrentEPPDRequestReport.cs" />
+    <Compile Include="Message\TraceDataInitializationRequest.cs" />
+    <Compile Include="Report\FormattedProcessProgramRequest.cs" />
     <Compile Include="Report\IReport.cs" />
     <Compile Include="Message\IMessage.cs" />
-    <Compile Include="Message\RemoteControlCommandJob.cs" />
+    <Compile Include="Message\RemoteControlCommandRequest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Report\ControlStateChangeReport.cs" />
     <Compile Include="Report\EquipmentInfo.cs" />
     <Compile Include="Report\EquipmentStatus.cs" />
     <Compile Include="Report\EquipmentBaseInfo.cs" />
     <Compile Include="Report\ProcessLaunchReport.cs" />
+    <Compile Include="Report\ProcessResultReport.cs" />
+    <Compile Include="Report\RecipeChangeReport.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Secs4Net\SecsCore.csproj">

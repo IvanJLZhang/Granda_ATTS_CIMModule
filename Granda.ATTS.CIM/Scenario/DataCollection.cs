@@ -27,6 +27,7 @@ using static Granda.ATTS.CIM.StreamType.Stream2_EquipmentControl;
 using static Granda.ATTS.CIM.Extension.SmlExtension;
 using System.Diagnostics;
 using Granda.ATTS.CIM.Data;
+using Granda.ATTS.CIM.Data.Report;
 
 namespace Granda.ATTS.CIM.Scenario
 {
@@ -79,71 +80,15 @@ namespace Granda.ATTS.CIM.Scenario
             }
         }
         /// <summary>
-        /// report Glass Process data
+        /// Glass/Lot/Mask Process result report
         /// </summary>
+        /// <param name="report"></param>
         /// <returns></returns>
-        public bool ReportGlassProcessData()
+        public bool LaunchProcessResultReportProcess(IReport report)
         {
             SubScenarioName = Resource.DCS_Discrete_Variable_Data_Send;
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-            {
-                A("500"),
-            });
-            // need to be finished.
-
-
-            var replyMsg = S6F3(ParseItem(stack), 500);
-            if (replyMsg != null && replyMsg.GetSFString() == "S6F4")
-            {
-                var ack = replyMsg.GetCommandValue();
-                if (ack == 0)
-                    return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// report Lot Process data
-        /// </summary>
-        /// <returns></returns>
-        public bool ReportLotProcessData()
-        {
-            SubScenarioName = Resource.DCS_Discrete_Variable_Data_Send;
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-            {
-                A("501"),
-            });
-            // need to be finished.
-
-
-            var replyMsg = S6F3(ParseItem(stack), 501);
-            if (replyMsg != null && replyMsg.GetSFString() == "S6F4")
-            {
-                var ack = replyMsg.GetCommandValue();
-                if (ack == 0)
-                    return true;
-            }
-            return false;
-        }
-
-        /// <summary>
-        /// report Mask Process data
-        /// </summary>
-        /// <returns></returns>
-        public bool ReportMaskProcessData()
-        {
-            SubScenarioName = Resource.DCS_Discrete_Variable_Data_Send;
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-            {
-                A("502"),
-            });
-            // need to be finished.
-
-
-            var replyMsg = S6F3(ParseItem(stack), 502);
+            var processResult = (ProcessResultReport)report;
+            var replyMsg = S6F3(report.SecsItem, (int)processResult.CEID);
             if (replyMsg != null && replyMsg.GetSFString() == "S6F4")
             {
                 var ack = replyMsg.GetCommandValue();
