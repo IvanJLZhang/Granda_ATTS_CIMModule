@@ -106,8 +106,6 @@ namespace Granda.ATTS.CIM.Scenario
         /// <summary>
         /// Host端尝试直接进行Recipe管理
         /// </summary>
-        /// <param name="pptype"></param>
-        /// <param name="UnitId"></param>
         /// <returns></returns>
         public bool LaunchCurrentEPPDRequestProcess()
         {
@@ -166,11 +164,7 @@ namespace Granda.ATTS.CIM.Scenario
             recipeManagement.FormattedProcessProgramRequestEvent(formattedProcessProgramRequest);
         }
 
-        public interface IRecipeManagement
-        {
-            void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest);
-            void FormattedProcessProgramRequestEvent(FormattedProcessProgramRequest formattedProcessProgramRequest);
-        }
+
 
         private class DefaultRecipeManagement : IRecipeManagement
         {
@@ -184,5 +178,21 @@ namespace Granda.ATTS.CIM.Scenario
                 throw new NotImplementedException();
             }
         }
+    }
+    /// <summary>
+    /// Process Program (Recipe) Management 回调方法接口
+    /// </summary>
+    public interface IRecipeManagement
+    {
+        /// <summary>
+        /// Current EPPD Request回调方法
+        /// </summary>
+        /// <param name="currentEPPDRequest"></param>
+        void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest);
+        /// <summary>
+        /// Formatted Process Program Request回调方法
+        /// </summary>
+        /// <param name="formattedProcessProgramRequest"></param>
+        void FormattedProcessProgramRequestEvent(FormattedProcessProgramRequest formattedProcessProgramRequest);
     }
 }

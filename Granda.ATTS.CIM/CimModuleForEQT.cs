@@ -13,7 +13,6 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
-using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Data.Message;
 using Granda.ATTS.CIM.Data.Report;
@@ -42,7 +41,7 @@ namespace Granda.ATTS.CIM
         /// 构造方法， 提供SecsGem参数
         /// </summary>
         /// <param name="secsGem"></param>
-        /// <param name="deviceId">设备Id号， 默认为1<</param>
+        /// <param name="deviceId">设备Id号， 默认为1</param>
         public CimModuleForEQT(SecsGem secsGem, short deviceId = 1) : base(secsGem, deviceId)
         {
         }
@@ -59,6 +58,8 @@ namespace Granda.ATTS.CIM
         #endregion
 
         #region 公开的方法
+
+        #region Initialization
         /// <summary>
         /// local端设置online/offline状态
         /// </summary>
@@ -86,6 +87,9 @@ namespace Granda.ATTS.CIM
             var initi = scenarioControllers[Scenarios.Intialize_Scenario] as InitializeScenario;
             return initi.LaunchDateTimeUpdateProcess();
         }
+        #endregion
+
+        #region Equipment Terminal Service
         /// <summary>
         /// 向Host发送display message
         /// </summary>
@@ -96,6 +100,8 @@ namespace Granda.ATTS.CIM
             var eqt = scenarioControllers[Scenarios.Equipment_Terminal_Service] as EqtTerminalService;
             return eqt.SendMessages(messages);
         }
+        #endregion
+
         #region Data Collection
         /// <summary>
         /// report Glass Process data
@@ -106,16 +112,49 @@ namespace Granda.ATTS.CIM
             var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
             return dc.LaunchProcessResultReportProcess(report);
         }
-        #endregion
+
         /// <summary>
-        /// Equipment Constant Change
+        /// S6F1: Trace Data Send
         /// </summary>
+        /// <param name="report"></param>
         /// <returns></returns>
-        public bool EquipmentConstantChangeProcess()
+        public bool LaunchTraceDataInitializationReportProcess(TraceDataInitializationReport report)
         {
             var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
-            return dc.EquipmentConstantChangeProcess();
+            return dc.LaunchTraceDataInitializationReportProcess(report);
         }
+
+        /// <summary>
+        /// S1F4: Selected Equipment Status Data report
+        /// </summary>
+        /// <param name="report"></param>
+        /// <returns></returns>
+        public bool LaunchSelectedEquipmentStatusReportProcess(string[] report)
+        {
+            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
+            return dc.LaunchSelectedEquipmentStatusReportProcess(report);
+        }
+        /// <summary>
+        /// Formatted Status Report
+        /// </summary>
+        /// <param name="report"></param>
+        /// <returns></returns>
+        public bool LaunchFormattedStatusReportProcess(FormattedProcessProgramReport report)
+        {
+            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
+            return dc.LaunchFormattedStatusReportProcess(report);
+        }
+        /// <summary>
+        /// Equipment Constants data report
+        /// </summary>
+        /// <param name="report"></param>
+        /// <returns></returns>
+        public bool LaunchEquipmentConstantsReportProcess(EquipmentConstantChangeReport report)
+        {
+            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
+            return dc.LaunchEquipmentConstantsReportProcess(report);
+        }
+        #endregion
 
         #region Process Program Management
         /// <summary>

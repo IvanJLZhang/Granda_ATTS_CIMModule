@@ -48,14 +48,14 @@ namespace Granda.ATTS.CIM.Scenario
                     SubScenarioName = Resource.AMS_Enable_Disable_Alarm;
                     AlarmEnableDisableRequest alarmEnableDisableJob = new AlarmEnableDisableRequest();
                     alarmEnableDisableJob.Parse(PrimaryMessage.SecsItem);
-                    AMSCallBack.UpdateAlarmStatus(alarmEnableDisableJob);
+                    AMSCallBack.AlarmEnableDisableRequestEvent(alarmEnableDisableJob);
                     secsMessage.S5F4(0);
                     break;
                 case "S5F103":// current alarm set list request
                     SubScenarioName = Resource.AMS_Alarm_List_Request;
                     CurrentAlarmListRequest currentAlarmListJob = new CurrentAlarmListRequest();
                     currentAlarmListJob.Parse(PrimaryMessage.SecsItem);
-                    AMSCallBack.AlarmSetListRequest(currentAlarmListJob);
+                    AMSCallBack.CurrentAlarmListRequestEvent(currentAlarmListJob);
                     break;
                 default:
                     break;
@@ -110,22 +110,34 @@ namespace Granda.ATTS.CIM.Scenario
             }
             return false;
         }
-        public interface IAMSCallBack
-        {
-            void UpdateAlarmStatus(AlarmEnableDisableRequest alarmEnableDisableJob);
-            void AlarmSetListRequest(CurrentAlarmListRequest currentAlarmListJob);
-        }
+
         private class DefaultAMSCallBack : IAMSCallBack
         {
-            public void AlarmSetListRequest(CurrentAlarmListRequest currentAlarmListJob)
+            public void CurrentAlarmListRequestEvent(CurrentAlarmListRequest currentAlarmListJob)
             {
                 //throw new NotImplementedException();
             }
 
-            public void UpdateAlarmStatus(AlarmEnableDisableRequest alarmEnableDisableJob)
+            public void AlarmEnableDisableRequestEvent(AlarmEnableDisableRequest alarmEnableDisableJob)
             {
                 Debug.WriteLine("is enable alarm: " + alarmEnableDisableJob.ALED);
             }
         }
+    }
+    /// <summary>
+    /// Alarm Management 回调方法接口
+    /// </summary>
+    public interface IAMSCallBack
+    {
+        /// <summary>
+        /// Alarm Enable Disable Request
+        /// </summary>
+        /// <param name="alarmEnableDisableJob"></param>
+        void AlarmEnableDisableRequestEvent(AlarmEnableDisableRequest alarmEnableDisableJob);
+        /// <summary>
+        /// Alarm Set List Request
+        /// </summary>
+        /// <param name="currentAlarmListJob"></param>
+        void CurrentAlarmListRequestEvent(CurrentAlarmListRequest currentAlarmListJob);
     }
 }

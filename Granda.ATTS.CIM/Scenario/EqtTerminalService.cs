@@ -124,11 +124,7 @@ namespace Granda.ATTS.CIM.Scenario
             }
             return null;
         }
-        public interface IEqtTerminalService
-        {
-            void ReceiveTestMessage(string[] messages);
-            void SendMessageDone(string[] messages);
-        }
+
 
         private class DefaultEqtTS : IEqtTerminalService
         {
@@ -141,5 +137,21 @@ namespace Granda.ATTS.CIM.Scenario
                 Debug.WriteLine("sent message: " + messages);
             }
         }
+    }
+    /// <summary>
+    /// Equipment Terminal Service回调方法接口
+    /// </summary>
+    public interface IEqtTerminalService
+    {
+        /// <summary>
+        /// 收到Display Message from host
+        /// </summary>
+        /// <param name="messages"></param>
+        void ReceiveTestMessage(string[] messages);
+        /// <summary>
+        /// 向host发送display message结果回调方法
+        /// </summary>
+        /// <param name="messages"></param>
+        void SendMessageDone(string[] messages);
     }
 }

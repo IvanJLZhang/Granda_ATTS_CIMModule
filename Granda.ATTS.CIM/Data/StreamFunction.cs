@@ -42,7 +42,7 @@ namespace Granda.ATTS.CIM.Data
         /// <returns></returns>
         public static StreamFunction[] GetStreamFunctionArray()
         {
-            return streamFunctions ?? LoadStreamFunctionArray("./Data/StreamFunctionList.json");
+            return streamFunctions ?? LoadStreamFunctionArray(@".\Configs\StreamFunctionList.json");
         }
         /// <summary>
         /// load stream function list under specified path.

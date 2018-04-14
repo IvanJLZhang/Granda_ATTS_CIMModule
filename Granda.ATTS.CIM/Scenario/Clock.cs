@@ -75,10 +75,7 @@ namespace Granda.ATTS.CIM.Scenario
             }
             return false;
         }
-        public interface IClock
-        {
-            void UpdateDateTime(string dateTimeStr);
-        }
+
 
         public class DefaultClock : IClock
         {
@@ -87,5 +84,16 @@ namespace Granda.ATTS.CIM.Scenario
                 Debug.WriteLine("update data time string: " + dateTimeStr);
             }
         }
+    }
+    /// <summary>
+    /// Clock 回调方法接口
+    /// </summary>
+    public interface IClock
+    {
+        /// <summary>
+        /// 更新系统时间
+        /// </summary>
+        /// <param name="dateTimeStr"></param>
+        void UpdateDateTime(string dateTimeStr);
     }
 }

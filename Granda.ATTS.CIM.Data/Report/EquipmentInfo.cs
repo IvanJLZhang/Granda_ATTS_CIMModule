@@ -26,6 +26,9 @@ namespace Granda.ATTS.CIM.Data.Report
     /// </summary>
     public struct EquipmentInfo
     {
+        /// <summary>
+        /// 设备基本信息
+        /// </summary>
         public EquipmentBaseInfo EquipmentBase
         {
             get
@@ -37,6 +40,9 @@ namespace Granda.ATTS.CIM.Data.Report
                 };
             }
         }
+        /// <summary>
+        /// 设备基本状态自信
+        /// </summary>
         public EquipmentStatus EquipmentStatus
         {
             get
@@ -76,7 +82,7 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <summary>
         /// Equipment Status
         /// </summary>
-        public EQST EQST
+        public CommonStatus EQST
         {
             get; set;
         }

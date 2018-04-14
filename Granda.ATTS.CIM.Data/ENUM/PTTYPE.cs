@@ -39,7 +39,7 @@ namespace Granda.ATTS.CIM.Data.ENUM
                 if (_pttypelist != null)
                     return _pttypelist;
                 _pttypelist = new Dictionary<string, string>();
-                using (var filestream = File.OpenRead("PTTYPE"))
+                using (var filestream = File.OpenRead(@".\Configs\PTTYPE"))
                 {
                     StreamReader reader = new StreamReader(filestream);
                     while (!reader.EndOfStream)

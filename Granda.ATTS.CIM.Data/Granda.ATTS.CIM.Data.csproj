@@ -40,21 +40,28 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ENUM\CommonStatus.cs" />
     <Compile Include="ENUM\CRST.cs" />
-    <Compile Include="ENUM\EQST.cs" />
     <Compile Include="ENUM\EQSTCODE.cs" />
+    <Compile Include="ENUM\GLSIDTYPE.cs" />
     <Compile Include="ENUM\PPCINFO.cs" />
     <Compile Include="ENUM\PPTYPE.cs" />
+    <Compile Include="ENUM\PTST.cs" />
     <Compile Include="ENUM\PTTYPE.cs" />
     <Compile Include="ENUM\PTUSETYPE.cs" />
     <Compile Include="ENUM\PTYPE.cs" />
     <Compile Include="ENUM\RCMD.cs" />
+    <Compile Include="ENUM\SFCD.cs" />
+    <Compile Include="ENUM\SLOTINFO.cs" />
+    <Compile Include="ENUM\TRSMODE.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Message\AlarmEnableDisableRequest.cs" />
     <Compile Include="Message\CurrentAlarmListRequestReport.cs" />
     <Compile Include="Message\CurrentEPPDRequestReport.cs" />
-    <Compile Include="Message\TraceDataInitializationRequest.cs" />
+    <Compile Include="Message\TraceDataInitializationRequestReport.cs" />
+    <Compile Include="Report\EquipmentConstantChangeReport.cs" />
     <Compile Include="Report\FormattedProcessProgramRequest.cs" />
+    <Compile Include="Report\FormattedStatusDataReport.cs" />
     <Compile Include="Report\IReport.cs" />
     <Compile Include="Message\IMessage.cs" />
     <Compile Include="Message\RemoteControlCommandRequest.cs" />
@@ -78,17 +85,22 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="PTTYPE">
+    <Content Include="Configs\PTTYPE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="PTUSETYPE">
+    <Content Include="Configs\PTUSETYPE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="EQSTCODE">
+    <Content Include="Configs\EQSTCODE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Configs\MASKST">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -1,0 +1,20 @@
+﻿<Evaporation>
+01: Evaporation Unit In: Evaporation Sub-Unit Stage In
+02: Mask Cassette In: Mask Cassette In
+
+<Mask AMHS>
+10: Clean Unit In
+11: Clean Out Stage
+12: AMHS Robot 
+13: AOI unit in
+14: Repair unit in 
+15: Inspection unit in
+16: Mask Store OK zone
+17: Mask Store NG zone
+18: Mask Store Rework zone
+30: Oven unit in (1CTJ01 equipment unit)
+31: Clean sub unit in (1CTJ01 equipment unit)
+
+<Other Equipment> (1CEPxx, ….)
+20: in use (Mask not exist, do not report)
+21: waiting (Mask not exist, do not report)

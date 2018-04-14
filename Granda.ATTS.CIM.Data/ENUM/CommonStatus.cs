@@ -3,8 +3,8 @@
 // Copyright © 2018 Granda. All Rights Reserved.
 // 苏州广林达电子科技有限公司 版权所有
 //------------------------------------------------------------------------------
-// File Name: EquipmentStatus
-// Author: Ivan JL Zhang    Date: 2018/4/11 13:59:49    Version: 1.0.0
+// File Name: CommonStatus
+// Author: Ivan JL Zhang    Date: 2018/4/14 11:24:32    Version: 1.0.0
 // Description: 
 //   
 // 
@@ -21,7 +21,7 @@ using System.Text;
 namespace Granda.ATTS.CIM.Data.ENUM
 {
     /// <summary>
-    /// EQST,Equipment Status
+    /// Common Status enum: EQST/UNITST/SUNITST/SSUNITST
     /// </summary>
     public enum CommonStatus
     {

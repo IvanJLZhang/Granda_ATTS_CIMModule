@@ -62,26 +62,13 @@ namespace Granda.ATTS.CIM
         /// </summary>
         public event EventHandler<TEventArgs<string[]>> SelectedEquipmnentStatusDataReceived;
         /// <summary>
-        /// Host收到FormattedStatusData响应事件
-        /// </summary>
-        public event EventHandler<TEventArgs<object>> FormattedStatusDataReceived;
-        /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
         /// <param name="data"></param>
-        public override void ReceivedSelectedEquipmnentStatusData(string[] data)
+        public override void SelectedEquipmentStatusRequestEvent(string[] data)
         {
-            base.ReceivedSelectedEquipmnentStatusData(data);
+            base.SelectedEquipmentStatusRequestEvent(data);
             SelectedEquipmnentStatusDataReceived?.Invoke(this, new TEventArgs<string[]>(data));
-        }
-        /// <summary>
-        /// 接口方法，触发事件，无需调用
-        /// </summary>
-        /// <param name="data"></param>
-        public override void ReceivedFormattedStatusData(object data)
-        {
-            base.ReceivedFormattedStatusData(data);
-            FormattedStatusDataReceived?.Invoke(this, new TEventArgs<object>(data));
         }
         #endregion
 
@@ -153,58 +140,49 @@ namespace Granda.ATTS.CIM
             return eqt.SendMessages(messages, false);
         }
 
-        /// <summary>
-        /// Host requests the value of Status Variables(SV)
-        /// </summary>
-        /// <returns></returns>
-        public bool RequestValueOfSV()
-        {
-            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
-            return dc.RequestValueOfSV();
-        }
 
-        /// <summary>
-        /// Host Request formatted status
-        /// </summary>
-        /// <param name="SFCD"></param>
-        /// <returns></returns>
-        public bool RequestFormattedStatus(int SFCD)
-        {
-            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
-            return dc.RequestFormattedStatus(SFCD);
-        }
+        ///// <summary>
+        ///// Host Request formatted status
+        ///// </summary>
+        ///// <param name="SFCD"></param>
+        ///// <returns></returns>
+        //public bool RequestFormattedStatus(int SFCD)
+        //{
+        //    var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
+        //    return dc.RequestFormattedStatus(SFCD);
+        //}
 
-        /// <summary>
-        /// Host requests the new value of Equipment Constants Variables(ECV)
-        /// </summary>
-        /// <returns></returns>
-        public bool EquipmentConstantsRequest()
-        {
-            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
-            return dc.EquipmentConstantsRequest();
-        }
-        /// <summary>
-        /// Host requests Enable or Disable Events
-        /// </summary>
-        /// <param name="CEED">1=>Disable Event, 0=>Enable Event</param>
-        /// <returns></returns>
-        public bool EnableDisableEventRequest(int CEED)
-        {
-            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
-            return dc.EnableDisableEventRequest(CEED);
-        }
+        ///// <summary>
+        ///// Host requests the new value of Equipment Constants Variables(ECV)
+        ///// </summary>
+        ///// <returns></returns>
+        //public bool EquipmentConstantsRequest()
+        //{
+        //    var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
+        //    return dc.EquipmentConstantsRequest();
+        //}
+        ///// <summary>
+        ///// Host requests Enable or Disable Events
+        ///// </summary>
+        ///// <param name="CEED">1=>Disable Event, 0=>Enable Event</param>
+        ///// <returns></returns>
+        //public bool EnableDisableEventRequest(int CEED)
+        //{
+        //    var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
+        //    return dc.EnableDisableEventRequest(CEED);
+        //}
 
-        /// <summary>
-        /// Host端尝试直接进行Recipe管理
-        /// </summary>
-        /// <param name="pptype"></param>
-        /// <param name="UnitId"></param>
-        /// <returns></returns>
-        public bool LaunchCurrentEPPDRequestProcess(PPTYPE pptype, string UnitId)
-        {
-            var rm = scenarioControllers[Scenarios.Data_Collection] as RecipeManagement;
-            return rm.LaunchCurrentEPPDRequestProcess(pptype, UnitId);
-        }
+        ///// <summary>
+        ///// Host端尝试直接进行Recipe管理
+        ///// </summary>
+        ///// <param name="pptype"></param>
+        ///// <param name="UnitId"></param>
+        ///// <returns></returns>
+        //public bool LaunchCurrentEPPDRequestProcess(PPTYPE pptype, string UnitId)
+        //{
+        //    var rm = scenarioControllers[Scenarios.Data_Collection] as RecipeManagement;
+        //    return rm.LaunchCurrentEPPDRequestProcess(pptype, UnitId);
+        //}
         /// <summary>
         /// Host端发送Formatted Process Program Request
         /// </summary>

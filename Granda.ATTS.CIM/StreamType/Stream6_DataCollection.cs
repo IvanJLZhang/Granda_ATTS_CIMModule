@@ -15,9 +15,9 @@ namespace Granda.ATTS.CIM.StreamType
         /// Trace Data Send
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S6F1()
+        public static SecsMessage S6F1(Item item)
         {
-            return SendMessage(6, 1, false, null);
+            return SendMessage(6, 1, false, item);
         }
 
         /// <summary>

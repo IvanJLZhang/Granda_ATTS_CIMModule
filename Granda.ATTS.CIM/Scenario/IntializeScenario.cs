@@ -24,7 +24,7 @@ namespace Granda.ATTS.CIM.Scenario
         /// <summary>
         /// 默认构造函数
         /// </summary>
-        public InitializeScenario(IItializeScenario callBack) : base()
+        public InitializeScenario(IInitializeScenario callBack) : base()
         {
             ScenarioType = Scenarios.Intialize_Scenario;
             itializeScenario = callBack;
@@ -38,7 +38,7 @@ namespace Granda.ATTS.CIM.Scenario
         /// </summary>
         private EquipmentStatus _equipmentStatusInfo = new EquipmentStatus();
 
-        private IItializeScenario itializeScenario = new DefaultIItializeScenario();
+        private IInitializeScenario itializeScenario = new DefaultIItializeScenario();
         ///// <summary>
         ///// 保存Equipment当前基本信息
         ///// </summary>
@@ -315,14 +315,9 @@ namespace Granda.ATTS.CIM.Scenario
         }
         #endregion
 
-        #region 接口
-        public interface IItializeScenario
-        {
-            void UpdateControlState(EquipmentStatus controlState);
-            void UpdateDateTime(string dateTimeStr);
-        }
 
-        private class DefaultIItializeScenario : IItializeScenario
+
+        private class DefaultIItializeScenario : IInitializeScenario
         {
             public void UpdateControlState(EquipmentStatus controlState)
             {
@@ -333,6 +328,24 @@ namespace Granda.ATTS.CIM.Scenario
                 Debug.WriteLine("date and time update: " + dateTimeStr);
             }
         }
-        #endregion
+
     }
+    #region 接口
+    /// <summary>
+    /// Initialize Scenario interface
+    /// </summary>
+    public interface IInitializeScenario
+    {
+        /// <summary>
+        /// 更新 Control State状态
+        /// </summary>
+        /// <param name="controlState"></param>
+        void UpdateControlState(EquipmentStatus controlState);
+        /// <summary>
+        /// 更新系统时间
+        /// </summary>
+        /// <param name="dateTimeStr"></param>
+        void UpdateDateTime(string dateTimeStr);
+    }
+    #endregion
 }

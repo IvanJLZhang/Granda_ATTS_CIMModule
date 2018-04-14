@@ -28,6 +28,8 @@ using static Granda.ATTS.CIM.Extension.SmlExtension;
 using System.Diagnostics;
 using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Data.Report;
+using Granda.ATTS.CIM.Data.Message;
+using Granda.ATTS.CIM.Data.ENUM;
 
 namespace Granda.ATTS.CIM.Scenario
 {
@@ -54,6 +56,11 @@ namespace Granda.ATTS.CIM.Scenario
                     PrimaryMessage.S6F4(0);
                     break;
                 case "S2F23":
+                    SubScenarioName = Resource.DCS_Host_Initiates_Trace_Report;
+                    PrimaryMessage.S2F24("0");
+                    TraceDataInitializationRequest traceDataInitializationRequest = new TraceDataInitializationRequest();
+                    traceDataInitializationRequest.Parse(PrimaryMessage.SecsItem);
+                    dataCollection.TraceDataInitializationRequestEvent(traceDataInitializationRequest);
                     break;
                 case "S6F1":
                     break;
@@ -98,21 +105,54 @@ namespace Granda.ATTS.CIM.Scenario
             return false;
         }
         /// <summary>
-        /// Equipment Constant Change
+        /// S6F1: Trace Data Send
         /// </summary>
+        /// <param name="report"></param>
         /// <returns></returns>
-        public bool EquipmentConstantChangeProcess()
+        public bool LaunchTraceDataInitializationReportProcess(IReport report)
         {
-            SubScenarioName = Resource.DCS_Equipment_Constants_Change;
+            SubScenarioName = Resource.DCS_Host_Initiates_Trace_Report;
+            S6F1(report.SecsItem);
+            return true;
+        }
+        /// <summary>
+        /// S1F4: Selected Equipment Status Data report
+        /// </summary>
+        /// <param name="report"></param>
+        /// <returns></returns>
+        public bool LaunchSelectedEquipmentStatusReportProcess(string[] report)
+        {
+            SubScenarioName = Resource.DCS_Host_request_value_status;
             var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
+            stack.Push(new List<Item>());
+            foreach (var item in report)
             {
-                A("DATAID"),
-                A("109"),
-            });
-            // need to be finished.
+                stack.Peek().Add(A(item));
+            }
 
-            var replyMsg = S6F11(ParseItem(stack), 109);
+            PrimaryMessage.S1F4(ParseItem(stack));
+            return true;
+        }
+        /// <summary>
+        /// Formatted Status Report
+        /// </summary>
+        /// <param name="report"></param>
+        /// <returns></returns>
+        public bool LaunchFormattedStatusReportProcess(IReport report)
+        {
+            SubScenarioName = Resource.DCS_Host_request_Formatted_status;
+            PrimaryMessage.S1F6(report.SecsItem);
+            return true;
+        }
+        /// <summary>
+        /// Equipment Constants data report
+        /// </summary>
+        /// <param name="report"></param>
+        /// <returns></returns>
+        public bool LaunchEquipmentConstantsReportProcess(IReport report)
+        {
+            SubScenarioName = Resource.DCS_Host_request_value_status;
+            var replyMsg = S6F11(report.SecsItem, 109);
             if (replyMsg != null && replyMsg.GetSFString() == "S6F12")
             {
                 var ack = replyMsg.GetCommandValue();
@@ -121,133 +161,112 @@ namespace Granda.ATTS.CIM.Scenario
             }
             return false;
         }
+        #region host message
+        ///// <summary>
+        ///// Host requests the value of Status Variables(SV)
+        ///// </summary>
+        ///// <returns></returns>
+        //public bool RequestValueOfSV()
+        //{
+        //    SubScenarioName = Resource.DCS_Host_request_value_status;
+        //    var stack = new Stack<List<Item>>();
+        //    stack.Push(new List<Item>()
+        //    {
+        //        A("SVID"),
+        //    });
+        //    // need to be finished.
+        //    var replyMsg = S1F3(ParseItem(stack));
+        //    if (replyMsg != null && replyMsg.GetSFString() == "S1F4")
+        //    {
+        //        dataCollection.SelectedEquipmentStatusRequestEvent(GetData(replyMsg.SecsItem));
+        //        return true;
+        //    }
+        //    return false;
+        //}
+        ///// <summary>
+        ///// Host Request formatted status
+        ///// </summary>
+        ///// <param name="SFCD"></param>
+        ///// <returns></returns>
+        //public bool RequestFormattedStatus(int SFCD)
+        //{
+        //    SubScenarioName = Resource.DCS_Host_request_Formatted_status;
+        //    var replyMsg = S1F5(SFCD);
+        //    if (replyMsg != null && replyMsg.GetSFString() == "S1F6")
+        //    {
+        //        // need to be finished
+        //        dataCollection.ReceivedFormattedStatusData(replyMsg.SecsItem);
+        //        return true;
+        //    }
+        //    return false;
+        //}
+        ///// <summary>
+        ///// Host requests the new value of Equipment Constants Variables(ECV)
+        ///// </summary>
+        ///// <returns></returns>
+        //public bool EquipmentConstantsRequest()
+        //{
+        //    SubScenarioName = Resource.DCS_Equipment_Constants_Request;
+        //    var stack = new Stack<List<Item>>();
+        //    stack.Push(new List<Item>()
+        //    {
+        //        A("ECID"),
+        //    });
+        //    // need to be finished.
+        //    var replyMsg = S2F13(ParseItem(stack));
+        //    if (replyMsg != null && replyMsg.GetSFString() == "S2F14")
+        //    {
+        //        // need to be finished
+        //        dataCollection.ReceivedFormattedStatusData(replyMsg.SecsItem);
+        //        return true;
+        //    }
+        //    return false;
+        //}
+        ///// <summary>
+        ///// Host requests Enable or Disable Events
+        ///// </summary>
+        ///// <param name="CEED">1=>Disable Event, 0=>Enable Event</param>
+        ///// <returns></returns>
+        //public bool EnableDisableEventRequest(int CEED)
+        //{
+        //    SubScenarioName = Resource.DCS_Host_Requests_Enable_Disable_Event;
+        //    var stack = new Stack<List<Item>>();
+        //    stack.Push(new List<Item>()
+        //    {
+        //        A(CEED.ToString()),
+        //    });
+        //    // need to be finished.
 
-        // S2F23待完成
+        //    var replyMsg = S2F37(ParseItem(stack));
+        //    if (replyMsg != null && replyMsg.GetSFString() == "S2F38")
+        //    {
+        //        var ack = replyMsg.GetCommandValue();
+        //        if (ack == 0)
+        //            return true;
+        //    }
+        //    return false;
+        //}
+        #endregion
 
-        /// <summary>
-        /// Host requests the value of Status Variables(SV)
-        /// </summary>
-        /// <returns></returns>
-        public bool RequestValueOfSV()
-        {
-            SubScenarioName = Resource.DCS_Host_request_value_status;
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-            {
-                A("SVID"),
-            });
-            // need to be finished.
-            var replyMsg = S1F3(ParseItem(stack));
-            if (replyMsg != null && replyMsg.GetSFString() == "S1F4")
-            {
-                dataCollection.ReceivedSelectedEquipmnentStatusData(GetData(replyMsg.SecsItem));
-                return true;
-            }
-            return false;
-        }
-        /// <summary>
-        /// Host Request formatted status
-        /// </summary>
-        /// <param name="SFCD"></param>
-        /// <returns></returns>
-        public bool RequestFormattedStatus(int SFCD)
-        {
-            SubScenarioName = Resource.DCS_Host_request_Formatted_status;
-            var replyMsg = S1F5(SFCD);
-            if (replyMsg != null && replyMsg.GetSFString() == "S1F6")
-            {
-                // need to be finished
-                dataCollection.ReceivedFormattedStatusData(replyMsg.SecsItem);
-                return true;
-            }
-            return false;
-        }
-        /// <summary>
-        /// Host requests the new value of Equipment Constants Variables(ECV)
-        /// </summary>
-        /// <returns></returns>
-        public bool EquipmentConstantsRequest()
-        {
-            SubScenarioName = Resource.DCS_Equipment_Constants_Request;
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-            {
-                A("ECID"),
-            });
-            // need to be finished.
-            var replyMsg = S2F13(ParseItem(stack));
-            if (replyMsg != null && replyMsg.GetSFString() == "S2F14")
-            {
-                // need to be finished
-                dataCollection.ReceivedFormattedStatusData(replyMsg.SecsItem);
-                return true;
-            }
-            return false;
-        }
-        /// <summary>
-        /// Host requests Enable or Disable Events
-        /// </summary>
-        /// <param name="CEED">1=>Disable Event, 0=>Enable Event</param>
-        /// <returns></returns>
-        public bool EnableDisableEventRequest(int CEED)
-        {
-            SubScenarioName = Resource.DCS_Host_Requests_Enable_Disable_Event;
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-            {
-                A(CEED.ToString()),
-            });
-            // need to be finished.
-
-            var replyMsg = S2F37(ParseItem(stack));
-            if (replyMsg != null && replyMsg.GetSFString() == "S2F38")
-            {
-                var ack = replyMsg.GetCommandValue();
-                if (ack == 0)
-                    return true;
-            }
-            return false;
-        }
         #endregion
 
         #region message handle methods
         void handleS1F3()
         {
             var requestData = GetData(PrimaryMessage.SecsItem);
-            // need to be finished;
-
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-            {
-                A("SV"),
-            });
-            PrimaryMessage.S1F4(ParseItem(stack));
+            dataCollection.SelectedEquipmentStatusRequestEvent(requestData);
         }
 
         void handleS1F5()
         {
             var sfcd = PrimaryMessage.GetCommandValue();
-            // need to be finished
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-            {
-                A(sfcd.ToString()),
-            });
-
-            PrimaryMessage.S1F6(ParseItem(stack));
+            dataCollection.FormattedStatusRequestEvent((SFCD)sfcd);
         }
 
         void handleS2F13()
         {
             var requestData = GetData(PrimaryMessage.SecsItem);
-            // need to be finished;
-
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-            {
-                A("SV"),
-            });
-            PrimaryMessage.S2F14(ParseItem(stack));
+            dataCollection.EquipmentConstantsRequestEvent(requestData);
         }
 
         void handleS2F37()
@@ -257,7 +276,7 @@ namespace Granda.ATTS.CIM.Scenario
             if (requestData.Length >= 2)
             {
                 var ceids = requestData.Skip(1).Take(requestData.Length - 1).ToArray();
-                dataCollection.UpdateEventStatus(ceed == 0, ceids);
+                dataCollection.EnableDisableEventReportEvent(requestData);
             }
 
             PrimaryMessage.S2F38(0);
@@ -280,28 +299,69 @@ namespace Granda.ATTS.CIM.Scenario
         }
         #endregion
 
-        public interface IDataCollection
-        {
-            void ReceivedSelectedEquipmnentStatusData(string[] data);
-            void ReceivedFormattedStatusData(object data);
-            void UpdateEventStatus(bool enable, string[] ceidArr);
-        }
+
 
         private class DefaultDataCollection : IDataCollection
         {
+            public void EquipmentConstantsRequestEvent(string[] data)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void FormattedStatusRequestEvent(SFCD sfcd)
+            {
+                throw new NotImplementedException();
+            }
+
             public void ReceivedFormattedStatusData(object data)
             {
 
             }
 
-            public void ReceivedSelectedEquipmnentStatusData(string[] data)
+            public void SelectedEquipmentStatusRequestEvent(string[] data)
             {
                 Debug.WriteLine("");
             }
 
-            public void UpdateEventStatus(bool enable, string[] ceidArr)
+            public void TraceDataInitializationRequestEvent(TraceDataInitializationRequest traceDataInitializationRequest)
+            {
+                throw new NotImplementedException();
+            }
+
+            public void EnableDisableEventReportEvent(string[] ceidArr)
             {
             }
         }
+    }
+    /// <summary>
+    /// Data Collection 回调方法接口
+    /// </summary>
+    public interface IDataCollection
+    {
+        /// <summary>
+        /// Selected Equipment Status Request
+        /// </summary>
+        /// <param name="data"></param>
+        void SelectedEquipmentStatusRequestEvent(string[] data);
+        /// <summary>
+        /// Equipment Constants Request
+        /// </summary>
+        /// <param name="data"></param>
+        void EquipmentConstantsRequestEvent(string[] data);
+        /// <summary>
+        /// Formatted Status Request
+        /// </summary>
+        /// <param name="sfcd"></param>
+        void FormattedStatusRequestEvent(SFCD sfcd);
+        /// <summary>
+        /// Enable Disable Event Report
+        /// </summary>
+        /// <param name="ceidArr"></param>
+        void EnableDisableEventReportEvent(string[] ceidArr);
+        /// <summary>
+        /// Trace Data Initialization Request
+        /// </summary>
+        /// <param name="traceDataInitializationRequest"></param>
+        void TraceDataInitializationRequestEvent(TraceDataInitializationRequest traceDataInitializationRequest);
     }
 }

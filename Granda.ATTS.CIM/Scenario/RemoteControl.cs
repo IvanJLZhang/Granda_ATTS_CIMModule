@@ -85,7 +85,7 @@ namespace Granda.ATTS.CIM.Scenario
             }
             RemoteControlCommandRequest remoteControlCommandJob = new RemoteControlCommandRequest();
             remoteControlCommandJob.Parse(PrimaryMessage.SecsItem);
-            remoteControlScenario.UpdateProcessReportState(remoteControlCommandJob);
+            remoteControlScenario.RemoteControlCommandRequestEvent(remoteControlCommandJob);
         }
         /// <summary>
         /// Process Report
@@ -184,17 +184,25 @@ namespace Granda.ATTS.CIM.Scenario
             return false;
         }
 
-        public interface IRCSCallBack
-        {
-            void UpdateProcessReportState(RemoteControlCommandRequest remoteControlCommandJob);
-        }
+
 
         private class DefaultRemoteControlScenario : IRCSCallBack
         {
-            public void UpdateProcessReportState(RemoteControlCommandRequest remoteControlCommandJob)
+            public void RemoteControlCommandRequestEvent(RemoteControlCommandRequest remoteControlCommandJob)
             {
                 Debug.WriteLine("Update Process Report State: " + remoteControlCommandJob.RCMD.ToString());
             }
         }
+    }
+    /// <summary>
+    /// Remote Control 回调接口
+    /// </summary>
+    public interface IRCSCallBack
+    {
+        /// <summary>
+        /// Remote Control Command Request
+        /// </summary>
+        /// <param name="remoteControlCommandJob"></param>
+        void RemoteControlCommandRequestEvent(RemoteControlCommandRequest remoteControlCommandJob);
     }
 }

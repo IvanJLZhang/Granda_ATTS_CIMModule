@@ -13,6 +13,10 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
+using Granda.AATS.Log;
+using Granda.ATTS.CIM.Data.ENUM;
+using Granda.ATTS.CIM.Data.Message;
+using Granda.ATTS.CIM.Data.Report;
 using Granda.ATTS.CIM.Extension;
 using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.Scenario;
@@ -21,20 +25,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
-using static Granda.ATTS.CIM.Extension.ExtensionHelper;
-using static Granda.ATTS.CIM.Scenario.AlarmManagement;
-using static Granda.ATTS.CIM.Scenario.Clock;
-using static Granda.ATTS.CIM.Scenario.EqtTerminalService;
-using static Granda.ATTS.CIM.Scenario.InitializeScenario;
-using static Granda.ATTS.CIM.Scenario.RemoteControl;
-using static Granda.ATTS.CIM.Scenario.RecipeManagement;
-using static Granda.ATTS.CIM.Scenario.DataCollection;
-using Granda.ATTS.CIM.Data.ENUM;
-using Granda.ATTS.CIM.Data.Report;
-using Granda.ATTS.CIM.Data.Message;
 using System.Threading;
-using Granda.AATS.Log;
-
+using static Granda.ATTS.CIM.Extension.ExtensionHelper;
 namespace Granda.ATTS.CIM
 {
     /// <summary>
@@ -50,7 +42,7 @@ namespace Granda.ATTS.CIM
     /// 等场景下primary message的处理
     /// </summary>
     public class CimModuleBase :
-        IItializeScenario,
+        IInitializeScenario,
         IRCSCallBack,
         IAMSCallBack,
         IClock,
@@ -89,7 +81,7 @@ namespace Granda.ATTS.CIM
         /// RESUME,
         /// OPERATOR_CALL,
         /// </summary>
-        public event EventHandler<TEventArgs<RemoteControlCommandRequest>> ProcessStateReport;
+        public event EventHandler<TEventArgs<RemoteControlCommandRequest>> OnRemoteControlCommandRequest;
         /// <summary>
         /// Host发送Enable/Disable Alarm指令事件
         /// </summary>
@@ -112,6 +104,43 @@ namespace Granda.ATTS.CIM
         /// 发生错误事件, 此为静态事件， 通过类名直接注册
         /// </summary>
         public static event EventHandler<TEventArgs<Exception>> ErrorOccured;
+        /// <summary>
+        /// Trace Data Initialization Request event
+        /// </summary>
+        public event EventHandler<TEventArgs<TraceDataInitializationRequest>> OnTraceDataInitializationRequest;
+        /// <summary>
+        /// Formatted Status Request event
+        /// </summary>
+        public event EventHandler<TEventArgs<SFCD>> OnFormattedStatusRequest;
+
+        /// <summary>
+        /// Equipment Constants Request event
+        /// </summary>
+        public event EventHandler<TEventArgs<string[]>> OnEquipmentConstantsRequest;
+        /// <summary>
+        /// Enable Disable event report event
+        /// </summary>
+        public event EventHandler<TEventArgs<string[]>> OnEnableDisableEventReportRequest;
+        /// <summary>
+        /// Selected Equipment Status Request event
+        /// </summary>
+        public event EventHandler<TEventArgs<string[]>> OnSelectedEquipmentStatusRequest;
+        /// <summary>
+        /// Formatted Process Program Request event
+        /// </summary>
+        public event EventHandler<TEventArgs<FormattedProcessProgramRequest>> OnFormattedProcessProgramRequest;
+        /// <summary>
+        /// Current EPPD Request event 
+        /// </summary>
+        public event EventHandler<TEventArgs<CurrentEPPDRequest>> OnCurrentEPPDRequest;
+        /// <summary>
+        /// Current Alarm List Request
+        /// </summary>
+        public event EventHandler<TEventArgs<CurrentAlarmListRequest>> OnCurrentAlarmListRequest;
+        /// <summary>
+        /// Alarm Enable Disable Request Event
+        /// </summary>
+        public event EventHandler<TEventArgs<AlarmEnableDisableRequest>> OnAlarmEnableDisableRequest;
         #endregion
 
         #region 构造方法
@@ -122,13 +151,7 @@ namespace Granda.ATTS.CIM
         {
             Thread.CurrentThread.Name = "Main";
             LogAdapter.WriteLog(new LogRecord(LogLevel.INFO, "Initialize CIM Module."));
-            scenarioControllers.Add(Scenarios.Intialize_Scenario, new InitializeScenario(this));
-            scenarioControllers.Add(Scenarios.Remote_Control, new RemoteControl(this));
-            scenarioControllers.Add(Scenarios.Alarm_Management, new AlarmManagement(this));
-            scenarioControllers.Add(Scenarios.Clock, new Clock(this));
-            scenarioControllers.Add(Scenarios.Equipment_Terminal_Service, new EqtTerminalService(this));
-            scenarioControllers.Add(Scenarios.Recipe_Management, new RecipeManagement(this));
-            scenarioControllers.Add(Scenarios.Data_Collection, new DataCollection(this));
+
         }
         /// <summary>
         /// 构造方法， 提供SecsGem参数
@@ -157,6 +180,34 @@ namespace Granda.ATTS.CIM
             secsGemService.ConnectionChanged += SecsGemService_ConnectionChanged;
             secsGemService.PrimaryMessageRecived += SecsGemService_PrimaryMessageRecived;
             DeviceId = deviceId;
+        }
+        /// <summary>
+        /// 场景初始化
+        /// <para>接口初始化和事件初始化不可同时使用，即如果初始化了相应场景的接口之后，对应场景下所有的事件将不会再被响应</para>
+        /// </summary>
+        /// <param name="itializeScenario">initialize场景回调方法接口</param>
+        /// <param name="rCSCallBack">Remote Control场景回调方法接口</param>
+        /// <param name="aMSCallBack">Alart Management场景回调方法接口</param>
+        /// <param name="clock">Clock场景回调方法接口</param>
+        /// <param name="eqtTerminalService">Equipment Terminal Service场景回调方法接口</param>
+        /// <param name="recipeManagement">Prcess Program(Recipe) Management场景回调方法接口</param>
+        /// <param name="dataCollection">Data Collection场景回调方法接口</param>
+        public void ScenarioInitialize(
+            IInitializeScenario itializeScenario = null,
+            IRCSCallBack rCSCallBack = null,
+            IAMSCallBack aMSCallBack = null,
+            IClock clock = null,
+            IEqtTerminalService eqtTerminalService = null,
+            IRecipeManagement recipeManagement = null,
+            IDataCollection dataCollection = null)
+        {
+            scenarioControllers.Add(Scenarios.Intialize_Scenario, new InitializeScenario(itializeScenario ?? this));
+            scenarioControllers.Add(Scenarios.Remote_Control, new RemoteControl(rCSCallBack ?? this));
+            scenarioControllers.Add(Scenarios.Alarm_Management, new AlarmManagement(aMSCallBack ?? this));
+            scenarioControllers.Add(Scenarios.Clock, new Clock(clock ?? this));
+            scenarioControllers.Add(Scenarios.Equipment_Terminal_Service, new EqtTerminalService(eqtTerminalService ?? this));
+            scenarioControllers.Add(Scenarios.Recipe_Management, new RecipeManagement(recipeManagement ?? this));
+            scenarioControllers.Add(Scenarios.Data_Collection, new DataCollection(dataCollection ?? this));
         }
         #endregion
 
@@ -279,9 +330,9 @@ namespace Granda.ATTS.CIM
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void UpdateProcessReportState(RemoteControlCommandRequest hostCommand)
+        public void RemoteControlCommandRequestEvent(RemoteControlCommandRequest hostCommand)
         {
-            ProcessStateReport?.Invoke(this, new TEventArgs<RemoteControlCommandRequest>(hostCommand));
+            OnRemoteControlCommandRequest?.Invoke(this, new TEventArgs<RemoteControlCommandRequest>(hostCommand));
         }
 
         /// <summary>
@@ -310,28 +361,83 @@ namespace Granda.ATTS.CIM
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public virtual void ReceivedSelectedEquipmnentStatusData(string[] data)
-        {
-            //throw new NotImplementedException();
-        }
-        /// <summary>
-        /// 接口方法，触发事件，无需调用
-        /// </summary>
-        public virtual void ReceivedFormattedStatusData(object data) { }
-        /// <summary>
-        /// 接口方法，触发事件，无需调用
-        /// </summary>
-        public void UpdateEventStatus(bool enable, string[] ceidArr)
-        {
-            throw new NotImplementedException();
-        }
-        /// <summary>
-        /// 接口方法，触发事件，无需调用
-        /// </summary>
         private void SecsGemService_ConnectionChanged(object sender, TEventArgs<ConnectionState> e)
         {
             Debug.WriteLine("connection state change: " + e.Data.ToString());
             ConnectionChanged?.Invoke(this, new TEventArgs<ConnectionState>(e.Data));
+        }
+
+        /// <summary>
+        /// 接口方法，触发事件，无需调用
+        /// </summary>
+        public virtual void SelectedEquipmentStatusRequestEvent(string[] data)
+        {
+            OnSelectedEquipmentStatusRequest?.Invoke(this, new TEventArgs<string[]>(data));
+        }
+
+        /// <summary>
+        /// 接口方法，触发事件，无需调用
+        /// </summary>
+        public void EnableDisableEventReportEvent(string[] ceidArr)
+        {
+            OnEnableDisableEventReportRequest?.Invoke(this, new TEventArgs<string[]>(ceidArr));
+        }
+        /// <summary>
+        /// 接口方法，触发事件，无需调用
+        /// </summary>
+        /// <param name="data"></param>
+        public void EquipmentConstantsRequestEvent(string[] data)
+        {
+            OnEquipmentConstantsRequest?.Invoke(this, new TEventArgs<string[]>(data));
+        }
+        /// <summary>
+        /// 接口方法，触发事件，无需调用
+        /// </summary>
+        /// <param name="sfcd"></param>
+        public void FormattedStatusRequestEvent(SFCD sfcd)
+        {
+            OnFormattedStatusRequest?.Invoke(this, new TEventArgs<SFCD>(sfcd));
+        }
+        /// <summary>
+        /// 接口方法，触发事件，无需调用
+        /// </summary>
+        /// <param name="traceDataInitializationRequest"></param>
+        public void TraceDataInitializationRequestEvent(TraceDataInitializationRequest traceDataInitializationRequest)
+        {
+            OnTraceDataInitializationRequest?.Invoke(this, new TEventArgs<TraceDataInitializationRequest>(traceDataInitializationRequest));
+        }
+        /// <summary>
+        /// 接口方法，触发事件，无需调用
+        /// </summary>
+        /// <param name="currentEPPDRequest"></param>
+        public void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest)
+        {
+            OnCurrentEPPDRequest?.Invoke(this, new TEventArgs<CurrentEPPDRequest>(currentEPPDRequest));
+        }
+        /// <summary>
+        /// 接口方法，触发事件，无需调用
+        /// </summary>
+        /// <param name="formattedProcessProgramRequest"></param>
+        public void FormattedProcessProgramRequestEvent(FormattedProcessProgramRequest formattedProcessProgramRequest)
+        {
+            OnFormattedProcessProgramRequest?.Invoke(this, new TEventArgs<FormattedProcessProgramRequest>(formattedProcessProgramRequest));
+        }
+        /// <summary>
+        /// 接口方法，触发事件，无需调用
+        /// </summary>
+        /// <param name="alarmEnableDisableJob"></param>
+        public void AlarmEnableDisableRequestEvent(AlarmEnableDisableRequest alarmEnableDisableJob)
+        {
+            OnAlarmEnableDisableRequest?.Invoke(this, new TEventArgs<AlarmEnableDisableRequest>(alarmEnableDisableJob));
+        }
+
+        /// <summary>
+        /// 接口方法，触发事件，无需调用
+        /// </summary>
+        /// <param name="currentAlarmListJob"></param>
+        public void CurrentAlarmListRequestEvent(CurrentAlarmListRequest currentAlarmListJob)
+        {
+            OnCurrentAlarmListRequest?.Invoke(this, new TEventArgs<CurrentAlarmListRequest>(currentAlarmListJob));
         }
         #endregion
     }

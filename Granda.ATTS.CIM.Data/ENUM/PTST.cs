@@ -3,8 +3,8 @@
 // Copyright © 2018 Granda. All Rights Reserved.
 // 苏州广林达电子科技有限公司 版权所有
 //------------------------------------------------------------------------------
-// File Name: EquipmentStatus
-// Author: Ivan JL Zhang    Date: 2018/4/11 13:59:49    Version: 1.0.0
+// File Name: PTST
+// Author: Ivan JL Zhang    Date: 2018/4/14 10:40:01    Version: 1.0.0
 // Description: 
 //   
 // 
@@ -21,29 +21,33 @@ using System.Text;
 namespace Granda.ATTS.CIM.Data.ENUM
 {
     /// <summary>
-    /// EQST,Equipment Status
+    /// Port Status
     /// </summary>
-    public enum CommonStatus
+    public enum PTST
     {
         /// <summary>
-        /// IDLE
+        /// 0: Load Request,
         /// </summary>
-        I,
+        LoadRequest = 0,
         /// <summary>
-        /// RUN
+        /// 1: Pre-Load Complete,
         /// </summary>
-        R,
+        PreLoadComplete,
         /// <summary>
-        /// DOWN
+        /// 2: Load Complete,
         /// </summary>
-        D,
+        LoadComplete,
         /// <summary>
-        /// MAINT
+        /// 3: Unload Request,
         /// </summary>
-        M,
+        UnloadRequest,
         /// <summary>
-        /// PAUSE
+        /// 4: Unload Complete,
         /// </summary>
-        P,
+        UnloadComplete,
+        /// <summary>
+        /// 5: Disable
+        /// </summary>
+        Disable,
     }
 }

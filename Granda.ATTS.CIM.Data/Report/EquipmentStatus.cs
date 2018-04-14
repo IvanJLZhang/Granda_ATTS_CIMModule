@@ -36,7 +36,7 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <summary>
         /// Equipment Status
         /// </summary>
-        public EQST EQST { get; set; }
+        public CommonStatus EQST { get; set; }
         /// <summary>
         /// equipment status reason code
         /// </summary>

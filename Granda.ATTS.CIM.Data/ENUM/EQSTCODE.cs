@@ -26,21 +26,21 @@ namespace Granda.ATTS.CIM.Data.ENUM
     /// </summary>
     public abstract class EQSTCODE
     {
-        private static Dictionary<EQST, Dictionary<string, int>> _eqstcodelist = null;
+        private static Dictionary<CommonStatus, Dictionary<string, int>> _eqstcodelist = null;
         /// <summary>
         /// 系统内置的equipment status reason code列表
         /// 作为参考以及校验用
         /// </summary>
-        public static Dictionary<EQST, Dictionary<string, int>> EQSTCODELIST
+        public static Dictionary<CommonStatus, Dictionary<string, int>> EQSTCODELIST
         {
             get
             {
                 if (_eqstcodelist != null)
                     return _eqstcodelist;
-                _eqstcodelist = new Dictionary<EQST, Dictionary<string, int>>();
-                using (var filestream = File.OpenRead("EQSTCODE"))
+                _eqstcodelist = new Dictionary<CommonStatus, Dictionary<string, int>>();
+                using (var filestream = File.OpenRead(@".\Configs\EQSTCODE"))
                 {
-                    EQST key = EQST.I;
+                    CommonStatus key = CommonStatus.I;
                     StreamReader reader = new StreamReader(filestream);
                     while (!reader.EndOfStream)
                     {
@@ -49,27 +49,27 @@ namespace Granda.ATTS.CIM.Data.ENUM
                         {
                             if (line.Contains("MAINT"))
                             {
-                                key = EQST.M;
+                                key = CommonStatus.M;
                                 _eqstcodelist.Add(key, new Dictionary<string, int>());
                             }
                             else if (line.Contains("DOWN"))
                             {
-                                key = EQST.D;
+                                key = CommonStatus.D;
                                 _eqstcodelist.Add(key, new Dictionary<string, int>());
                             }
                             else if (line.Contains("PAUSE"))
                             {
-                                key = EQST.P;
+                                key = CommonStatus.P;
                                 _eqstcodelist.Add(key, new Dictionary<string, int>());
                             }
                             else if (line.Contains("IDLE"))
                             {
-                                key = EQST.I;
+                                key = CommonStatus.I;
                                 _eqstcodelist.Add(key, new Dictionary<string, int>());
                             }
                             else if (line.Contains("RUN"))
                             {
-                                key = EQST.R;
+                                key = CommonStatus.R;
                                 _eqstcodelist.Add(key, new Dictionary<string, int>());
                             }
                         }

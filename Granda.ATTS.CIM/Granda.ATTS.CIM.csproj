@@ -50,9 +50,6 @@
     <Compile Include="CimModuleBase.cs" />
     <Compile Include="CimModuleForHST.cs" />
     <Compile Include="CimModuleForEQT.cs" />
-    <Compile Include="Core\Item.cs" />
-    <Compile Include="Core\MessageHeader.cs" />
-    <Compile Include="Core\MessageType.cs" />
     <Compile Include="Data\StreamFunction.cs" />
     <Compile Include="Extension\ExtensionHelper.cs" />
     <Compile Include="Extension\MyTracer.cs" />
@@ -86,7 +83,7 @@
     <Compile Include="StreamType\Stream9_SystemErrors.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="StreamFunctionList.json">
+    <Content Include="Configs\StreamFunctionList.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

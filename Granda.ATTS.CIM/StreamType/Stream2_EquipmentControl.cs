@@ -100,7 +100,7 @@ namespace Granda.ATTS.CIM.StreamType
         /// Trace Initialize Acknowledge
         /// </summary>
         /// <returns></returns>
-        public static SecsMessage S2F24(string TIAACK)
+        public static SecsMessage S2F24(this SecsMessage secsMessage, string TIAACK)
         {
             var stack = new Stack<List<Item>>();
             stack.Push(new List<Item>() {
@@ -108,7 +108,7 @@ namespace Granda.ATTS.CIM.StreamType
             });
             var item = ParseItem(stack);
 
-            return SendMessage(2, 24, false, item);
+            return SendMessage(2, 24, secsMessage.SystenBytes, item);
         }
 
         /// <summary>

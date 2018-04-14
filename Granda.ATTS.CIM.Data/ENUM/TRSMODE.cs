@@ -3,8 +3,8 @@
 // Copyright © 2018 Granda. All Rights Reserved.
 // 苏州广林达电子科技有限公司 版权所有
 //------------------------------------------------------------------------------
-// File Name: EquipmentStatus
-// Author: Ivan JL Zhang    Date: 2018/4/11 13:59:49    Version: 1.0.0
+// File Name: TRSMODE
+// Author: Ivan JL Zhang    Date: 2018/4/14 10:37:30    Version: 1.0.0
 // Description: 
 //   
 // 
@@ -21,29 +21,17 @@ using System.Text;
 namespace Granda.ATTS.CIM.Data.ENUM
 {
     /// <summary>
-    /// EQST,Equipment Status
+    /// Transfer Mode
     /// </summary>
-    public enum CommonStatus
+    public enum TRSMODE
     {
         /// <summary>
-        /// IDLE
+        /// AUTO (AGV or STK),
         /// </summary>
-        I,
+        AUTO = 1,
         /// <summary>
-        /// RUN
+        /// Manual(MGV).
         /// </summary>
-        R,
-        /// <summary>
-        /// DOWN
-        /// </summary>
-        D,
-        /// <summary>
-        /// MAINT
-        /// </summary>
-        M,
-        /// <summary>
-        /// PAUSE
-        /// </summary>
-        P,
+        Manual = 2,
     }
 }

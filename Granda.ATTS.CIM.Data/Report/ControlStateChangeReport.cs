@@ -22,6 +22,9 @@ using static Secs4Net.Item;
 using static Granda.ATTS.CIM.Data.Helper;
 namespace Granda.ATTS.CIM.Data.Report
 {
+    /// <summary>
+    /// Control State Change Report
+    /// </summary>
     public struct ControlStateChangeReport : IReport
     {
         /// <summary>
