@@ -41,6 +41,9 @@ namespace Granda.ATTS.CIM.Data.Report
         /// equipment status reason code
         /// </summary>
         public Int32 EQSTCODE { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public Item SecsItem
         {
             get

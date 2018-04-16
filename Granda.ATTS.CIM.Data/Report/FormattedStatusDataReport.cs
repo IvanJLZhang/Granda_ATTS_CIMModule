@@ -13,14 +13,11 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Granda.ATTS.CIM.Data.ENUM;
 using Secs4Net;
-using static Secs4Net.Item;
 using static Granda.ATTS.CIM.Data.Helper;
+using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.Data.Report
 {
     /// <summary>
@@ -56,6 +53,9 @@ namespace Granda.ATTS.CIM.Data.Report
         /// Mask Status Data List
         /// </summary>
         public MaskStatusDatas MaskStatusDataList { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public Item SecsItem
         {
             get
@@ -145,7 +145,9 @@ namespace Granda.ATTS.CIM.Data.Report
         /// Slot Information
         /// </summary>
         public SLOTINFO SLOTINFO { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public Item SecsItem
         {
             get
@@ -282,6 +284,9 @@ namespace Granda.ATTS.CIM.Data.Report
         /// Unit Slot Number List
         /// </summary>
         public USLOTNOS USLOTNOLIST { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public Item SecsItem
         {
             get
@@ -379,7 +384,9 @@ namespace Granda.ATTS.CIM.Data.Report
         /// Glass ID
         /// </summary>
         public string GLSID { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public Item SecsItem
         {
             get
@@ -475,7 +482,9 @@ namespace Granda.ATTS.CIM.Data.Report
         /// Mask Status List
         /// </summary>
         public MaskStatuss MaskStatusList { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public Item SecsItem
         {
             get
@@ -582,7 +591,9 @@ namespace Granda.ATTS.CIM.Data.Report
         /// Sub Unit mask status list
         /// </summary>
         public MaskStatusDatas SUNITMaskStatusList { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public Item SecsItem
         {
             get

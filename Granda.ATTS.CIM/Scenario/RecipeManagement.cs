@@ -13,26 +13,23 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Granda.ATTS.CIM.Extension;
-using Secs4Net;
-using static Secs4Net.Item;
-using static Granda.ATTS.CIM.Extension.SmlExtension;
-
-using static Granda.ATTS.CIM.StreamType.Stream7_ProcessProgramManagement;
-using static Granda.ATTS.CIM.StreamType.Stream6_DataCollection;
-using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Data.Message;
 using Granda.ATTS.CIM.Data.Report;
+using Granda.ATTS.CIM.Extension;
+using Secs4Net;
+using System;
+using System.Collections.Generic;
+using static Granda.ATTS.CIM.Extension.SmlExtension;
+using static Granda.ATTS.CIM.StreamType.Stream6_DataCollection;
+using static Granda.ATTS.CIM.StreamType.Stream7_ProcessProgramManagement;
+using static Secs4Net.Item;
 
 namespace Granda.ATTS.CIM.Scenario
 {
     internal class RecipeManagement : BaseScenario, IScenario
     {
+        #region 构造方法和变量
         public RecipeManagement()
         {
             ScenarioType = Model.Scenarios.Recipe_Management;
@@ -42,17 +39,20 @@ namespace Granda.ATTS.CIM.Scenario
         {
             recipeManagement = callback;
         }
+        #endregion
+
+        #region message handle methods
         public void HandleSecsMessage(SecsMessage secsMessage)
         {
             PrimaryMessage = secsMessage;
             switch (secsMessage.GetSFString())
             {
-                case "S7F19":
+                case "S7F19":// current EPPD request
                     SubScenarioName = Resource.RMS_Host_Attempts_To_Recipe_Mnt;
                     handleS7F19Message();
                     break;
-                case "S725":
-                    SubScenarioName = Resource.RMS_Host_Attempts_To_Recipe_Mnt;
+                case "S725":// formatted process program request
+                    SubScenarioName = Resource.RMS_Host_Requests_formatted_Process_program;
                     handleS7F25Message();
                     break;
                 default:
@@ -60,11 +60,33 @@ namespace Granda.ATTS.CIM.Scenario
             }
         }
         /// <summary>
+        /// current EPPD request
+        /// </summary>
+        void handleS7F19Message()
+        {
+            CurrentEPPDRequest currentEPPDRequest = new CurrentEPPDRequest();
+            currentEPPDRequest.Parse(PrimaryMessage.SecsItem);
+            recipeManagement.CurrentEPPDRequestEvent(currentEPPDRequest, true);
+        }
+        /// <summary>
+        /// formatted process program request
+        /// </summary>
+        void handleS7F25Message()
+        {
+            FormattedProcessProgramRequest formattedProcessProgramRequest = new FormattedProcessProgramRequest();
+            formattedProcessProgramRequest.Parse(PrimaryMessage.SecsItem);
+            recipeManagement.FormattedProcessProgramRequestEvent(formattedProcessProgramRequest, true);
+        }
+        #endregion
+
+        #region Process Program(Recipe) management methods
+        /// <summary>
         /// local端Process Program or Recipe发生变化时向host发送通知
         /// </summary>
         /// <returns></returns>
         public bool LaunchRecipeChangeReportProcess(IReport report)
         {
+            SubScenarioName = Resource.RMS_Recipe_Changed;
             var replyMsg = S6F11(report.SecsItem, 401);
             if (replyMsg != null && replyMsg.GetSFString() == "S6F12")
             {
@@ -76,11 +98,13 @@ namespace Granda.ATTS.CIM.Scenario
                         return true;
                     }
                 }
-                catch (InvalidOperationException)
+                catch (InvalidOperationException ex)
                 {
+                    CimModuleBase.WriteLog(AATS.Log.LogLevel.ERROR, "", ex);
                     return false;
                 }
             }
+            CimModuleBase.WriteLog(AATS.Log.LogLevel.ERROR, "something wrong was happened when send recipe change data");
             return false;
         }
         /// <summary>
@@ -103,6 +127,8 @@ namespace Granda.ATTS.CIM.Scenario
             PrimaryMessage.S7F26(report.SecsItem);
             return true;
         }
+
+        #region host 端测试用例
         /// <summary>
         /// Host端尝试直接进行Recipe管理
         /// </summary>
@@ -148,37 +174,26 @@ namespace Granda.ATTS.CIM.Scenario
             }
             return false;
         }
+        #endregion
+        #endregion
 
-
-        void handleS7F19Message()
-        {
-            CurrentEPPDRequest currentEPPDRequest = new CurrentEPPDRequest();
-            currentEPPDRequest.Parse(PrimaryMessage.SecsItem);
-            recipeManagement.CurrentEPPDRequestEvent(currentEPPDRequest);
-        }
-
-        void handleS7F25Message()
-        {
-            FormattedProcessProgramRequest formattedProcessProgramRequest = new FormattedProcessProgramRequest();
-            formattedProcessProgramRequest.Parse(PrimaryMessage.SecsItem);
-            recipeManagement.FormattedProcessProgramRequestEvent(formattedProcessProgramRequest);
-        }
-
-
-
+        #region 接口默认实例
         private class DefaultRecipeManagement : IRecipeManagement
         {
-            public void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest)
+            public void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest, bool needReply = false)
             {
                 throw new NotImplementedException();
             }
 
-            public void FormattedProcessProgramRequestEvent(FormattedProcessProgramRequest formattedProcessProgramRequest)
+            public void FormattedProcessProgramRequestEvent(FormattedProcessProgramRequest formattedProcessProgramRequest, bool needReply = false)
             {
                 throw new NotImplementedException();
             }
         }
+        #endregion
     }
+
+    #region 接口
     /// <summary>
     /// Process Program (Recipe) Management 回调方法接口
     /// </summary>
@@ -187,12 +202,11 @@ namespace Granda.ATTS.CIM.Scenario
         /// <summary>
         /// Current EPPD Request回调方法
         /// </summary>
-        /// <param name="currentEPPDRequest"></param>
-        void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest);
+        void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest, bool needReply = false);
         /// <summary>
         /// Formatted Process Program Request回调方法
         /// </summary>
-        /// <param name="formattedProcessProgramRequest"></param>
-        void FormattedProcessProgramRequestEvent(FormattedProcessProgramRequest formattedProcessProgramRequest);
+        void FormattedProcessProgramRequestEvent(FormattedProcessProgramRequest formattedProcessProgramRequest, bool needReply = false);
     }
+    #endregion
 }

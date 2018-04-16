@@ -1,18 +1,16 @@
-﻿using Secs4Net;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using Granda.ATTS.CIM.Extension;
-using Granda.ATTS.CIM.Model;
-using static Granda.ATTS.CIM.Extension.ExtensionHelper;
-using static Granda.ATTS.CIM.Extension.SmlExtension;
-using static Granda.ATTS.CIM.StreamType.Stream1_EquipmentStatus;
-using static Granda.ATTS.CIM.StreamType.Stream2_EquipmentControl;
-using static Granda.ATTS.CIM.StreamType.Stream6_DataCollection;
-using static Secs4Net.Item;
+﻿using Granda.AATS.Log;
 using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Data.Report;
+using Granda.ATTS.CIM.Extension;
+using Granda.ATTS.CIM.Model;
+using Secs4Net;
+using System;
+using System.Diagnostics;
+using static Granda.ATTS.CIM.Extension.ExtensionHelper;
+using static Granda.ATTS.CIM.StreamType.Stream1_EquipmentStatus;
+using static Granda.ATTS.CIM.StreamType.Stream2_EquipmentControl;
+using static Granda.ATTS.CIM.StreamType.Stream6_DataCollection;
 
 namespace Granda.ATTS.CIM.Scenario
 {
@@ -21,6 +19,7 @@ namespace Granda.ATTS.CIM.Scenario
     /// </summary>
     internal class InitializeScenario : BaseScenario, IScenario
     {
+        #region 构造方法及变量定义
         /// <summary>
         /// 默认构造函数
         /// </summary>
@@ -48,7 +47,9 @@ namespace Granda.ATTS.CIM.Scenario
         ///// </summary>
         //public EquipmentStatus EquipmentStatusInfo { get => _equipmentStatusInfo; set => _equipmentStatusInfo = value; }
 
+        #endregion
 
+        #region message handler methods
         /// <summary>
         /// handle online/offline request by host
         /// </summary>
@@ -78,9 +79,10 @@ namespace Granda.ATTS.CIM.Scenario
                         case CRST.L:
                         case CRST.R:
                             // send OFF_LINE Acknowledge
+                            // 0: Accepted, 1: Not Accepted
                             secsMessage.S1F16("0");
                             // send Control State Change(OFF_LINE)
-                            launchControlStateProcess((int)CRST.O, this._equipmentStatusInfo);
+                            launchControlStateProcess((int)CRST.O);
                             break;
                         default:
                             break;
@@ -97,7 +99,56 @@ namespace Granda.ATTS.CIM.Scenario
                     break;
             }
         }
-        #region Initialize Scenario: 
+
+        /// <summary>
+        /// establish communication request by host
+        /// </summary>
+        void handleS1F13()
+        {
+            SubScenarioName = Resource.Intialize_Scenario_3;
+            EquipmentBaseInfo message = new EquipmentBaseInfo();
+            message.Parse(PrimaryMessage.SecsItem);
+            //this._equipmentBaseInfo = message;
+            PrimaryMessage.S1F14(_equipmentBaseInfo.MDLN, _equipmentBaseInfo.SOFTREV, "0");
+        }
+        /// <summary>
+        /// request online by host
+        /// 0: Accepted,
+        /// 1: Not Accepted,
+        /// 2: Already ON-LINE LOCAL,
+        /// 3: Already ON-LINE REMOTE.
+        /// </summary>
+        void handleS1F17()
+        {
+            SubScenarioName = Resource.Intialize_Scenario_3;
+            string ONLACK = String.Empty;
+            switch (this._equipmentStatusInfo.CRST)
+            {
+                case CRST.O:
+                    ONLACK = "0";
+                    break;
+                case CRST.L:
+                    ONLACK = "2";
+                    break;
+                case CRST.R:
+                    ONLACK = "3";
+                    break;
+                default:
+                    ONLACK = "0";
+                    break;
+            }
+            PrimaryMessage.S1F18(ONLACK);
+            if (launchControlStateProcess((int)CRST.R))
+            {
+                if (LaunchDateTimeUpdateProcess())
+                {
+                    launchControlStateProcess(114);
+                }
+            }
+        }
+        #endregion
+
+        #region Initialize Scenario methods
         /// <summary>
         /// 启动建立连接进程 online by Unit
         /// </summary>
@@ -110,36 +161,48 @@ namespace Granda.ATTS.CIM.Scenario
             // send estublish communication request
             var replyMsg = S1F13(_equipmentBaseInfo.SecsItem);
 
-            if (!(replyMsg != null && replyMsg.GetSFString() == "S1F14"))
+            if ((replyMsg != null && replyMsg.GetSFString() == "S1F14"))
             {
-                return false;
+                var ack = replyMsg.GetCommandValue();
+                if (ack != 0)
+                {
+                    CimModuleBase.WriteLog(LogLevel.INFO, "Host denies establish communication request.");
+                    return false;
+                }
             }
 
             replyMsg = S1F1();
             if (replyMsg == null || replyMsg.F == 0)
             {// host denies online request
+                CimModuleBase.WriteLog(LogLevel.INFO, "Host denies online request.");
                 return false;
             }
-            if (launchControlStateProcess((int)CRST.R, this._equipmentStatusInfo))
+            CimModuleBase.WriteLog(LogLevel.DEBUG, "Host grants online.");
+            if (launchControlStateProcess((int)CRST.R))
             {
                 if (LaunchDateTimeUpdateProcess())
                 {
-                    return launchControlStateProcess((int)CRST.EQT_STATUS_CHANGE, this._equipmentStatusInfo);
+                    return launchControlStateProcess(114);
                 }
             }
+            CimModuleBase.WriteLog(LogLevel.ERROR, "estublish communication with host failed.");
             return false;
         }
 
         /// <summary>
         /// 启动Offline进程 Offline by Unit
+        /// <para>If Host reply ACK=0, Equipment turns control mode to Offline Mode,
+        /// If Host reply ACK != 0 or host no response, Equipment still change to Offline</para>
         /// </summary>
         /// <returns></returns>
         public bool LaunchOfflineProcess()
         {
             SubScenarioName = Resource.Intialize_Scenario_2;
-            var result = launchControlStateProcess((int)CRST.O, this._equipmentStatusInfo);
+            var result = launchControlStateProcess((int)CRST.O);
             return result;
         }
+
+        #region Host methods
         /// <summary>
         /// 启动online by host 进程
         /// </summary>
@@ -197,6 +260,8 @@ namespace Granda.ATTS.CIM.Scenario
         }
         #endregion
 
+        #endregion
+
         #region 其他可公开的控制进程
         /// <summary>
         /// 设置Control State状态：
@@ -206,56 +271,51 @@ namespace Granda.ATTS.CIM.Scenario
         ///      114==>EQUIPMENT STATUS CHANGE
         /// </summary>
         /// <param name="ceid"></param>
-        /// <param name="equipmentStatus"></param>
         /// <returns></returns>
-        private bool launchControlStateProcess(int ceid, EquipmentStatus equipmentStatus)
+        private bool launchControlStateProcess(int ceid)
         {
-            if (ceid >= 111 && ceid <= 114)
-            {// control state change
-                EquipmentStatus newEquipmentStatus = new EquipmentStatus()
+            ControlStateChangeReport controlStateChangeReport = new ControlStateChangeReport()
+            {
+                CEID = ceid,
+                EquipmentStatus = new EquipmentStatus()
                 {
-                    CRST = equipmentStatus.CRST,
-                    EQST = equipmentStatus.EQST,
-                    EQSTCODE = equipmentStatus.EQSTCODE,
-                };
-                if (ceid == 114)
-                {
-                    newEquipmentStatus.CRST = CRST.R;
-                }
-                else
-                {
-                    newEquipmentStatus.CRST = (CRST)ceid;
-                }
-                ControlStateChangeReport controlStateChangeReport = new ControlStateChangeReport()
-                {
-                    CEID = ceid,
-                    EquipmentStatus = newEquipmentStatus,
-                    DATAID = 0,
-                    RPTID = 100,
-                };
-                var replyMsg = S6F11(controlStateChangeReport.SecsItem, (int)ceid);
-                if (replyMsg != null && replyMsg.GetSFString() == "S6F12")
-                {
-                    try
+                    CRST = ceid == 114 ? CRST.R : (CRST)ceid,
+                    EQST = this._equipmentStatusInfo.EQST,
+                    EQSTCODE = this._equipmentStatusInfo.EQSTCODE,
+                },
+                DATAID = 0,
+                RPTID = 100,
+            };
+            var replyMsg = S6F11(controlStateChangeReport.SecsItem, (int)ceid);
+            switch (ceid)
+            {
+                case (int)CRST.R:
+                case (int)CRST.L:
+                    if (!(replyMsg != null && replyMsg.GetSFString() == "S6F12"))
                     {
                         int ack = replyMsg.GetCommandValue();
                         if (ack == 0)
                         {
-                            if (ceid != 114)
-                            {
-                                this._equipmentStatusInfo = newEquipmentStatus;
-                                itializeScenario?.UpdateControlState(this._equipmentStatusInfo);
-                            }
-
+                            this._equipmentStatusInfo = controlStateChangeReport.EquipmentStatus;
+                            itializeScenario?.UpdateControlState(this._equipmentStatusInfo);
                             return true;
                         }
                     }
-                    catch (InvalidOperationException)
+                    break;
+                case (int)CRST.O:// no matter what happened, send control state change event
+                    this._equipmentStatusInfo = controlStateChangeReport.EquipmentStatus;
+                    itializeScenario?.UpdateControlState(this._equipmentStatusInfo);
+                    return true;
+                case 114:
+                    if (!(replyMsg != null && replyMsg.GetSFString() == "S6F12"))
                     {
-                        return false;
+                        return replyMsg.GetCommandValue() == 0;
                     }
-                }
+                    break;
+                default:
+                    break;
             }
+            CimModuleBase.WriteLog(LogLevel.ERROR, "something was wrong when sending S6F11 message.");
             return false;
         }
         /// <summary>
@@ -264,72 +324,35 @@ namespace Granda.ATTS.CIM.Scenario
         /// <returns></returns>
         public bool LaunchDateTimeUpdateProcess()
         {
+            CimModuleBase.WriteLog(LogLevel.DEBUG, "send update date and time request to host.");
             var replyMsg = S2F17();
             if (replyMsg != null && replyMsg.GetSFString() == "S2F18")
             {
                 var dateTimeStr = replyMsg.SecsItem.GetString();
+                CimModuleBase.WriteLog(LogLevel.DEBUG, "get response datetime string: " + dateTimeStr);
                 itializeScenario?.UpdateDateTime(dateTimeStr);
                 return true;
             }
+            CimModuleBase.WriteLog(LogLevel.ERROR, "something wrong happened in sending update date and time request to host");
             return false;
         }
         #endregion
 
-        #region message handler methods
-        void handleS1F13()
-        {
-            SubScenarioName = Resource.Intialize_Scenario_3;
-            EquipmentBaseInfo message = new EquipmentBaseInfo();
-            message.Parse(PrimaryMessage.SecsItem);
-            this._equipmentBaseInfo = message;
-            PrimaryMessage.S1F14(message.MDLN, message.SOFTREV, "0");
-        }
-
-        void handleS1F17()
-        {
-            SubScenarioName = Resource.Intialize_Scenario_3;
-            string ONLACK = String.Empty;
-            switch (this._equipmentStatusInfo.CRST)
-            {
-                case CRST.O:
-                    ONLACK = "0";
-                    break;
-                case CRST.L:
-                    ONLACK = "2";
-                    break;
-                case CRST.R:
-                    ONLACK = "3";
-                    break;
-                case CRST.EQT_STATUS_CHANGE:
-                default:
-                    break;
-            }
-            PrimaryMessage.S1F18(ONLACK);
-            if (launchControlStateProcess((int)CRST.R, this._equipmentStatusInfo))
-            {
-                if (LaunchDateTimeUpdateProcess())
-                {
-                    launchControlStateProcess((int)CRST.EQT_STATUS_CHANGE, this._equipmentStatusInfo);
-                }
-            }
-        }
-        #endregion
-
-
-
+        #region 接口默认实例类
         private class DefaultIItializeScenario : IInitializeScenario
         {
-            public void UpdateControlState(EquipmentStatus controlState)
+            public void UpdateControlState(EquipmentStatus controlState, bool needReply = false)
             {
                 Debug.WriteLine("Control State Changed: " + controlState.CRST.ToString());
             }
-            public void UpdateDateTime(string dateTimeStr)
+            public void UpdateDateTime(string dateTimeStr, bool needReply = false)
             {
                 Debug.WriteLine("date and time update: " + dateTimeStr);
             }
         }
-
+        #endregion
     }
+
     #region 接口
     /// <summary>
     /// Initialize Scenario interface
@@ -340,12 +363,14 @@ namespace Granda.ATTS.CIM.Scenario
         /// 更新 Control State状态
         /// </summary>
         /// <param name="controlState"></param>
-        void UpdateControlState(EquipmentStatus controlState);
+        /// <param name="needReply"></param>
+        void UpdateControlState(EquipmentStatus controlState, bool needReply = false);
         /// <summary>
         /// 更新系统时间
         /// </summary>
         /// <param name="dateTimeStr"></param>
-        void UpdateDateTime(string dateTimeStr);
+        /// <param name="needReply"></param>
+        void UpdateDateTime(string dateTimeStr, bool needReply = false);
     }
     #endregion
 }

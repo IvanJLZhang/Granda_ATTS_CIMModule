@@ -189,6 +189,9 @@
   <data name="RMS_Host_Attempts_To_Recipe_Mnt" xml:space="preserve">
     <value>Host Attempts to Process Program Directory Request</value>
   </data>
+  <data name="RMS_Host_Requests_formatted_Process_program" xml:space="preserve">
+    <value>Formatted Process Program Request</value>
+  </data>
   <data name="RMS_Recipe_Changed" xml:space="preserve">
     <value>Process Program is changed(created/edited/deleted) by Operator</value>
   </data>

@@ -15,11 +15,9 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Secs4Net;
-using static Secs4Net.Item;
 using static Granda.ATTS.CIM.Data.Helper;
+using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.Data.Report
 {
     /// <summary>
@@ -47,16 +45,22 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <summary>
         /// Report ID
         /// </summary>
-        public string RPTID1 { get; private set; }
+        public int RPTID1 { get; private set; }
         /// <summary>
         /// Equipment Constant ID
         /// </summary>
         public ECIDDatas ECIDLIST { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public Item SecsItem
         {
             get
             {
+                DATAID = 0;
+                CEID = 109;
+                RPTID = 100;
+                RPTID1 = 109;
                 var stack = new Stack<List<Item>>();
                 stack.Push(new List<Item>() {
                     A($"{DATAID}"),
@@ -91,6 +95,9 @@ namespace Granda.ATTS.CIM.Data.Report
         /// Equipment Constant Value
         /// </summary>
         public string ECV { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public Item SecsItem
         {
             get
@@ -103,8 +110,8 @@ namespace Granda.ATTS.CIM.Data.Report
                     var item = _items[index];
                     stack.Push(new List<Item>()
                     {
-                        A(ECID??String.Empty),
-                        A(ECV??String.Empty),
+                        A(item.ECID ?? String.Empty),
+                        A(item.ECV ?? String.Empty),
                     });
                 }
                 return ParseItem(stack);

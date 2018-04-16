@@ -35,6 +35,7 @@ namespace Granda.ATTS.CIM.Scenario
 {
     internal class DataCollection : BaseScenario, IScenario
     {
+        #region 构造方法和变量
         public DataCollection()
         {
             ScenarioType = Scenarios.Data_Collection;
@@ -44,8 +45,9 @@ namespace Granda.ATTS.CIM.Scenario
         {
             dataCollection = callback;
         }
+        #endregion
 
-        #region data collection process
+        #region message handle methods
         public void HandleSecsMessage(SecsMessage secsMessage)
         {
             PrimaryMessage = secsMessage;
@@ -55,7 +57,7 @@ namespace Granda.ATTS.CIM.Scenario
                     SubScenarioName = Resource.DCS_Discrete_Variable_Data_Send;
                     PrimaryMessage.S6F4(0);
                     break;
-                case "S2F23":
+                case "S2F23":// trace data initialization request
                     SubScenarioName = Resource.DCS_Host_Initiates_Trace_Report;
                     PrimaryMessage.S2F24("0");
                     TraceDataInitializationRequest traceDataInitializationRequest = new TraceDataInitializationRequest();
@@ -76,9 +78,9 @@ namespace Granda.ATTS.CIM.Scenario
                     SubScenarioName = Resource.DCS_Equipment_Constants_Request;
                     handleS2F13();
                     break;
-                case "S2F15":
+                case "S2F15":// X
                     break;
-                case "S2F37":
+                case "S2F37":// host request enable or disable events
                     SubScenarioName = Resource.DCS_Host_Requests_Enable_Disable_Event;
                     handleS2F37();
                     break;
@@ -86,6 +88,64 @@ namespace Granda.ATTS.CIM.Scenario
                     break;
             }
         }
+        /// <summary>
+        /// Selected equipment Status request
+        /// </summary>
+        void handleS1F3()
+        {
+            var requestData = GetData(PrimaryMessage.SecsItem);
+            dataCollection.SelectedEquipmentStatusRequestEvent(requestData, true);
+        }
+        /// <summary>
+        /// Host requests the formatted status
+        /// </summary>
+        void handleS1F5()
+        {
+            var sfcd = PrimaryMessage.GetCommandValue();
+            dataCollection.FormattedStatusRequestEvent((SFCD)sfcd, true);
+        }
+        /// <summary>
+        /// Equipment constants request
+        /// </summary>
+        void handleS2F13()
+        {
+            var requestData = GetData(PrimaryMessage.SecsItem);
+            dataCollection.EquipmentConstantsRequestEvent(requestData, true);
+        }
+        /// <summary>
+        /// Host requests Enable or Disable events
+        /// </summary>
+        void handleS2F37()
+        {
+            var requestData = GetData(PrimaryMessage.SecsItem);
+            var ceed = PrimaryMessage.GetCommandValue();
+            if (requestData.Length >= 2)
+            {
+                var ceids = requestData.Skip(1).Take(requestData.Length - 1).ToArray();
+                dataCollection.EnableDisableEventReportEvent(requestData);
+            }
+
+            PrimaryMessage.S2F38(0);
+        }
+
+        string[] GetData(Item itemList)
+        {
+            List<string> result = new List<string>();
+            if (itemList != null)
+            {
+                foreach (var item in itemList.Items)
+                {
+                    if (item.Count == 1)
+                        result.Add(item.GetString());
+                    else
+                        result.AddRange(GetData(item));
+                }
+            }
+            return result.ToArray();
+        }
+        #endregion
+
+        #region data collection process
         /// <summary>
         /// Glass/Lot/Mask Process result report
         /// </summary>
@@ -102,6 +162,7 @@ namespace Granda.ATTS.CIM.Scenario
                 if (ack == 0)
                     return true;
             }
+            CimModuleBase.WriteLog(AATS.Log.LogLevel.ERROR, "something wrong was happened when sending process result report");
             return false;
         }
         /// <summary>
@@ -129,7 +190,6 @@ namespace Granda.ATTS.CIM.Scenario
             {
                 stack.Peek().Add(A(item));
             }
-
             PrimaryMessage.S1F4(ParseItem(stack));
             return true;
         }
@@ -159,8 +219,10 @@ namespace Granda.ATTS.CIM.Scenario
                 if (ack == 0)
                     return true;
             }
+            CimModuleBase.WriteLog(AATS.Log.LogLevel.ERROR, "something wrong was happened when send Epuipment Constanrs Report message.");
             return false;
         }
+
         #region host message
         ///// <summary>
         ///// Host requests the value of Status Variables(SV)
@@ -250,89 +312,42 @@ namespace Granda.ATTS.CIM.Scenario
 
         #endregion
 
-        #region message handle methods
-        void handleS1F3()
-        {
-            var requestData = GetData(PrimaryMessage.SecsItem);
-            dataCollection.SelectedEquipmentStatusRequestEvent(requestData);
-        }
-
-        void handleS1F5()
-        {
-            var sfcd = PrimaryMessage.GetCommandValue();
-            dataCollection.FormattedStatusRequestEvent((SFCD)sfcd);
-        }
-
-        void handleS2F13()
-        {
-            var requestData = GetData(PrimaryMessage.SecsItem);
-            dataCollection.EquipmentConstantsRequestEvent(requestData);
-        }
-
-        void handleS2F37()
-        {
-            var requestData = GetData(PrimaryMessage.SecsItem);
-            var ceed = PrimaryMessage.GetCommandValue();
-            if (requestData.Length >= 2)
-            {
-                var ceids = requestData.Skip(1).Take(requestData.Length - 1).ToArray();
-                dataCollection.EnableDisableEventReportEvent(requestData);
-            }
-
-            PrimaryMessage.S2F38(0);
-        }
-
-        string[] GetData(Item itemList)
-        {
-            List<string> result = new List<string>();
-            if (itemList != null)
-            {
-                foreach (var item in itemList.Items)
-                {
-                    if (item.Count == 1)
-                        result.Add(item.GetString());
-                    else
-                        result.AddRange(GetData(item));
-                }
-            }
-            return result.ToArray();
-        }
-        #endregion
-
-
-
+        #region 接口默认实例类
         private class DefaultDataCollection : IDataCollection
         {
-            public void EquipmentConstantsRequestEvent(string[] data)
+            public void EquipmentConstantsRequestEvent(string[] data, bool needReply = false)
             {
                 throw new NotImplementedException();
             }
 
-            public void FormattedStatusRequestEvent(SFCD sfcd)
+            public void FormattedStatusRequestEvent(SFCD sfcd, bool needReply = false)
             {
                 throw new NotImplementedException();
             }
 
-            public void ReceivedFormattedStatusData(object data)
+            public void ReceivedFormattedStatusData(object data, bool needReply = false)
             {
 
             }
 
-            public void SelectedEquipmentStatusRequestEvent(string[] data)
+            public void SelectedEquipmentStatusRequestEvent(string[] data, bool needReply = false)
             {
                 Debug.WriteLine("");
             }
 
-            public void TraceDataInitializationRequestEvent(TraceDataInitializationRequest traceDataInitializationRequest)
+            public void TraceDataInitializationRequestEvent(TraceDataInitializationRequest traceDataInitializationRequest, bool needReply = false)
             {
                 throw new NotImplementedException();
             }
 
-            public void EnableDisableEventReportEvent(string[] ceidArr)
+            public void EnableDisableEventReportEvent(string[] ceidArr, bool needReply = false)
             {
             }
         }
+        #endregion
     }
+
+    #region 接口
     /// <summary>
     /// Data Collection 回调方法接口
     /// </summary>
@@ -341,27 +356,23 @@ namespace Granda.ATTS.CIM.Scenario
         /// <summary>
         /// Selected Equipment Status Request
         /// </summary>
-        /// <param name="data"></param>
-        void SelectedEquipmentStatusRequestEvent(string[] data);
+        void SelectedEquipmentStatusRequestEvent(string[] data, bool needReply = false);
         /// <summary>
         /// Equipment Constants Request
         /// </summary>
-        /// <param name="data"></param>
-        void EquipmentConstantsRequestEvent(string[] data);
+        void EquipmentConstantsRequestEvent(string[] data, bool needReply = false);
         /// <summary>
         /// Formatted Status Request
         /// </summary>
-        /// <param name="sfcd"></param>
-        void FormattedStatusRequestEvent(SFCD sfcd);
+        void FormattedStatusRequestEvent(SFCD sfcd, bool needReply = false);
         /// <summary>
         /// Enable Disable Event Report
         /// </summary>
-        /// <param name="ceidArr"></param>
-        void EnableDisableEventReportEvent(string[] ceidArr);
+        void EnableDisableEventReportEvent(string[] ceidArr, bool needReply = false);
         /// <summary>
         /// Trace Data Initialization Request
         /// </summary>
-        /// <param name="traceDataInitializationRequest"></param>
-        void TraceDataInitializationRequestEvent(TraceDataInitializationRequest traceDataInitializationRequest);
+        void TraceDataInitializationRequestEvent(TraceDataInitializationRequest traceDataInitializationRequest, bool needReply = false);
     }
+    #endregion
 }

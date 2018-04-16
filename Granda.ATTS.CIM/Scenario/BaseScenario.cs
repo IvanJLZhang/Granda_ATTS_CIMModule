@@ -33,10 +33,22 @@ namespace Granda.ATTS.CIM.Scenario
         /// 场景类型名称
         /// </summary>
         public string ScenarioName { get => ScenarioType.ToString().Replace("_", " "); }
+        private string _subScenarioName = String.Empty;
         /// <summary>
         /// 场景下功能名称
         /// </summary>
-        public string SubScenarioName { get; set; } = String.Empty;
+        public string SubScenarioName
+        {
+            get
+            {
+                return _subScenarioName;
+            }
+            set
+            {
+                _subScenarioName = value;
+                CimModuleBase.WriteLog(AATS.Log.LogLevel.INFO, "Scenario: " + ScenarioName + ", Function: " + _subScenarioName);
+            }
+        }
 
         public SecsMessage PrimaryMessage { get; set; }
         public SecsTracer secsTracer { get; set; }

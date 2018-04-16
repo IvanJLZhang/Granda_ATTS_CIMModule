@@ -37,9 +37,9 @@ namespace Granda.ATTS.CIM.Data.ENUM
         /// online remote
         /// </summary>
         R = 113,
-        /// <summary>
-        /// equipment status change
-        /// </summary>
-        EQT_STATUS_CHANGE = 114
+        ///// <summary>
+        ///// equipment status change
+        ///// </summary>
+        //EQT_STATUS_CHANGE = 114
     }
 }

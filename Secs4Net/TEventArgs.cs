@@ -7,11 +7,14 @@ namespace Secs4Net
 {
     public class TEventArgs<T> : EventArgs
     {
-        public TEventArgs(T data)
+        public TEventArgs(T data, bool needReply = false)
         {
             Data = data;
+            this.NeedReply = needReply;
         }
 
         public T Data { get; set; }
+
+        public bool NeedReply { get; set; }
     }
 }

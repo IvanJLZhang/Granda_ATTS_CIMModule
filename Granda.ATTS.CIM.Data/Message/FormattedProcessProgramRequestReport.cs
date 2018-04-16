@@ -15,13 +15,13 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Granda.ATTS.CIM.Data.ENUM;
+using Granda.ATTS.CIM.Data.Report;
 using Secs4Net;
-using static Secs4Net.Item;
 using static Granda.ATTS.CIM.Data.Helper;
-namespace Granda.ATTS.CIM.Data.Report
+using static Secs4Net.Item;
+
+namespace Granda.ATTS.CIM.Data.Message
 {
     /// <summary>
     /// Formatted Process Program Request
@@ -49,7 +49,10 @@ namespace Granda.ATTS.CIM.Data.Report
         /// </summary>
         public PPTYPE PPTYPE { get; private set; }
 
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
         public void Parse(Item item)
         {
             if (item.Items.Count == 5)
@@ -59,7 +62,7 @@ namespace Granda.ATTS.CIM.Data.Report
                 SUNITID = item.Items[2].Format == SecsFormat.ASCII ? item.Items[2].GetString() : String.Empty;
                 SSUNITID = item.Items[3].Format == SecsFormat.ASCII ? item.Items[3].GetString() : String.Empty;
 
-                Enum.TryParse(item.Items[0].Format == SecsFormat.ASCII ? item.Items[0].GetString() : String.Empty, out PPTYPE pPTYPE);
+                Enum.TryParse(item.Items[4].Format == SecsFormat.ASCII ? item.Items[4].GetString() : String.Empty, out PPTYPE pPTYPE);
                 this.PPTYPE = pPTYPE;
             }
         }
@@ -91,7 +94,9 @@ namespace Granda.ATTS.CIM.Data.Report
         /// Process Command list
         /// </summary>
         public ProcessCommands ProcessCommandList { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public Item SecsItem
         {
             get

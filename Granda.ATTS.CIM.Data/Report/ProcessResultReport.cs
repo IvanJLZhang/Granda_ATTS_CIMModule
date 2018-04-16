@@ -15,12 +15,10 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Secs4Net;
-using static Secs4Net.Item;
-using static Granda.ATTS.CIM.Data.Helper;
 using Granda.ATTS.CIM.Data.ENUM;
+using Secs4Net;
+using static Granda.ATTS.CIM.Data.Helper;
+using static Secs4Net.Item;
 
 namespace Granda.ATTS.CIM.Data.Report
 {
@@ -32,7 +30,7 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <summary>
         /// CEID
         /// </summary>
-        public PTYPE CEID { get; private set; }
+        public PTYPE CEID { get; set; }
         /// <summary>
         /// Unit Id
         /// </summary>

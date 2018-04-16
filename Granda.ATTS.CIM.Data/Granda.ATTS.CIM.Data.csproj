@@ -60,7 +60,7 @@
     <Compile Include="Message\CurrentEPPDRequestReport.cs" />
     <Compile Include="Message\TraceDataInitializationRequestReport.cs" />
     <Compile Include="Report\EquipmentConstantChangeReport.cs" />
-    <Compile Include="Report\FormattedProcessProgramRequest.cs" />
+    <Compile Include="Message\FormattedProcessProgramRequestReport.cs" />
     <Compile Include="Report\FormattedStatusDataReport.cs" />
     <Compile Include="Report\IReport.cs" />
     <Compile Include="Message\IMessage.cs" />

@@ -13,20 +13,18 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Extension;
 using Secs4Net;
+using System;
+using System.Diagnostics;
 using static Granda.ATTS.CIM.StreamType.Stream2_EquipmentControl;
 
 namespace Granda.ATTS.CIM.Scenario
 {
     internal class Clock : BaseScenario, IScenario
     {
+        #region 构造方法和变量
         IClock clock = new DefaultClock();
         public Clock()
         {
@@ -36,6 +34,9 @@ namespace Granda.ATTS.CIM.Scenario
         {
             clock = callback;
         }
+        #endregion
+
+        #region message handle methods
         public void HandleSecsMessage(SecsMessage secsMessage)
         {
             switch (secsMessage.GetSFString())
@@ -56,6 +57,9 @@ namespace Granda.ATTS.CIM.Scenario
                     break;
             }
         }
+        #endregion
+
+        #region Clock methods
         /// <summary>
         /// host 端用于测试向eqt发送更新时间指定功能
         /// </summary>
@@ -75,16 +79,19 @@ namespace Granda.ATTS.CIM.Scenario
             }
             return false;
         }
+        #endregion
 
-
+        #region 接口默认实例
         public class DefaultClock : IClock
         {
-            public void UpdateDateTime(string dateTimeStr)
+            public void UpdateDateTime(string dateTimeStr, bool needReply = false)
             {
                 Debug.WriteLine("update data time string: " + dateTimeStr);
             }
         }
+        #endregion
     }
+    #region 接口
     /// <summary>
     /// Clock 回调方法接口
     /// </summary>
@@ -93,7 +100,7 @@ namespace Granda.ATTS.CIM.Scenario
         /// <summary>
         /// 更新系统时间
         /// </summary>
-        /// <param name="dateTimeStr"></param>
-        void UpdateDateTime(string dateTimeStr);
+        void UpdateDateTime(string dateTimeStr, bool needReply = false);
     }
+    #endregion
 }

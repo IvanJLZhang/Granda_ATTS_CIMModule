@@ -13,32 +13,33 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+using Granda.ATTS.CIM.Data;
+using Granda.ATTS.CIM.Data.Message;
 using Granda.ATTS.CIM.Extension;
 using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.StreamType;
 using Secs4Net;
+using System.Collections.Generic;
+using System.Diagnostics;
 using static Granda.ATTS.CIM.Extension.ExtensionHelper;
+using static Granda.ATTS.CIM.Extension.SmlExtension;
 using static Granda.ATTS.CIM.StreamType.Stream5_ExceptionReporting;
 using static Secs4Net.Item;
-using static Granda.ATTS.CIM.Extension.SmlExtension;
-using Granda.ATTS.CIM.Data;
-using Granda.ATTS.CIM.Data.Message;
 
 namespace Granda.ATTS.CIM.Scenario
 {
     internal class AlarmManagement : BaseScenario, IScenario
     {
+        #region 构造方法和变量
         private IAMSCallBack AMSCallBack = new DefaultAMSCallBack();
         public AlarmManagement(IAMSCallBack callback)
         {
             this.ScenarioType = Scenarios.Alarm_Management;
             this.AMSCallBack = callback;
         }
+        #endregion
+
+        #region message handle methods
         public void HandleSecsMessage(SecsMessage secsMessage)
         {
             PrimaryMessage = secsMessage;
@@ -55,12 +56,15 @@ namespace Granda.ATTS.CIM.Scenario
                     SubScenarioName = Resource.AMS_Alarm_List_Request;
                     CurrentAlarmListRequest currentAlarmListJob = new CurrentAlarmListRequest();
                     currentAlarmListJob.Parse(PrimaryMessage.SecsItem);
-                    AMSCallBack.CurrentAlarmListRequestEvent(currentAlarmListJob);
+                    AMSCallBack.CurrentAlarmListRequestEvent(currentAlarmListJob, true);
                     break;
                 default:
                     break;
             }
         }
+        #endregion
+
+        #region Alarm Management methods
         /// <summary>
         /// 对RequestAlarmList的回复
         /// </summary>
@@ -108,22 +112,28 @@ namespace Granda.ATTS.CIM.Scenario
             {
                 return true;
             }
+
             return false;
         }
+        #endregion
 
+        #region 接口默认实例
         private class DefaultAMSCallBack : IAMSCallBack
         {
-            public void CurrentAlarmListRequestEvent(CurrentAlarmListRequest currentAlarmListJob)
+            public void CurrentAlarmListRequestEvent(CurrentAlarmListRequest currentAlarmListJob, bool needReply = false)
             {
                 //throw new NotImplementedException();
             }
 
-            public void AlarmEnableDisableRequestEvent(AlarmEnableDisableRequest alarmEnableDisableJob)
+            public void AlarmEnableDisableRequestEvent(AlarmEnableDisableRequest alarmEnableDisableJob, bool needReply = false)
             {
                 Debug.WriteLine("is enable alarm: " + alarmEnableDisableJob.ALED);
             }
         }
+        #endregion
     }
+
+    #region 接口
     /// <summary>
     /// Alarm Management 回调方法接口
     /// </summary>
@@ -132,12 +142,11 @@ namespace Granda.ATTS.CIM.Scenario
         /// <summary>
         /// Alarm Enable Disable Request
         /// </summary>
-        /// <param name="alarmEnableDisableJob"></param>
-        void AlarmEnableDisableRequestEvent(AlarmEnableDisableRequest alarmEnableDisableJob);
+        void AlarmEnableDisableRequestEvent(AlarmEnableDisableRequest alarmEnableDisableJob, bool needReply = false);
         /// <summary>
         /// Alarm Set List Request
         /// </summary>
-        /// <param name="currentAlarmListJob"></param>
-        void CurrentAlarmListRequestEvent(CurrentAlarmListRequest currentAlarmListJob);
+        void CurrentAlarmListRequestEvent(CurrentAlarmListRequest currentAlarmListJob, bool needReply = false);
     }
+    #endregion
 }

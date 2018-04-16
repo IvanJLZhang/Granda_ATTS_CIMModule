@@ -64,11 +64,10 @@ namespace Granda.ATTS.CIM
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        /// <param name="data"></param>
-        public override void SelectedEquipmentStatusRequestEvent(string[] data)
+        public override void SelectedEquipmentStatusRequestEvent(string[] data, bool needReply = false)
         {
             base.SelectedEquipmentStatusRequestEvent(data);
-            SelectedEquipmnentStatusDataReceived?.Invoke(this, new TEventArgs<string[]>(data));
+            SelectedEquipmnentStatusDataReceived?.Invoke(this, new TEventArgs<string[]>(data, needReply));
         }
         #endregion
 

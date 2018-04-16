@@ -15,12 +15,10 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Granda.ATTS.CIM.Data.ENUM;
 using Secs4Net;
-using static Secs4Net.Item;
 using static Granda.ATTS.CIM.Data.Helper;
+using static Secs4Net.Item;
 
 namespace Granda.ATTS.CIM.Data.Message
 {
@@ -37,6 +35,10 @@ namespace Granda.ATTS.CIM.Data.Message
         /// Process Program Type
         /// </summary>
         public PPTYPE PPTYPE { get; private set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
         public void Parse(Item item)
         {
             if (item.Items.Count == 2)
@@ -64,6 +66,9 @@ namespace Granda.ATTS.CIM.Data.Message
         /// Process Program ID List
         /// </summary>
         public IList<string> PPIDLIST;
+        /// <summary>
+        /// 
+        /// </summary>
         public Item SecsItem
         {
             get
@@ -78,7 +83,6 @@ namespace Granda.ATTS.CIM.Data.Message
                 {
                     stack.Peek().Add(A(item));
                 }
-
                 return ParseItem(stack);
             }
 

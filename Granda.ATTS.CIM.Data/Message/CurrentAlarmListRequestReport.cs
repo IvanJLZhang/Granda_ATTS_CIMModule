@@ -13,14 +13,10 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Secs4Net;
-using static Secs4Net.Item;
 using static Granda.ATTS.CIM.Data.Helper;
+using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.Data.Message
 {
     /// <summary>
@@ -32,6 +28,10 @@ namespace Granda.ATTS.CIM.Data.Message
         /// UNITID List
         /// </summary>
         public IEnumerable<string> UNITIDLIST;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
         public void Parse(Item item)
         {
             List<string> list = new List<string>();
@@ -64,7 +64,9 @@ namespace Granda.ATTS.CIM.Data.Message
         /// ALID List
         /// </summary>
         public IEnumerable<string> ALIDLIST;
-
+        /// <summary>
+        /// 
+        /// </summary>
         public Item SecsItem
         {
             get
@@ -74,12 +76,13 @@ namespace Granda.ATTS.CIM.Data.Message
                 foreach (var item in _items)
                 {
                     stack.Push(new List<Item>() {
-                        A(UNITID),
+                        A(item.UNITID),
                     });
-                    foreach (var ALID in ALIDLIST)
+                    stack.Push(new List<Item>());
+                    foreach (var ALID in item.ALIDLIST)
                     {
                         stack.Peek().Add(A(ALID));
-                    }
+                    } 
                 }
                 return ParseItem(stack);
             }

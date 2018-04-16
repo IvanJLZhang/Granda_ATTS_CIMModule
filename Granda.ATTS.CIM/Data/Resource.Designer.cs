@@ -277,6 +277,15 @@ namespace Granda.ATTS.CIM.Data {
         }
         
         /// <summary>
+        ///   查找类似 Formatted Process Program Request 的本地化字符串。
+        /// </summary>
+        internal static string RMS_Host_Requests_formatted_Process_program {
+            get {
+                return ResourceManager.GetString("RMS_Host_Requests_formatted_Process_program", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   查找类似 Process Program is changed(created/edited/deleted) by Operator 的本地化字符串。
         /// </summary>
         internal static string RMS_Recipe_Changed {

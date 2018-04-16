@@ -13,13 +13,10 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Secs4Net;
-using static Secs4Net.Item;
 using static Granda.ATTS.CIM.Data.Helper;
+using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.Data.Report
 {
     /// <summary>

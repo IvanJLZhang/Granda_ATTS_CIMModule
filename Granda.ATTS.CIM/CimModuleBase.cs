@@ -13,6 +13,11 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Net;
+using System.Threading;
 using Granda.AATS.Log;
 using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Data.Message;
@@ -21,11 +26,6 @@ using Granda.ATTS.CIM.Extension;
 using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.Scenario;
 using Secs4Net;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Net;
-using System.Threading;
 using static Granda.ATTS.CIM.Extension.ExtensionHelper;
 namespace Granda.ATTS.CIM
 {
@@ -281,7 +281,7 @@ namespace Granda.ATTS.CIM
             }
             catch (Exception ex)
             {
-                ErrorOccured?.Invoke(secsGemService, new TEventArgs<Exception>(ex));
+                WriteLog(LogLevel.ERROR, "Send Secondary Message error.", ex);
                 return null;
             }
         }
@@ -303,10 +303,20 @@ namespace Granda.ATTS.CIM
             }
             catch (Exception ex)
             {
-                ErrorOccured?.Invoke(secsGemService, new TEventArgs<Exception>(ex));
+                WriteLog(LogLevel.ERROR, "Send primary Message error.", ex);
                 return null;
             }
 
+        }
+        /// <summary>
+        /// 写入Log信息
+        /// </summary>
+        /// <param name="logLevel"></param>
+        /// <param name="logMessage"></param>
+        /// <param name="ex"></param>
+        public static void WriteLog(LogLevel logLevel, string logMessage, Exception ex = null)
+        {
+            LogAdapter.WriteLog(new LogRecord(logLevel, logMessage, ex));
         }
         #endregion
 
@@ -314,49 +324,41 @@ namespace Granda.ATTS.CIM
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void UpdateControlState(EquipmentStatus controlState)
+        public void UpdateControlState(EquipmentStatus controlState, bool needReply = false)
         {
-            ControlStateChanged?.Invoke(this, new TEventArgs<EquipmentStatus>(controlState));
+            ControlStateChanged?.Invoke(this, new TEventArgs<EquipmentStatus>(controlState, needReply));
         }
 
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void UpdateDateTime(string dateTimeStr)
+        public void UpdateDateTime(string dateTimeStr, bool needReply = false)
         {
-            DateTimeUpdate?.Invoke(this, new TEventArgs<string>(dateTimeStr));
+            DateTimeUpdate?.Invoke(this, new TEventArgs<string>(dateTimeStr, needReply));
         }
 
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void RemoteControlCommandRequestEvent(RemoteControlCommandRequest hostCommand)
+        public void RemoteControlCommandRequestEvent(RemoteControlCommandRequest hostCommand, bool needReply = false)
         {
-            OnRemoteControlCommandRequest?.Invoke(this, new TEventArgs<RemoteControlCommandRequest>(hostCommand));
+            OnRemoteControlCommandRequest?.Invoke(this, new TEventArgs<RemoteControlCommandRequest>(hostCommand, needReply));
         }
 
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void UpdateAlarmStatus(bool isEnable)
+        public void ReceiveTestMessage(string[] messages, bool needReply = false)
         {
-            AlarmStatusUpdated?.Invoke(this, new TEventArgs<bool>(isEnable));
+            ReceiveDisplayMessage?.Invoke(this, new TEventArgs<string[]>(messages, needReply));
         }
 
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void ReceiveTestMessage(string[] messages)
+        public void SendMessageDone(string[] messages, bool needReply = false)
         {
-            ReceiveDisplayMessage?.Invoke(this, new TEventArgs<string[]>(messages));
-        }
-
-        /// <summary>
-        /// 接口方法，触发事件，无需调用
-        /// </summary>
-        public void SendMessageDone(string[] messages)
-        {
-            SendDisplayMessageDone?.Invoke(this, new TEventArgs<string[]>(messages));
+            SendDisplayMessageDone?.Invoke(this, new TEventArgs<string[]>(messages, needReply));
         }
         /// <summary>
         /// 接口方法，触发事件，无需调用
@@ -364,80 +366,73 @@ namespace Granda.ATTS.CIM
         private void SecsGemService_ConnectionChanged(object sender, TEventArgs<ConnectionState> e)
         {
             Debug.WriteLine("connection state change: " + e.Data.ToString());
-            ConnectionChanged?.Invoke(this, new TEventArgs<ConnectionState>(e.Data));
+            ConnectionChanged?.Invoke(this, new TEventArgs<ConnectionState>(e.Data, false));
         }
 
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public virtual void SelectedEquipmentStatusRequestEvent(string[] data)
+        public virtual void SelectedEquipmentStatusRequestEvent(string[] data, bool needReply = false)
         {
-            OnSelectedEquipmentStatusRequest?.Invoke(this, new TEventArgs<string[]>(data));
+            OnSelectedEquipmentStatusRequest?.Invoke(this, new TEventArgs<string[]>(data, needReply));
         }
 
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void EnableDisableEventReportEvent(string[] ceidArr)
+        public void EnableDisableEventReportEvent(string[] ceidArr, bool needReply = false)
         {
-            OnEnableDisableEventReportRequest?.Invoke(this, new TEventArgs<string[]>(ceidArr));
+            OnEnableDisableEventReportRequest?.Invoke(this, new TEventArgs<string[]>(ceidArr, needReply));
         }
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        /// <param name="data"></param>
-        public void EquipmentConstantsRequestEvent(string[] data)
+        public void EquipmentConstantsRequestEvent(string[] data, bool needReply = false)
         {
-            OnEquipmentConstantsRequest?.Invoke(this, new TEventArgs<string[]>(data));
+            OnEquipmentConstantsRequest?.Invoke(this, new TEventArgs<string[]>(data, needReply));
         }
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        /// <param name="sfcd"></param>
-        public void FormattedStatusRequestEvent(SFCD sfcd)
+        public void FormattedStatusRequestEvent(SFCD sfcd, bool needReply = false)
         {
-            OnFormattedStatusRequest?.Invoke(this, new TEventArgs<SFCD>(sfcd));
+            OnFormattedStatusRequest?.Invoke(this, new TEventArgs<SFCD>(sfcd, needReply));
         }
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        /// <param name="traceDataInitializationRequest"></param>
-        public void TraceDataInitializationRequestEvent(TraceDataInitializationRequest traceDataInitializationRequest)
+        public void TraceDataInitializationRequestEvent(TraceDataInitializationRequest traceDataInitializationRequest, bool needReply = false)
         {
-            OnTraceDataInitializationRequest?.Invoke(this, new TEventArgs<TraceDataInitializationRequest>(traceDataInitializationRequest));
+            OnTraceDataInitializationRequest?.Invoke(this, new TEventArgs<TraceDataInitializationRequest>(traceDataInitializationRequest, needReply));
         }
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        /// <param name="currentEPPDRequest"></param>
-        public void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest)
+        public void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest, bool needReply = false)
         {
-            OnCurrentEPPDRequest?.Invoke(this, new TEventArgs<CurrentEPPDRequest>(currentEPPDRequest));
+            OnCurrentEPPDRequest?.Invoke(this, new TEventArgs<CurrentEPPDRequest>(currentEPPDRequest, needReply));
         }
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        /// <param name="formattedProcessProgramRequest"></param>
-        public void FormattedProcessProgramRequestEvent(FormattedProcessProgramRequest formattedProcessProgramRequest)
+        public void FormattedProcessProgramRequestEvent(FormattedProcessProgramRequest formattedProcessProgramRequest, bool needReply = false)
         {
-            OnFormattedProcessProgramRequest?.Invoke(this, new TEventArgs<FormattedProcessProgramRequest>(formattedProcessProgramRequest));
+            OnFormattedProcessProgramRequest?.Invoke(this, new TEventArgs<FormattedProcessProgramRequest>(formattedProcessProgramRequest, needReply));
         }
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        /// <param name="alarmEnableDisableJob"></param>
-        public void AlarmEnableDisableRequestEvent(AlarmEnableDisableRequest alarmEnableDisableJob)
+        public void AlarmEnableDisableRequestEvent(AlarmEnableDisableRequest alarmEnableDisableJob, bool needReply = false)
         {
-            OnAlarmEnableDisableRequest?.Invoke(this, new TEventArgs<AlarmEnableDisableRequest>(alarmEnableDisableJob));
+            OnAlarmEnableDisableRequest?.Invoke(this, new TEventArgs<AlarmEnableDisableRequest>(alarmEnableDisableJob, needReply));
         }
 
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        /// <param name="currentAlarmListJob"></param>
-        public void CurrentAlarmListRequestEvent(CurrentAlarmListRequest currentAlarmListJob)
+        public void CurrentAlarmListRequestEvent(CurrentAlarmListRequest currentAlarmListJob, bool needReply = false)
         {
-            OnCurrentAlarmListRequest?.Invoke(this, new TEventArgs<CurrentAlarmListRequest>(currentAlarmListJob));
+            OnCurrentAlarmListRequest?.Invoke(this, new TEventArgs<CurrentAlarmListRequest>(currentAlarmListJob, needReply));
         }
         #endregion
     }

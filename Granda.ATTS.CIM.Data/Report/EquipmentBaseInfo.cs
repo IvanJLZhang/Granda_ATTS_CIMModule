@@ -15,11 +15,9 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Secs4Net;
-using static Secs4Net.Item;
 using static Granda.ATTS.CIM.Data.Helper;
+using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.Data.Report
 {
     /// <summary>
@@ -54,18 +52,16 @@ namespace Granda.ATTS.CIM.Data.Report
                 return ParseItem(stack);
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
         public void Parse(Item item)
         {
-            try
+            if (item.Items.Count == 2)
             {
-                MDLN = item.Items[0].GetString();
-                SOFTREV = item.Items[1].GetString();
-            }
-            catch (Exception)
-            {
-
-                //throw;
+                MDLN = item.Items[0].Format == SecsFormat.ASCII ? item.Items[0].GetString() : String.Empty;
+                SOFTREV = item.Items[1].Format == SecsFormat.ASCII ? item.Items[1].GetString() : String.Empty;
             }
         }
     }

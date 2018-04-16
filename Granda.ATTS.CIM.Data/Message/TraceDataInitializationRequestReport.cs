@@ -15,11 +15,9 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Secs4Net;
-using static Secs4Net.Item;
 using static Granda.ATTS.CIM.Data.Helper;
+using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.Data.Message
 {
     /// <summary>
@@ -50,10 +48,14 @@ namespace Granda.ATTS.CIM.Data.Message
         /// </summary>
         public string REPGSZ { get; private set; }
         /// <summary>
-        /// Status Variable ID
+        /// Status Variable ID List
         /// <para>Status variables may include any parameter that can be sampled in time such as temperature or quantity of a consumable.</para>
         /// </summary>
         public IEnumerable<string> SVIDList;
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
         public void Parse(Item item)
         {
             if (item.Items.Count == 5)
@@ -100,16 +102,18 @@ namespace Granda.ATTS.CIM.Data.Message
         /// Status Variable ID List
         /// </summary>
         public SVIDS SVIDLIST { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public Item SecsItem
         {
             get
             {
                 var stack = new Stack<List<Item>>();
                 stack.Push(new List<Item>() {
-                    A(TRID??String.Empty),
-                    A(SMPLN??String.Empty),
-                    A(STIME??String.Empty)
+                    A(TRID ?? String.Empty),
+                    A(SMPLN ?? String.Empty),
+                    A(STIME ?? String.Empty)
                 });
                 stack.Push(new List<Item>());
                 for (int index = 0; index < SVIDLIST.Count; index++)
@@ -131,11 +135,11 @@ namespace Granda.ATTS.CIM.Data.Message
     public class SVIDS
     {
         /// <summary>
-        /// 
+        /// Status Variable ID
         /// </summary>
         public string SVID { get; set; }
         /// <summary>
-        /// 
+        /// Status Variable
         /// </summary>
         public string SV { get; set; }
 

@@ -13,14 +13,11 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Granda.ATTS.CIM.Data.ENUM;
 using Secs4Net;
-using static Secs4Net.Item;
 using static Granda.ATTS.CIM.Data.Helper;
+using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.Data.Report
 {
     /// <summary>
@@ -82,6 +79,9 @@ namespace Granda.ATTS.CIM.Data.Report
         /// Process Command list
         /// </summary>
         public ProcessCommands ProcessCommandList { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
         public Item SecsItem
         {
             get

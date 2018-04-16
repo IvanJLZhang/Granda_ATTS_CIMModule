@@ -14,16 +14,13 @@
 //----------------------------------------------------------------------------*/
 #endregion
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Granda.ATTS.CIM.Data.ENUM;
 using Secs4Net;
 
 namespace Granda.ATTS.CIM.Data.Message
 {
     /// <summary>
-    /// 
+    /// Remote Control Command Request
     /// </summary>
     public struct RemoteControlCommandRequest : IMessage
     {
@@ -47,7 +44,10 @@ namespace Granda.ATTS.CIM.Data.Message
         /// Operator Call
         /// </summary>
         public string OPCALL { get; private set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="item"></param>
         public void Parse(Item item)
         {
             if (item == null)
@@ -60,21 +60,24 @@ namespace Granda.ATTS.CIM.Data.Message
                 {
                     if (it.Items.Count == 2)
                     {
-                        if (it.Items[0].GetString().Equals(nameof(this.PTID)))
+                        if (it.Items[0].Format == SecsFormat.ASCII)
                         {
-                            this.PTID = it.Items[1].GetString();
-                        }
-                        else if (it.Items[0].GetString().Equals(nameof(this.CSTID)))
-                        {
-                            this.CSTID = it.Items[1].GetString();
-                        }
-                        else if (it.Items[0].GetString().Equals(nameof(this.LOTID)))
-                        {
-                            this.LOTID = it.Items[1].GetString();
-                        }
-                        else if (it.Items[0].GetString().Equals(nameof(this.LOTID)))
-                        {
-                            this.OPCALL = it.Items[1].GetString();
+                            if (it.Items[0].GetString().Equals(nameof(this.PTID)))
+                            {
+                                this.PTID = it.Items[1].Format == SecsFormat.ASCII ? it.Items[1].GetString() : String.Empty;
+                            }
+                            else if (it.Items[0].GetString().Equals(nameof(this.CSTID)))
+                            {
+                                this.CSTID = it.Items[1].Format == SecsFormat.ASCII ? it.Items[1].GetString() : String.Empty;
+                            }
+                            else if (it.Items[0].GetString().Equals(nameof(this.LOTID)))
+                            {
+                                this.LOTID = it.Items[1].Format == SecsFormat.ASCII ? it.Items[1].GetString() : String.Empty;
+                            }
+                            else if (it.Items[0].GetString().Equals(nameof(this.LOTID)))
+                            {
+                                this.OPCALL = it.Items[1].Format == SecsFormat.ASCII ? it.Items[1].GetString() : String.Empty;
+                            }
                         }
                     }
                 }

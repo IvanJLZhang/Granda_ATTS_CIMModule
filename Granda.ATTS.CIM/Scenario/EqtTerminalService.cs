@@ -13,22 +13,20 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using Granda.ATTS.CIM.Extension;
 using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.StreamType;
 using Secs4Net;
-using static Secs4Net.Item;
+using System.Collections.Generic;
+using System.Diagnostics;
 using static Granda.ATTS.CIM.Extension.SmlExtension;
 using static Granda.ATTS.CIM.StreamType.Stream10_TerminalServices;
+using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.Scenario
 {
     internal class EqtTerminalService : BaseScenario, IScenario
     {
+        #region 构造方法和变量
         public EqtTerminalService()
         {
             ScenarioType = Scenarios.Equipment_Terminal_Service;
@@ -38,6 +36,9 @@ namespace Granda.ATTS.CIM.Scenario
             eqtTerminalService = callback;
         }
         IEqtTerminalService eqtTerminalService = new DefaultEqtTS();
+        #endregion
+
+        #region message handle methods
         public void HandleSecsMessage(SecsMessage secsMessage)
         {
             PrimaryMessage = secsMessage;
@@ -63,6 +64,9 @@ namespace Granda.ATTS.CIM.Scenario
                     break;
             }
         }
+        #endregion
+
+        #region Equipment Terminal Service mthods
         /// <summary>
         /// 用于host/eqt向eqt/host端发送消息
         /// </summary>
@@ -73,7 +77,10 @@ namespace Granda.ATTS.CIM.Scenario
         {
             var stack = new Stack<List<Item>>();
             stack.Push(new List<Item>() {
-                A("TID"),
+                // Terminal number
+                // 0: Single or main terminal,
+                // >0: Additional terminals at the same equipment.
+                A("0"),
             });
             stack.Push(new List<Item>());
             foreach (var msg in messages)
@@ -107,6 +114,7 @@ namespace Granda.ATTS.CIM.Scenario
                     }
                 }
             }
+            CimModuleBase.WriteLog(AATS.Log.LogLevel.ERROR, "something wrong was happened when send display message.");
             return false;
         }
 
@@ -124,20 +132,24 @@ namespace Granda.ATTS.CIM.Scenario
             }
             return null;
         }
+        #endregion
 
-
+        #region 接口默认实例
         private class DefaultEqtTS : IEqtTerminalService
         {
-            public void ReceiveTestMessage(string[] messages)
+            public void ReceiveTestMessage(string[] messages, bool needReply = false)
             {
                 Debug.WriteLine("receive message: " + messages);
             }
-            public void SendMessageDone(string[] messages)
+            public void SendMessageDone(string[] messages, bool needReply = false)
             {
                 Debug.WriteLine("sent message: " + messages);
             }
         }
+        #endregion
     }
+
+    #region 接口
     /// <summary>
     /// Equipment Terminal Service回调方法接口
     /// </summary>
@@ -146,12 +158,11 @@ namespace Granda.ATTS.CIM.Scenario
         /// <summary>
         /// 收到Display Message from host
         /// </summary>
-        /// <param name="messages"></param>
-        void ReceiveTestMessage(string[] messages);
+        void ReceiveTestMessage(string[] messages, bool needReply = false);
         /// <summary>
         /// 向host发送display message结果回调方法
         /// </summary>
-        /// <param name="messages"></param>
-        void SendMessageDone(string[] messages);
+        void SendMessageDone(string[] messages, bool needReply = false);
     }
+    #endregion
 }

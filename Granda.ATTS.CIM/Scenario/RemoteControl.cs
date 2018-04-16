@@ -13,28 +13,27 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Granda.ATTS.CIM.Extension;
-using Granda.ATTS.CIM.Model;
-using Secs4Net;
-using static Granda.ATTS.CIM.StreamType.Stream2_EquipmentControl;
-using static Granda.ATTS.CIM.StreamType.Stream6_DataCollection;
-using static Secs4Net.Item;
-using static Granda.ATTS.CIM.Extension.ExtensionHelper;
-using static Granda.ATTS.CIM.Extension.SmlExtension;
-using System.Diagnostics;
 using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Data.Message;
 using Granda.ATTS.CIM.Data.Report;
+using Granda.ATTS.CIM.Extension;
+using Granda.ATTS.CIM.Model;
+using Secs4Net;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using static Granda.ATTS.CIM.Extension.ExtensionHelper;
+using static Granda.ATTS.CIM.Extension.SmlExtension;
+using static Granda.ATTS.CIM.StreamType.Stream2_EquipmentControl;
+using static Granda.ATTS.CIM.StreamType.Stream6_DataCollection;
+using static Secs4Net.Item;
 
 namespace Granda.ATTS.CIM.Scenario
 {
     internal class RemoteControl : BaseScenario, IScenario
     {
+        #region 构造方法和变量
         private IRCSCallBack remoteControlScenario = new DefaultRemoteControlScenario();
 
         public RemoteControl(IRCSCallBack callback)
@@ -43,6 +42,9 @@ namespace Granda.ATTS.CIM.Scenario
             this.remoteControlScenario = callback;
         }
 
+        #endregion
+
+        #region message handle methods
         public void HandleSecsMessage(SecsMessage secsMessage)
         {
             PrimaryMessage = secsMessage;
@@ -56,7 +58,6 @@ namespace Granda.ATTS.CIM.Scenario
                     break;
             }
         }
-
         private void handleRCMDMessage(int rcmd)
         {
             PrimaryMessage.S2F42(rcmd, 0);// 立即回复S2F42
@@ -87,15 +88,20 @@ namespace Granda.ATTS.CIM.Scenario
             remoteControlCommandJob.Parse(PrimaryMessage.SecsItem);
             remoteControlScenario.RemoteControlCommandRequestEvent(remoteControlCommandJob);
         }
+        #endregion
+
+        #region remote control process
         /// <summary>
         /// Process Report
         /// CEID: 301=>start, 304=>cancel, 305=>abort, 306=>pause, 307=>resume
         /// </summary>
         /// <returns></returns>
-        public bool LaunchProcessReport(RCMD rcmd, ProcessLaunchReport processLaunchReport, EquipmentBaseInfo equipmentBaseInfo)
+        public bool LaunchProcessReport(RCMD rcmd,
+            ProcessLaunchReport processLaunchReport,
+            EquipmentBaseInfo equipmentBaseInfo)
         {
             int ceid = 0;
-            switch ((RCMD)rcmd)
+            switch (rcmd)
             {
                 case RCMD.START:
                     ceid = 301;
@@ -115,6 +121,11 @@ namespace Granda.ATTS.CIM.Scenario
                 case RCMD.OPERATOR_CALL:
                 default:
                     break;
+            }
+            if (ceid <= 0)
+            {
+                CimModuleBase.WriteLog(AATS.Log.LogLevel.ERROR, "CEID value is out of range. CEID: " + ceid);
+                return false;
             }
             ProcessLaunchReport newReport = new ProcessLaunchReport(0, ceid, 100, equipmentBaseInfo, 301)
             {
@@ -136,11 +147,13 @@ namespace Granda.ATTS.CIM.Scenario
                         return true;
                     }
                 }
-                catch (InvalidOperationException)
+                catch (InvalidOperationException ex)
                 {
+                    CimModuleBase.WriteLog(AATS.Log.LogLevel.ERROR, "", ex);
                     return false;
                 }
             }
+            CimModuleBase.WriteLog(AATS.Log.LogLevel.ERROR, "something wrong was happened when send process report");
             return false;
         }
         /// <summary>
@@ -183,17 +196,20 @@ namespace Granda.ATTS.CIM.Scenario
             }
             return false;
         }
+        #endregion
 
-
-
+        #region 接口默认实例
         private class DefaultRemoteControlScenario : IRCSCallBack
         {
-            public void RemoteControlCommandRequestEvent(RemoteControlCommandRequest remoteControlCommandJob)
+            public void RemoteControlCommandRequestEvent(RemoteControlCommandRequest remoteControlCommandJob, bool needReply = false)
             {
                 Debug.WriteLine("Update Process Report State: " + remoteControlCommandJob.RCMD.ToString());
             }
         }
+        #endregion
     }
+
+    #region 接口
     /// <summary>
     /// Remote Control 回调接口
     /// </summary>
@@ -202,7 +218,7 @@ namespace Granda.ATTS.CIM.Scenario
         /// <summary>
         /// Remote Control Command Request
         /// </summary>
-        /// <param name="remoteControlCommandJob"></param>
-        void RemoteControlCommandRequestEvent(RemoteControlCommandRequest remoteControlCommandJob);
+        void RemoteControlCommandRequestEvent(RemoteControlCommandRequest remoteControlCommandJob, bool needReply = false);
     }
+    #endregion
 }
