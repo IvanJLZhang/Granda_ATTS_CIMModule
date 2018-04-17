@@ -83,21 +83,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Granda.ATTS.CIM.Data\Granda.ATTS.CIM.Data.csproj">
-      <Project>{a992048f-ae2a-4b95-894a-76e4f955e986}</Project>
-      <Name>Granda.ATTS.CIM.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Granda.ATTS.CIM\Granda.ATTS.CIM.csproj">
-      <Project>{4717c255-74a3-4000-97ba-06c544dbd6a8}</Project>
-      <Name>Granda.ATTS.CIM</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Secs4Net\SecsCore.csproj">
-      <Project>{3c8c67b8-3746-4d26-b3a8-dcb01b5aa66b}</Project>
-      <Name>SecsCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SmlHelper\SmlHelper.csproj">
-      <Project>{36a2c439-8771-4f98-b33f-390e6d7821a2}</Project>
-      <Name>SmlHelper</Name>
+    <ProjectReference Include="..\..\Granda.HSMS\Granda.HSMS.csproj">
+      <Project>{d2071314-a2a1-4890-9175-7409a9f72880}</Project>
+      <Name>Granda.HSMS</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
