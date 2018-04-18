@@ -114,7 +114,7 @@ namespace Granda.ATTS.CIM.Scenario
                     }
                 }
             }
-            CimModuleBase.WriteLog(AATS.Log.LogLevel.ERROR, "something wrong was happened when send display message.");
+            CIMBASE.WriteLog(AATS.Log.LogLevel.ERROR, "something wrong was happened when send display message.");
             return false;
         }
 
@@ -137,11 +137,11 @@ namespace Granda.ATTS.CIM.Scenario
         #region 接口默认实例
         private class DefaultEqtTS : IEqtTerminalService
         {
-            public void ReceiveTestMessage(string[] messages, bool needReply = false)
+            public void ReceiveTestMessage(string[] messages)
             {
                 Debug.WriteLine("receive message: " + messages);
             }
-            public void SendMessageDone(string[] messages, bool needReply = false)
+            public void SendMessageDone(string[] messages)
             {
                 Debug.WriteLine("sent message: " + messages);
             }
@@ -158,11 +158,11 @@ namespace Granda.ATTS.CIM.Scenario
         /// <summary>
         /// 收到Display Message from host
         /// </summary>
-        void ReceiveTestMessage(string[] messages, bool needReply = false);
+        void ReceiveTestMessage(string[] messages);
         /// <summary>
         /// 向host发送display message结果回调方法
         /// </summary>
-        void SendMessageDone(string[] messages, bool needReply = false);
+        void SendMessageDone(string[] messages);
     }
     #endregion
 }

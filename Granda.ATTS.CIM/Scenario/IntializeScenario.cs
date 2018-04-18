@@ -1,12 +1,12 @@
-﻿using Granda.AATS.Log;
+﻿using System;
+using System.Diagnostics;
+using Granda.AATS.Log;
 using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Data.Report;
 using Granda.ATTS.CIM.Extension;
 using Granda.ATTS.CIM.Model;
 using Secs4Net;
-using System;
-using System.Diagnostics;
 using static Granda.ATTS.CIM.Extension.ExtensionHelper;
 using static Granda.ATTS.CIM.StreamType.Stream1_EquipmentStatus;
 using static Granda.ATTS.CIM.StreamType.Stream2_EquipmentControl;
@@ -166,7 +166,7 @@ namespace Granda.ATTS.CIM.Scenario
                 var ack = replyMsg.GetCommandValue();
                 if (ack != 0)
                 {
-                    CimModuleBase.WriteLog(LogLevel.INFO, "Host denies establish communication request.");
+                    CIMBASE.WriteLog(LogLevel.INFO, "Host denies establish communication request.");
                     return false;
                 }
             }
@@ -174,10 +174,10 @@ namespace Granda.ATTS.CIM.Scenario
             replyMsg = S1F1();
             if (replyMsg == null || replyMsg.F == 0)
             {// host denies online request
-                CimModuleBase.WriteLog(LogLevel.INFO, "Host denies online request.");
+                CIMBASE.WriteLog(LogLevel.INFO, "Host denies online request.");
                 return false;
             }
-            CimModuleBase.WriteLog(LogLevel.DEBUG, "Host grants online.");
+            CIMBASE.WriteLog(LogLevel.DEBUG, "Host grants online.");
             if (launchControlStateProcess((int)CRST.R))
             {
                 if (LaunchDateTimeUpdateProcess())
@@ -185,7 +185,7 @@ namespace Granda.ATTS.CIM.Scenario
                     return launchControlStateProcess(114);
                 }
             }
-            CimModuleBase.WriteLog(LogLevel.ERROR, "estublish communication with host failed.");
+            CIMBASE.WriteLog(LogLevel.ERROR, "estublish communication with host failed.");
             return false;
         }
 
@@ -225,7 +225,7 @@ namespace Granda.ATTS.CIM.Scenario
                         if (ack == 0)
                         {
                             this._equipmentStatusInfo.CRST = CRST.R;
-                            itializeScenario?.UpdateControlState(this._equipmentStatusInfo);
+                            itializeScenario?.UpdateControlState(this._equipmentStatusInfo.CRST);
                             return true;
                         }
                     }
@@ -252,7 +252,7 @@ namespace Granda.ATTS.CIM.Scenario
                 if (ack == 0)
                 {
                     this._equipmentStatusInfo.CRST = CRST.O;
-                    itializeScenario?.UpdateControlState(this._equipmentStatusInfo);
+                    itializeScenario?.UpdateControlState(this._equipmentStatusInfo.CRST);
                     return true;
                 }
             }
@@ -297,14 +297,14 @@ namespace Granda.ATTS.CIM.Scenario
                         if (ack == 0)
                         {
                             this._equipmentStatusInfo = controlStateChangeReport.EquipmentStatus;
-                            itializeScenario?.UpdateControlState(this._equipmentStatusInfo);
+                            itializeScenario?.UpdateControlState(this._equipmentStatusInfo.CRST);
                             return true;
                         }
                     }
                     break;
                 case (int)CRST.O:// no matter what happened, send control state change event
                     this._equipmentStatusInfo = controlStateChangeReport.EquipmentStatus;
-                    itializeScenario?.UpdateControlState(this._equipmentStatusInfo);
+                    itializeScenario?.UpdateControlState(this._equipmentStatusInfo.CRST);
                     return true;
                 case 114:
                     if (!(replyMsg != null && replyMsg.GetSFString() == "S6F12"))
@@ -315,7 +315,7 @@ namespace Granda.ATTS.CIM.Scenario
                 default:
                     break;
             }
-            CimModuleBase.WriteLog(LogLevel.ERROR, "something was wrong when sending S6F11 message.");
+            CIMBASE.WriteLog(LogLevel.ERROR, "something was wrong when sending S6F11 message.");
             return false;
         }
         /// <summary>
@@ -324,16 +324,16 @@ namespace Granda.ATTS.CIM.Scenario
         /// <returns></returns>
         public bool LaunchDateTimeUpdateProcess()
         {
-            CimModuleBase.WriteLog(LogLevel.DEBUG, "send update date and time request to host.");
+            CIMBASE.WriteLog(LogLevel.DEBUG, "send update date and time request to host.");
             var replyMsg = S2F17();
             if (replyMsg != null && replyMsg.GetSFString() == "S2F18")
             {
                 var dateTimeStr = replyMsg.SecsItem.GetString();
-                CimModuleBase.WriteLog(LogLevel.DEBUG, "get response datetime string: " + dateTimeStr);
+                CIMBASE.WriteLog(LogLevel.DEBUG, "get response datetime string: " + dateTimeStr);
                 itializeScenario?.UpdateDateTime(dateTimeStr);
                 return true;
             }
-            CimModuleBase.WriteLog(LogLevel.ERROR, "something wrong happened in sending update date and time request to host");
+            CIMBASE.WriteLog(LogLevel.ERROR, "something wrong happened in sending update date and time request to host");
             return false;
         }
         #endregion
@@ -341,11 +341,11 @@ namespace Granda.ATTS.CIM.Scenario
         #region 接口默认实例类
         private class DefaultIItializeScenario : IInitializeScenario
         {
-            public void UpdateControlState(EquipmentStatus controlState, bool needReply = false)
+            public void UpdateControlState(CRST controlState)
             {
-                Debug.WriteLine("Control State Changed: " + controlState.CRST.ToString());
+                Debug.WriteLine("Control State Changed: " + controlState.ToString());
             }
-            public void UpdateDateTime(string dateTimeStr, bool needReply = false)
+            public void UpdateDateTime(string dateTimeStr)
             {
                 Debug.WriteLine("date and time update: " + dateTimeStr);
             }
@@ -361,16 +361,16 @@ namespace Granda.ATTS.CIM.Scenario
     {
         /// <summary>
         /// 更新 Control State状态
+        /// 是否需要回复：否
         /// </summary>
         /// <param name="controlState"></param>
-        /// <param name="needReply"></param>
-        void UpdateControlState(EquipmentStatus controlState, bool needReply = false);
+        void UpdateControlState(CRST controlState);
         /// <summary>
         /// 更新系统时间
+        /// 是否需要回复：否
         /// </summary>
         /// <param name="dateTimeStr"></param>
-        /// <param name="needReply"></param>
-        void UpdateDateTime(string dateTimeStr, bool needReply = false);
+        void UpdateDateTime(string dateTimeStr);
     }
     #endregion
 }

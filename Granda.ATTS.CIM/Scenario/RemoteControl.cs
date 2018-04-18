@@ -124,7 +124,7 @@ namespace Granda.ATTS.CIM.Scenario
             }
             if (ceid <= 0)
             {
-                CimModuleBase.WriteLog(AATS.Log.LogLevel.ERROR, "CEID value is out of range. CEID: " + ceid);
+                CIMBASE.WriteLog(AATS.Log.LogLevel.ERROR, "CEID value is out of range. CEID: " + ceid);
                 return false;
             }
             ProcessLaunchReport newReport = new ProcessLaunchReport(0, ceid, 100, equipmentBaseInfo, 301)
@@ -149,11 +149,11 @@ namespace Granda.ATTS.CIM.Scenario
                 }
                 catch (InvalidOperationException ex)
                 {
-                    CimModuleBase.WriteLog(AATS.Log.LogLevel.ERROR, "", ex);
+                    CIMBASE.WriteLog(AATS.Log.LogLevel.ERROR, "", ex);
                     return false;
                 }
             }
-            CimModuleBase.WriteLog(AATS.Log.LogLevel.ERROR, "something wrong was happened when send process report");
+            CIMBASE.WriteLog(AATS.Log.LogLevel.ERROR, "something wrong was happened when send process report");
             return false;
         }
         /// <summary>
@@ -201,7 +201,7 @@ namespace Granda.ATTS.CIM.Scenario
         #region 接口默认实例
         private class DefaultRemoteControlScenario : IRCSCallBack
         {
-            public void RemoteControlCommandRequestEvent(RemoteControlCommandRequest remoteControlCommandJob, bool needReply = false)
+            public void RemoteControlCommandRequestEvent(RemoteControlCommandRequest remoteControlCommandJob)
             {
                 Debug.WriteLine("Update Process Report State: " + remoteControlCommandJob.RCMD.ToString());
             }
@@ -218,7 +218,7 @@ namespace Granda.ATTS.CIM.Scenario
         /// <summary>
         /// Remote Control Command Request
         /// </summary>
-        void RemoteControlCommandRequestEvent(RemoteControlCommandRequest remoteControlCommandJob, bool needReply = false);
+        void RemoteControlCommandRequestEvent(RemoteControlCommandRequest remoteControlCommandJob);
     }
     #endregion
 }

@@ -34,25 +34,25 @@ namespace Granda.ATTS.CIM
     /// <para>Data Collection</para>
     /// 等场景下primary message的处理，以及由Equipment端发起的消息进程
     /// </summary>
-    public class CimModuleForEQT : CimModuleBase
+    public class CIM4EQT : CIMBASE
     {
         #region 构造方法
         /// <summary>
         /// 构造方法， 提供SecsGem参数
         /// </summary>
-        /// <param name="secsGem"></param>
+        /// <param name="secsGem">HSMS通信模块</param>
         /// <param name="deviceId">设备Id号， 默认为1</param>
-        public CimModuleForEQT(SecsGem secsGem, short deviceId = 1) : base(secsGem, deviceId)
+        public CIM4EQT(SecsGem secsGem, short deviceId = 1) : base(secsGem, deviceId)
         {
         }
         /// <summary>
         /// 构造方法，提供创建SecsGem所需参数
         /// </summary>
-        /// <param name="ipAddress"></param>
-        /// <param name="port"></param>
-        /// <param name="isActive"></param>
+        /// <param name="ipAddress">Server端IP地址</param>
+        /// <param name="port">Server端端口号</param>
+        /// <param name="isActive">是否为主动模式</param>
         /// <param name="deviceId">设备Id号， 默认为1</param>
-        public CimModuleForEQT(string ipAddress, int port, bool isActive, short deviceId = 1) : base(ipAddress, port, isActive, deviceId)
+        public CIM4EQT(string ipAddress, int port, bool isActive, short deviceId = 1) : base(ipAddress, port, isActive, deviceId)
         {
         }
         #endregion
@@ -139,7 +139,7 @@ namespace Granda.ATTS.CIM
         /// </summary>
         /// <param name="report"></param>
         /// <returns></returns>
-        public bool LaunchFormattedStatusReportProcess(FormattedProcessProgramReport report)
+        public bool LaunchFormattedStatusReportProcess(FormattedStatusDataReport report)
         {
             var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
             return dc.LaunchFormattedStatusReportProcess(report);
@@ -149,10 +149,21 @@ namespace Granda.ATTS.CIM
         /// </summary>
         /// <param name="report"></param>
         /// <returns></returns>
-        public bool LaunchEquipmentConstantsReportProcess(EquipmentConstantChangeReport report)
+        public bool LaunchEquipmentConstantChangeReportProcess(EquipmentConstantChangeReport report)
         {
             var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
-            return dc.LaunchEquipmentConstantsReportProcess(report);
+            return dc.LaunchEquipmentConstantChangeReportProcess(report);
+        }
+
+        /// <summary>
+        /// Equipment Constants Data Report
+        /// </summary>
+        /// <param name="report"></param>
+        /// <returns></returns>
+        public bool LaunchEquipmentConstantsDataReportProcess(string[] report)
+        {
+            var dc = scenarioControllers[Scenarios.Data_Collection] as DataCollection;
+            return dc.LaunchEquipmentConstantsDataReportProcess(report);
         }
         #endregion
 

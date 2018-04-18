@@ -48,6 +48,14 @@ namespace Granda.ATTS.CIM.Data.Message
                 PPTYPE = pPTYPE;
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"{nameof(UNITID)}:{UNITID}, {nameof(this.PPTYPE)}: {PPTYPE.ToString()}";
+        }
     }
     /// <summary>
     /// Current Equipment process program data request

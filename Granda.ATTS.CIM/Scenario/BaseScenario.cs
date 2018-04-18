@@ -46,7 +46,7 @@ namespace Granda.ATTS.CIM.Scenario
             set
             {
                 _subScenarioName = value;
-                CimModuleBase.WriteLog(AATS.Log.LogLevel.INFO, "Scenario: " + ScenarioName + ", Function: " + _subScenarioName);
+                CIMBASE.WriteLog(AATS.Log.LogLevel.INFO, "Scenario: " + ScenarioName + ", Function: " + _subScenarioName);
             }
         }
 

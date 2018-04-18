@@ -13,14 +13,14 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
+using System.Collections.Generic;
+using System.Diagnostics;
 using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Data.Message;
 using Granda.ATTS.CIM.Extension;
 using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.StreamType;
 using Secs4Net;
-using System.Collections.Generic;
-using System.Diagnostics;
 using static Granda.ATTS.CIM.Extension.ExtensionHelper;
 using static Granda.ATTS.CIM.Extension.SmlExtension;
 using static Granda.ATTS.CIM.StreamType.Stream5_ExceptionReporting;
@@ -120,12 +120,12 @@ namespace Granda.ATTS.CIM.Scenario
         #region 接口默认实例
         private class DefaultAMSCallBack : IAMSCallBack
         {
-            public void CurrentAlarmListRequestEvent(CurrentAlarmListRequest currentAlarmListJob, bool needReply = false)
+            public void CurrentAlarmListRequestEvent(CurrentAlarmListRequest currentAlarmListJob, bool needReply = true)
             {
                 //throw new NotImplementedException();
             }
 
-            public void AlarmEnableDisableRequestEvent(AlarmEnableDisableRequest alarmEnableDisableJob, bool needReply = false)
+            public void AlarmEnableDisableRequestEvent(AlarmEnableDisableRequest alarmEnableDisableJob)
             {
                 Debug.WriteLine("is enable alarm: " + alarmEnableDisableJob.ALED);
             }
@@ -142,11 +142,11 @@ namespace Granda.ATTS.CIM.Scenario
         /// <summary>
         /// Alarm Enable Disable Request
         /// </summary>
-        void AlarmEnableDisableRequestEvent(AlarmEnableDisableRequest alarmEnableDisableJob, bool needReply = false);
+        void AlarmEnableDisableRequestEvent(AlarmEnableDisableRequest alarmEnableDisableJob);
         /// <summary>
         /// Alarm Set List Request
         /// </summary>
-        void CurrentAlarmListRequestEvent(CurrentAlarmListRequest currentAlarmListJob, bool needReply = false);
+        void CurrentAlarmListRequestEvent(CurrentAlarmListRequest currentAlarmListJob, bool needReply = true);
     }
     #endregion
 }

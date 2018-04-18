@@ -33,7 +33,7 @@ namespace Granda.ATTS.CIM
     /// <para>Data Collection</para>
     /// 等场景下primary message的处理，以及由Host端发起的消息进程
     /// </summary>
-    public class CimModuleForHST : CimModuleBase
+    public class CIM4HST : CIMBASE
     {
         #region 构造方法
         /// <summary>
@@ -41,7 +41,7 @@ namespace Granda.ATTS.CIM
         /// </summary>
         /// <param name="secsGem"></param>
         /// <param name="deviceId">设备Id号， 默认为1</param>
-        public CimModuleForHST(SecsGem secsGem, short deviceId = 1) : base(secsGem, deviceId)
+        public CIM4HST(SecsGem secsGem, short deviceId = 1) : base(secsGem, deviceId)
         {
         }
         /// <summary>
@@ -51,7 +51,7 @@ namespace Granda.ATTS.CIM
         /// <param name="port"></param>
         /// <param name="isActive"></param>
         /// <param name="deviceId">设备Id号， 默认为1</param>
-        public CimModuleForHST(string ipAddress, int port, bool isActive, short deviceId = 1) : base(ipAddress, port, isActive, deviceId)
+        public CIM4HST(string ipAddress, int port, bool isActive, short deviceId = 1) : base(ipAddress, port, isActive, deviceId)
         {
         }
         #endregion
@@ -64,7 +64,7 @@ namespace Granda.ATTS.CIM
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public override void SelectedEquipmentStatusRequestEvent(string[] data, bool needReply = false)
+        public override void SelectedEquipmentStatusRequestEvent(string[] data, bool needReply = true)
         {
             base.SelectedEquipmentStatusRequestEvent(data);
             SelectedEquipmnentStatusDataReceived?.Invoke(this, new TEventArgs<string[]>(data, needReply));

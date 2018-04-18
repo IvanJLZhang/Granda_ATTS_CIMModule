@@ -100,11 +100,11 @@ namespace Granda.ATTS.CIM.Scenario
                 }
                 catch (InvalidOperationException ex)
                 {
-                    CimModuleBase.WriteLog(AATS.Log.LogLevel.ERROR, "", ex);
+                    CIMBASE.WriteLog(AATS.Log.LogLevel.ERROR, "", ex);
                     return false;
                 }
             }
-            CimModuleBase.WriteLog(AATS.Log.LogLevel.ERROR, "something wrong was happened when send recipe change data");
+            CIMBASE.WriteLog(AATS.Log.LogLevel.ERROR, "something wrong was happened when send recipe change data");
             return false;
         }
         /// <summary>
@@ -180,12 +180,12 @@ namespace Granda.ATTS.CIM.Scenario
         #region 接口默认实例
         private class DefaultRecipeManagement : IRecipeManagement
         {
-            public void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest, bool needReply = false)
+            public void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest, bool needReply = true)
             {
                 throw new NotImplementedException();
             }
 
-            public void FormattedProcessProgramRequestEvent(FormattedProcessProgramRequest formattedProcessProgramRequest, bool needReply = false)
+            public void FormattedProcessProgramRequestEvent(FormattedProcessProgramRequest formattedProcessProgramRequest, bool needReply = true)
             {
                 throw new NotImplementedException();
             }
@@ -202,11 +202,11 @@ namespace Granda.ATTS.CIM.Scenario
         /// <summary>
         /// Current EPPD Request回调方法
         /// </summary>
-        void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest, bool needReply = false);
+        void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest, bool needReply = true);
         /// <summary>
         /// Formatted Process Program Request回调方法
         /// </summary>
-        void FormattedProcessProgramRequestEvent(FormattedProcessProgramRequest formattedProcessProgramRequest, bool needReply = false);
+        void FormattedProcessProgramRequestEvent(FormattedProcessProgramRequest formattedProcessProgramRequest, bool needReply = true);
     }
     #endregion
 }

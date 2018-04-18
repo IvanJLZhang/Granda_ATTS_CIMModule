@@ -55,5 +55,18 @@ namespace Granda.ATTS.CIM.Data.Message
                 ALIDLIST = idlist;
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            string str = $"{nameof(ALED)}:{ALED}, {nameof(UNITID)}:{UNITID} \r\n";
+            foreach (var item in ALIDLIST)
+            {
+                str += "ALID: " + item + "\r\n";
+            }
+            return str;
+        }
     }
 }

@@ -26,20 +26,6 @@ namespace Granda.ATTS.CIM.Data.Report
     public struct RecipeChangeReport : IReport
     {
         /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="dataid"></param>
-        /// <param name="ceid"></param>
-        /// <param name="rptid"></param>
-        /// <param name="rptid1"></param>
-        public RecipeChangeReport(int dataid, int ceid, int rptid, int rptid1) : this()
-        {
-            this.DATAID = dataid;
-            this.CEID = ceid;
-            this.RPTID = rptid;
-            this.RPTID1 = rptid1;
-        }
-        /// <summary>
         /// 数据ID
         /// </summary>
         public int DATAID { get; private set; }
@@ -86,9 +72,14 @@ namespace Granda.ATTS.CIM.Data.Report
         {
             get
             {
+                DATAID = 0;
+                CEID = 401;
+                RPTID = 100;
+                RPTID1 = 401;
+
                 var stack = new Stack<List<Item>>();
                 stack.Push(new List<Item>() {
-                    A("0"),
+                    A(DATAID.ToString()),
                     A(CEID.ToString()),
                 });
                 stack.Push(new List<Item>());

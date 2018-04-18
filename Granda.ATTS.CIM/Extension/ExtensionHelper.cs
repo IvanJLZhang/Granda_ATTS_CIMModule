@@ -92,7 +92,7 @@ namespace Granda.ATTS.CIM.Extension
         public static SecsMessage SendMessage(this SecsGem secsGem, short deviceId, byte s, byte f, bool replyExpected, int systemBytes, Item item = null, string key = "", int value = 0)
         {
             SecsMessage secsMessage = new SecsMessage(deviceId, s, f, GetFunctionName(s, f, key, value), replyExpected, systemBytes, item);
-            CimModuleBase.WriteLog(AATS.Log.LogLevel.INFO, $"Send Message: S{s}F{f}:{GetFunctionName(s, f, key, value)}");
+            CIMBASE.WriteLog(AATS.Log.LogLevel.INFO, $"Send Message: S{s}F{f}:{GetFunctionName(s, f, key, value)}");
             return secsGem.Send(secsMessage);
         }
         public static String GetSFString(this SecsMessage secsMessage)

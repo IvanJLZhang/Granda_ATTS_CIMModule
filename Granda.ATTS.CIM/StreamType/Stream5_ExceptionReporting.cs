@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static Granda.ATTS.CIM.CimModuleBase;
+using static Granda.ATTS.CIM.CIMBASE;
 using static Granda.ATTS.CIM.Extension.SmlExtension;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.StreamType

@@ -29,6 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\Granda.ATTS.CIM.Data.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -41,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ENUM\CommonStatus.cs" />
+    <Compile Include="ENUM\ConnectionStatus.cs" />
     <Compile Include="ENUM\CRST.cs" />
     <Compile Include="ENUM\EQSTCODE.cs" />
     <Compile Include="ENUM\GLSIDTYPE.cs" />
@@ -75,16 +77,6 @@
     <Compile Include="Report\RecipeChangeReport.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Secs4Net\SecsCore.csproj">
-      <Project>{3c8c67b8-3746-4d26-b3a8-dcb01b5aa66b}</Project>
-      <Name>SecsCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\SmlHelper\SmlHelper.csproj">
-      <Project>{36a2c439-8771-4f98-b33f-390e6d7821a2}</Project>
-      <Name>SmlHelper</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Configs\PTTYPE">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -101,6 +93,16 @@
     <None Include="Configs\MASKST">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Secs4Net\SecsCore.csproj">
+      <Project>{3c8c67b8-3746-4d26-b3a8-dcb01b5aa66b}</Project>
+      <Name>SecsCore</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SmlHelper\SmlHelper.csproj">
+      <Project>{36a2c439-8771-4f98-b33f-390e6d7821a2}</Project>
+      <Name>SmlHelper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

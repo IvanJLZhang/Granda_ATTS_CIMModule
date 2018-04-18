@@ -83,5 +83,14 @@ namespace Granda.ATTS.CIM.Data.Message
                 }
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            string str = $"Control Command: {RCMD.ToString()}, PTID: {PTID}, CSTID: {CSTID}, LOTID: { CSTID}, LOTID: {LOTID}, OPCALL: { OPCALL}";
+            return str;
+        }
     }
 }

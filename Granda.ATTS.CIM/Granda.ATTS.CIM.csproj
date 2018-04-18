@@ -33,6 +33,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile>bin\Release\Granda.ATTS.CIM.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -47,9 +48,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CimModuleBase.cs" />
-    <Compile Include="CimModuleForHST.cs" />
-    <Compile Include="CimModuleForEQT.cs" />
+    <Compile Include="CIMBASE.cs" />
+    <Compile Include="CIM4HST.cs" />
+    <Compile Include="CIM4EQT.cs" />
+    <Compile Include="CIMEventArgs.cs" />
     <Compile Include="Data\StreamFunction.cs" />
     <Compile Include="Extension\ExtensionHelper.cs" />
     <Compile Include="Extension\MyTracer.cs" />
@@ -94,6 +96,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Data\Granda.ATTS.CIM使用说明.docx" />
     <None Include="Data\TestMessage.sml" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -101,6 +104,10 @@
     <ProjectReference Include="..\..\Granda.AATS.Log\Granda.AATS.Log.csproj">
       <Project>{57e0a100-47fd-43de-bbda-7908b0dc5ddf}</Project>
       <Name>Granda.AATS.Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Granda.HSMS\Granda.HSMS.csproj">
+      <Project>{d2071314-a2a1-4890-9175-7409a9f72880}</Project>
+      <Name>Granda.HSMS</Name>
     </ProjectReference>
     <ProjectReference Include="..\Granda.ATTS.CIM.Data\Granda.ATTS.CIM.Data.csproj">
       <Project>{a992048f-ae2a-4b95-894a-76e4f955e986}</Project>

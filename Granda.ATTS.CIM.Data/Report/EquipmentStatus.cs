@@ -58,5 +58,14 @@ namespace Granda.ATTS.CIM.Data.Report
                 return ParseItem(stack);
             }
         }
+        /// <summary>
+        /// 重写toString方法
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+
+            return base.ToString();
+        }
     }
 }

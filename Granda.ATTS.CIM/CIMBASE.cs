@@ -41,7 +41,7 @@ namespace Granda.ATTS.CIM
     /// <para>Data Collection</para>
     /// 等场景下primary message的处理
     /// </summary>
-    public class CimModuleBase :
+    public class CIMBASE :
         IInitializeScenario,
         IRCSCallBack,
         IAMSCallBack,
@@ -66,11 +66,11 @@ namespace Granda.ATTS.CIM
         /// <summary>
         /// 设备控制状态变化事件
         /// </summary>
-        public event EventHandler<TEventArgs<EquipmentStatus>> ControlStateChanged;
+        public event EventHandler<CIMEventArgs<CRST>> ControlStateChanged;
         /// <summary>
         /// Date and Time 更新事件
         /// </summary>
-        public event EventHandler<TEventArgs<string>> DateTimeUpdate;
+        public event EventHandler<CIMEventArgs<string>> DateTimeUpdate;
         /// <summary>
         /// Remote Control Scen下Host所发送的命令
         /// HostCommand:
@@ -81,73 +81,65 @@ namespace Granda.ATTS.CIM
         /// RESUME,
         /// OPERATOR_CALL,
         /// </summary>
-        public event EventHandler<TEventArgs<RemoteControlCommandRequest>> OnRemoteControlCommandRequest;
-        /// <summary>
-        /// Host发送Enable/Disable Alarm指令事件
-        /// </summary>
-        public event EventHandler<TEventArgs<bool>> AlarmStatusUpdated;
+        public event EventHandler<CIMEventArgs<RemoteControlCommandRequest>> OnRemoteControlCommandRequest;
         /// <summary>
         /// 接收Equipment Terminal Service Scen下Display Message事件，
         /// （消息有每次最大十条限制）
         /// </summary>
-        public event EventHandler<TEventArgs<string[]>> ReceiveDisplayMessage;
+        public event EventHandler<CIMEventArgs<string[]>> ReceiveDisplayMessage;
         /// <summary>
         /// 发送Equipment Terminal Service Scen下Display Message消息成功事件，
         /// （消息有每次最大十条限制）
         /// </summary>
-        public event EventHandler<TEventArgs<string[]>> SendDisplayMessageDone;
+        public event EventHandler<CIMEventArgs<string[]>> SendDisplayMessageDone;
         /// <summary>
         /// 连接状态变化事件
         /// </summary>
-        public event EventHandler<TEventArgs<ConnectionState>> ConnectionChanged;
-        /// <summary>
-        /// 发生错误事件, 此为静态事件， 通过类名直接注册
-        /// </summary>
-        public static event EventHandler<TEventArgs<Exception>> ErrorOccured;
+        public event EventHandler<CIMEventArgs<ConnectionStatus>> ConnectionChanged;
         /// <summary>
         /// Trace Data Initialization Request event
         /// </summary>
-        public event EventHandler<TEventArgs<TraceDataInitializationRequest>> OnTraceDataInitializationRequest;
+        public event EventHandler<CIMEventArgs<TraceDataInitializationRequest>> OnTraceDataInitializationRequest;
         /// <summary>
         /// Formatted Status Request event
         /// </summary>
-        public event EventHandler<TEventArgs<SFCD>> OnFormattedStatusRequest;
+        public event EventHandler<CIMEventArgs<SFCD>> OnFormattedStatusRequest;
 
         /// <summary>
         /// Equipment Constants Request event
         /// </summary>
-        public event EventHandler<TEventArgs<string[]>> OnEquipmentConstantsRequest;
+        public event EventHandler<CIMEventArgs<string[]>> OnEquipmentConstantsRequest;
         /// <summary>
         /// Enable Disable event report event
         /// </summary>
-        public event EventHandler<TEventArgs<string[]>> OnEnableDisableEventReportRequest;
+        public event EventHandler<CIMEventArgs<string[]>> OnEnableDisableEventReportRequest;
         /// <summary>
         /// Selected Equipment Status Request event
         /// </summary>
-        public event EventHandler<TEventArgs<string[]>> OnSelectedEquipmentStatusRequest;
+        public event EventHandler<CIMEventArgs<string[]>> OnSelectedEquipmentStatusRequest;
         /// <summary>
         /// Formatted Process Program Request event
         /// </summary>
-        public event EventHandler<TEventArgs<FormattedProcessProgramRequest>> OnFormattedProcessProgramRequest;
+        public event EventHandler<CIMEventArgs<FormattedProcessProgramRequest>> OnFormattedProcessProgramRequest;
         /// <summary>
         /// Current EPPD Request event 
         /// </summary>
-        public event EventHandler<TEventArgs<CurrentEPPDRequest>> OnCurrentEPPDRequest;
+        public event EventHandler<CIMEventArgs<CurrentEPPDRequest>> OnCurrentEPPDRequest;
         /// <summary>
         /// Current Alarm List Request
         /// </summary>
-        public event EventHandler<TEventArgs<CurrentAlarmListRequest>> OnCurrentAlarmListRequest;
+        public event EventHandler<CIMEventArgs<CurrentAlarmListRequest>> OnCurrentAlarmListRequest;
         /// <summary>
         /// Alarm Enable Disable Request Event
         /// </summary>
-        public event EventHandler<TEventArgs<AlarmEnableDisableRequest>> OnAlarmEnableDisableRequest;
+        public event EventHandler<CIMEventArgs<AlarmEnableDisableRequest>> OnAlarmEnableDisableRequest;
         #endregion
 
         #region 构造方法
         /// <summary>
         /// 默认构造方法
         /// </summary>
-        public CimModuleBase()
+        public CIMBASE()
         {
             Thread.CurrentThread.Name = "Main";
             LogAdapter.WriteLog(new LogRecord(LogLevel.INFO, "Initialize CIM Module."));
@@ -158,7 +150,7 @@ namespace Granda.ATTS.CIM
         /// </summary>
         /// <param name="secsGem"></param>
         /// <param name="deviceId">设备Id号， 默认为1</param>
-        public CimModuleBase(SecsGem secsGem, short deviceId) : this()
+        public CIMBASE(SecsGem secsGem, short deviceId) : this()
         {
             secsGemService = secsGem;
             secsGemService.Tracer = new MyTracer();
@@ -173,7 +165,7 @@ namespace Granda.ATTS.CIM
         /// <param name="port"></param>
         /// <param name="isActive"></param>
         /// <param name="deviceId">设备Id号， 默认为1</param>
-        public CimModuleBase(string ipAddress, int port, bool isActive, short deviceId) : this()
+        public CIMBASE(string ipAddress, int port, bool isActive, short deviceId) : this()
         {
             secsGemService = new SecsGem(IPAddress.Parse(ipAddress), port, isActive);
             secsGemService.Tracer = new MyTracer();
@@ -324,41 +316,41 @@ namespace Granda.ATTS.CIM
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void UpdateControlState(EquipmentStatus controlState, bool needReply = false)
+        public void UpdateControlState(CRST controlState)
         {
-            ControlStateChanged?.Invoke(this, new TEventArgs<EquipmentStatus>(controlState, needReply));
+            ControlStateChanged?.Invoke(this, new CIMEventArgs<CRST>(controlState, false));
         }
 
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void UpdateDateTime(string dateTimeStr, bool needReply = false)
+        public void UpdateDateTime(string dateTimeStr)
         {
-            DateTimeUpdate?.Invoke(this, new TEventArgs<string>(dateTimeStr, needReply));
+            DateTimeUpdate?.Invoke(this, new CIMEventArgs<string>(dateTimeStr, false));
         }
 
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void RemoteControlCommandRequestEvent(RemoteControlCommandRequest hostCommand, bool needReply = false)
+        public void RemoteControlCommandRequestEvent(RemoteControlCommandRequest hostCommand)
         {
-            OnRemoteControlCommandRequest?.Invoke(this, new TEventArgs<RemoteControlCommandRequest>(hostCommand, needReply));
+            OnRemoteControlCommandRequest?.Invoke(this, new CIMEventArgs<RemoteControlCommandRequest>(hostCommand));
         }
 
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void ReceiveTestMessage(string[] messages, bool needReply = false)
+        public void ReceiveTestMessage(string[] messages)
         {
-            ReceiveDisplayMessage?.Invoke(this, new TEventArgs<string[]>(messages, needReply));
+            ReceiveDisplayMessage?.Invoke(this, new CIMEventArgs<string[]>(messages));
         }
 
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void SendMessageDone(string[] messages, bool needReply = false)
+        public void SendMessageDone(string[] messages)
         {
-            SendDisplayMessageDone?.Invoke(this, new TEventArgs<string[]>(messages, needReply));
+            SendDisplayMessageDone?.Invoke(this, new CIMEventArgs<string[]>(messages));
         }
         /// <summary>
         /// 接口方法，触发事件，无需调用
@@ -366,73 +358,73 @@ namespace Granda.ATTS.CIM
         private void SecsGemService_ConnectionChanged(object sender, TEventArgs<ConnectionState> e)
         {
             Debug.WriteLine("connection state change: " + e.Data.ToString());
-            ConnectionChanged?.Invoke(this, new TEventArgs<ConnectionState>(e.Data, false));
+            ConnectionChanged?.Invoke(this, new CIMEventArgs<ConnectionStatus>((ConnectionStatus)((Int32)e.Data), false));
         }
 
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public virtual void SelectedEquipmentStatusRequestEvent(string[] data, bool needReply = false)
+        public virtual void SelectedEquipmentStatusRequestEvent(string[] data, bool needReply = true)
         {
-            OnSelectedEquipmentStatusRequest?.Invoke(this, new TEventArgs<string[]>(data, needReply));
+            OnSelectedEquipmentStatusRequest?.Invoke(this, new CIMEventArgs<string[]>(data, needReply));
         }
 
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void EnableDisableEventReportEvent(string[] ceidArr, bool needReply = false)
+        public void EnableDisableEventReportRequestEvent(string[] ceidArr)
         {
-            OnEnableDisableEventReportRequest?.Invoke(this, new TEventArgs<string[]>(ceidArr, needReply));
+            OnEnableDisableEventReportRequest?.Invoke(this, new CIMEventArgs<string[]>(ceidArr));
         }
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void EquipmentConstantsRequestEvent(string[] data, bool needReply = false)
+        public void EquipmentConstantsRequestEvent(string[] data, bool needReply = true)
         {
-            OnEquipmentConstantsRequest?.Invoke(this, new TEventArgs<string[]>(data, needReply));
+            OnEquipmentConstantsRequest?.Invoke(this, new CIMEventArgs<string[]>(data, needReply));
         }
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void FormattedStatusRequestEvent(SFCD sfcd, bool needReply = false)
+        public void FormattedStatusRequestEvent(SFCD sfcd, bool needReply = true)
         {
-            OnFormattedStatusRequest?.Invoke(this, new TEventArgs<SFCD>(sfcd, needReply));
+            OnFormattedStatusRequest?.Invoke(this, new CIMEventArgs<SFCD>(sfcd, needReply));
         }
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void TraceDataInitializationRequestEvent(TraceDataInitializationRequest traceDataInitializationRequest, bool needReply = false)
+        public void TraceDataInitializationRequestEvent(TraceDataInitializationRequest traceDataInitializationRequest, bool needReply = true)
         {
-            OnTraceDataInitializationRequest?.Invoke(this, new TEventArgs<TraceDataInitializationRequest>(traceDataInitializationRequest, needReply));
+            OnTraceDataInitializationRequest?.Invoke(this, new CIMEventArgs<TraceDataInitializationRequest>(traceDataInitializationRequest, needReply));
         }
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest, bool needReply = false)
+        public void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest, bool needReply = true)
         {
-            OnCurrentEPPDRequest?.Invoke(this, new TEventArgs<CurrentEPPDRequest>(currentEPPDRequest, needReply));
+            OnCurrentEPPDRequest?.Invoke(this, new CIMEventArgs<CurrentEPPDRequest>(currentEPPDRequest, needReply));
         }
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void FormattedProcessProgramRequestEvent(FormattedProcessProgramRequest formattedProcessProgramRequest, bool needReply = false)
+        public void FormattedProcessProgramRequestEvent(FormattedProcessProgramRequest formattedProcessProgramRequest, bool needReply = true)
         {
-            OnFormattedProcessProgramRequest?.Invoke(this, new TEventArgs<FormattedProcessProgramRequest>(formattedProcessProgramRequest, needReply));
+            OnFormattedProcessProgramRequest?.Invoke(this, new CIMEventArgs<FormattedProcessProgramRequest>(formattedProcessProgramRequest, needReply));
         }
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void AlarmEnableDisableRequestEvent(AlarmEnableDisableRequest alarmEnableDisableJob, bool needReply = false)
+        public void AlarmEnableDisableRequestEvent(AlarmEnableDisableRequest alarmEnableDisableJob)
         {
-            OnAlarmEnableDisableRequest?.Invoke(this, new TEventArgs<AlarmEnableDisableRequest>(alarmEnableDisableJob, needReply));
+            OnAlarmEnableDisableRequest?.Invoke(this, new CIMEventArgs<AlarmEnableDisableRequest>(alarmEnableDisableJob));
         }
 
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        public void CurrentAlarmListRequestEvent(CurrentAlarmListRequest currentAlarmListJob, bool needReply = false)
+        public void CurrentAlarmListRequestEvent(CurrentAlarmListRequest currentAlarmListJob, bool needReply = true)
         {
-            OnCurrentAlarmListRequest?.Invoke(this, new TEventArgs<CurrentAlarmListRequest>(currentAlarmListJob, needReply));
+            OnCurrentAlarmListRequest?.Invoke(this, new CIMEventArgs<CurrentAlarmListRequest>(currentAlarmListJob, needReply));
         }
         #endregion
     }

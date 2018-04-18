@@ -84,7 +84,7 @@ namespace Granda.ATTS.CIM.Scenario
         #region 接口默认实例
         public class DefaultClock : IClock
         {
-            public void UpdateDateTime(string dateTimeStr, bool needReply = false)
+            public void UpdateDateTime(string dateTimeStr)
             {
                 Debug.WriteLine("update data time string: " + dateTimeStr);
             }
@@ -100,7 +100,7 @@ namespace Granda.ATTS.CIM.Scenario
         /// <summary>
         /// 更新系统时间
         /// </summary>
-        void UpdateDateTime(string dateTimeStr, bool needReply = false);
+        void UpdateDateTime(string dateTimeStr);
     }
     #endregion
 }

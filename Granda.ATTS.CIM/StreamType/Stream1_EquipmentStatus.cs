@@ -1,7 +1,7 @@
 ﻿using Secs4Net;
 using System;
 using System.Collections.Generic;
-using static Granda.ATTS.CIM.CimModuleBase;
+using static Granda.ATTS.CIM.CIMBASE;
 using static Granda.ATTS.CIM.Extension.SmlExtension;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.StreamType

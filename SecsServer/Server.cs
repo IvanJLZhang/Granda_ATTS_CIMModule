@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
+using Granda.ATTS.CIM;
 using Granda.HSMS;
 
 namespace SecsServer
@@ -17,6 +18,8 @@ namespace SecsServer
         SecsHsms secsHsms = null;
         private void Server_Load(object sender, EventArgs e)
         {
+
+
             secsHsms = new SecsHsms(false, IPAddress.Parse("192.168.0.145"), 1024);
             secsHsms.ConnectionChanged += SecsHsms_ConnectionChanged;
             secsHsms.PrimaryMessageReceived += SecsHsms_PrimaryMessageReceived;

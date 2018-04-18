@@ -1,9 +1,11 @@
-namespace Secs4Net {
+namespace Secs4Net
+{
 
     /// <summary>
     /// Connection state
     /// </summary>
-    public enum ConnectionState {
+    public enum ConnectionState
+    {
 
         Disconnected,
         /// <summary>

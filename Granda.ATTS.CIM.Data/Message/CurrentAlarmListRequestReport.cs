@@ -50,6 +50,19 @@ namespace Granda.ATTS.CIM.Data.Message
             }
             UNITIDLIST = list;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            string str = string.Empty;
+            foreach (var item in UNITIDLIST)
+            {
+                str += "UNITID: " + item + "\r\n";
+            }
+            return str;
+        }
     }
     /// <summary>
     /// Current Alarm Set List Data
@@ -82,7 +95,7 @@ namespace Granda.ATTS.CIM.Data.Message
                     foreach (var ALID in item.ALIDLIST)
                     {
                         stack.Peek().Add(A(ALID));
-                    } 
+                    }
                 }
                 return ParseItem(stack);
             }

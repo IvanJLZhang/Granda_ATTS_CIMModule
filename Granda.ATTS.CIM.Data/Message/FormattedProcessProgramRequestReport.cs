@@ -66,6 +66,20 @@ namespace Granda.ATTS.CIM.Data.Message
                 this.PPTYPE = pPTYPE;
             }
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $@"{nameof(PPID)}:{PPID}, 
+{nameof(PPID)}:{PPID}, 
+{nameof(UNITID)}:{UNITID},
+{nameof(SUNITID)}:{SUNITID},
+{nameof(SSUNITID)}:{SSUNITID},
+{nameof(PPTYPE)}:{PPTYPE.ToString()},
+";
+        }
     }
     /// <summary>
     /// Formatted Process Program Data

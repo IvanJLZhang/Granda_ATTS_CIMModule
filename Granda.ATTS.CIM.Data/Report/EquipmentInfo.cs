@@ -93,5 +93,11 @@ namespace Granda.ATTS.CIM.Data.Report
         {
             get; set;
         }
+
+        public override string ToString()
+        {
+
+            return $"{nameof(MDLN)}:{MDLN},{nameof(SOFTREV)}:{SOFTREV},{nameof(CRST)}:{CRST.ToString()},{nameof(EQST)}:{EQST.ToString()},{nameof(EQSTCODE)}:{EQSTCODE}";
+        }
     }
 }
