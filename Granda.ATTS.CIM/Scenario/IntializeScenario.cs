@@ -60,7 +60,7 @@ namespace Granda.ATTS.CIM.Scenario
             {
                 case "S1F1":// are you there request
                     SubScenarioName = Resource.Intialize_Scenario_1;
-                    secsMessage.S1F2(this._equipmentBaseInfo.MDLN, this._equipmentBaseInfo.SOFTREV);// 作为unit端， 只考虑online的选项
+                    secsMessage.S1F2(this._equipmentBaseInfo.MDLN ?? String.Empty, this._equipmentBaseInfo.SOFTREV ?? String.Empty);// 作为unit端， 只考虑online的选项
                     break;
                 case "S1F13":// estublish communication request
                     handleS1F13();
@@ -109,7 +109,7 @@ namespace Granda.ATTS.CIM.Scenario
             EquipmentBaseInfo message = new EquipmentBaseInfo();
             message.Parse(PrimaryMessage.SecsItem);
             //this._equipmentBaseInfo = message;
-            PrimaryMessage.S1F14(_equipmentBaseInfo.MDLN, _equipmentBaseInfo.SOFTREV, "0");
+            PrimaryMessage.S1F14(_equipmentBaseInfo.MDLN ?? String.Empty, _equipmentBaseInfo.SOFTREV ?? String.Empty, "0");
         }
         /// <summary>
         /// request online by host
@@ -170,7 +170,8 @@ namespace Granda.ATTS.CIM.Scenario
                     return false;
                 }
             }
-
+            if (replyMsg == null)
+                return false;
             replyMsg = S1F1();
             if (replyMsg == null || replyMsg.F == 0)
             {// host denies online request
@@ -291,7 +292,7 @@ namespace Granda.ATTS.CIM.Scenario
             {
                 case (int)CRST.R:
                 case (int)CRST.L:
-                    if (!(replyMsg != null && replyMsg.GetSFString() == "S6F12"))
+                    if (replyMsg != null && replyMsg.GetSFString() == "S6F12")
                     {
                         int ack = replyMsg.GetCommandValue();
                         if (ack == 0)
@@ -307,7 +308,7 @@ namespace Granda.ATTS.CIM.Scenario
                     itializeScenario?.UpdateControlState(this._equipmentStatusInfo.CRST);
                     return true;
                 case 114:
-                    if (!(replyMsg != null && replyMsg.GetSFString() == "S6F12"))
+                    if (replyMsg != null && replyMsg.GetSFString() == "S6F12")
                     {
                         return replyMsg.GetCommandValue() == 0;
                     }
@@ -328,7 +329,7 @@ namespace Granda.ATTS.CIM.Scenario
             var replyMsg = S2F17();
             if (replyMsg != null && replyMsg.GetSFString() == "S2F18")
             {
-                var dateTimeStr = replyMsg.SecsItem.GetString();
+                var dateTimeStr = replyMsg.SecsItem.Items[0].GetString();
                 CIMBASE.WriteLog(LogLevel.DEBUG, "get response datetime string: " + dateTimeStr);
                 itializeScenario?.UpdateDateTime(dateTimeStr);
                 return true;

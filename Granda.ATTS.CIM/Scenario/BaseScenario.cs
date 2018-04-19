@@ -51,7 +51,7 @@ namespace Granda.ATTS.CIM.Scenario
         }
 
         public SecsMessage PrimaryMessage { get; set; }
-        public SecsTracer secsTracer { get; set; }
+        //public SecsTracer secsTracer { get; set; }
 
         public BaseScenario()
         {

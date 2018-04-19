@@ -60,15 +60,15 @@ namespace Granda.ATTS.CIM
         /// <summary>
         /// Host收到SelectedEquipmnentStatusData响应事件
         /// </summary>
-        public event EventHandler<TEventArgs<string[]>> SelectedEquipmnentStatusDataReceived;
-        /// <summary>
-        /// 接口方法，触发事件，无需调用
-        /// </summary>
-        public override void SelectedEquipmentStatusRequestEvent(string[] data, bool needReply = true)
-        {
-            base.SelectedEquipmentStatusRequestEvent(data);
-            SelectedEquipmnentStatusDataReceived?.Invoke(this, new TEventArgs<string[]>(data, needReply));
-        }
+        //public event EventHandler<TEventArgs<string[]>> SelectedEquipmnentStatusDataReceived;
+        ///// <summary>
+        ///// 接口方法，触发事件，无需调用
+        ///// </summary>
+        //public override void SelectedEquipmentStatusRequestEvent(string[] data, bool needReply = true)
+        //{
+        //    base.SelectedEquipmentStatusRequestEvent(data);
+        //    SelectedEquipmnentStatusDataReceived?.Invoke(this, new TEventArgs<string[]>(data, needReply));
+        //}
         #endregion
 
         #region host端测试用例

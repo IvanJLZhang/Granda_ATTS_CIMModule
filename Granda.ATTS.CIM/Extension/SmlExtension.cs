@@ -8,7 +8,7 @@ using static Secs4Net.Item;
 
 namespace Granda.ATTS.CIM.Extension
 {
-    internal static class SmlExtension
+    public static class SmlExtension
     {
         #region SML str to SecsMessage
         //public static SecsMessage ToSecsMessage(this string str)

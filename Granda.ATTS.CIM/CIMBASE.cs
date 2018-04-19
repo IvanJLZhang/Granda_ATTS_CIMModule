@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using Granda.AATS.Log;
 using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Data.Message;
@@ -141,7 +142,7 @@ namespace Granda.ATTS.CIM
         /// </summary>
         public CIMBASE()
         {
-            Thread.CurrentThread.Name = "Main";
+            //Thread.CurrentThread.Name = "Main";
             LogAdapter.WriteLog(new LogRecord(LogLevel.INFO, "Initialize CIM Module."));
 
         }
@@ -153,9 +154,8 @@ namespace Granda.ATTS.CIM
         public CIMBASE(SecsGem secsGem, short deviceId) : this()
         {
             secsGemService = secsGem;
-            secsGemService.Tracer = new MyTracer();
             secsGemService.ConnectionChanged += SecsGemService_ConnectionChanged;
-            secsGemService.PrimaryMessageRecived += SecsGemService_PrimaryMessageRecived;
+            secsGemService.PrimaryMessageReceived += SecsGemService_PrimaryMessageReceived;
             DeviceId = deviceId;
         }
         /// <summary>
@@ -167,46 +167,16 @@ namespace Granda.ATTS.CIM
         /// <param name="deviceId">设备Id号， 默认为1</param>
         public CIMBASE(string ipAddress, int port, bool isActive, short deviceId) : this()
         {
-            secsGemService = new SecsGem(IPAddress.Parse(ipAddress), port, isActive);
-            secsGemService.Tracer = new MyTracer();
+            secsGemService = new SecsGem(isActive, IPAddress.Parse(ipAddress), port);
             secsGemService.ConnectionChanged += SecsGemService_ConnectionChanged;
-            secsGemService.PrimaryMessageRecived += SecsGemService_PrimaryMessageRecived;
+            secsGemService.ConnectionChanged += SecsGemService_ConnectionChanged;
+            secsGemService.PrimaryMessageReceived += SecsGemService_PrimaryMessageReceived;
             DeviceId = deviceId;
         }
-        /// <summary>
-        /// 场景初始化
-        /// <para>接口初始化和事件初始化不可同时使用，即如果初始化了相应场景的接口之后，对应场景下所有的事件将不会再被响应</para>
-        /// </summary>
-        /// <param name="itializeScenario">initialize场景回调方法接口</param>
-        /// <param name="rCSCallBack">Remote Control场景回调方法接口</param>
-        /// <param name="aMSCallBack">Alart Management场景回调方法接口</param>
-        /// <param name="clock">Clock场景回调方法接口</param>
-        /// <param name="eqtTerminalService">Equipment Terminal Service场景回调方法接口</param>
-        /// <param name="recipeManagement">Prcess Program(Recipe) Management场景回调方法接口</param>
-        /// <param name="dataCollection">Data Collection场景回调方法接口</param>
-        public void ScenarioInitialize(
-            IInitializeScenario itializeScenario = null,
-            IRCSCallBack rCSCallBack = null,
-            IAMSCallBack aMSCallBack = null,
-            IClock clock = null,
-            IEqtTerminalService eqtTerminalService = null,
-            IRecipeManagement recipeManagement = null,
-            IDataCollection dataCollection = null)
-        {
-            scenarioControllers.Add(Scenarios.Intialize_Scenario, new InitializeScenario(itializeScenario ?? this));
-            scenarioControllers.Add(Scenarios.Remote_Control, new RemoteControl(rCSCallBack ?? this));
-            scenarioControllers.Add(Scenarios.Alarm_Management, new AlarmManagement(aMSCallBack ?? this));
-            scenarioControllers.Add(Scenarios.Clock, new Clock(clock ?? this));
-            scenarioControllers.Add(Scenarios.Equipment_Terminal_Service, new EqtTerminalService(eqtTerminalService ?? this));
-            scenarioControllers.Add(Scenarios.Recipe_Management, new RecipeManagement(recipeManagement ?? this));
-            scenarioControllers.Add(Scenarios.Data_Collection, new DataCollection(dataCollection ?? this));
-        }
-        #endregion
 
-        #region 事件响应方法
-        private void SecsGemService_PrimaryMessageRecived(object sender, TEventArgs<SecsMessage> e)
+        private void SecsGemService_PrimaryMessageReceived(object sender, PrimaryMessageWrapper e)
         {
-            var message = e.Data;
+            var message = e.Message;
             string sf = message.GetSFString();
             IScenario scenario = null;
             switch (sf)
@@ -250,8 +220,89 @@ namespace Granda.ATTS.CIM
                 default:
                     break;
             }
+            message.SystenBytes = e.MessageId;
             scenario?.HandleSecsMessage(message);
         }
+
+        /// <summary>
+        /// 场景初始化
+        /// <para>接口初始化和事件初始化不可同时使用，即如果初始化了相应场景的接口之后，对应场景下所有的事件将不会再被响应</para>
+        /// </summary>
+        /// <param name="itializeScenario">initialize场景回调方法接口</param>
+        /// <param name="rCSCallBack">Remote Control场景回调方法接口</param>
+        /// <param name="aMSCallBack">Alart Management场景回调方法接口</param>
+        /// <param name="clock">Clock场景回调方法接口</param>
+        /// <param name="eqtTerminalService">Equipment Terminal Service场景回调方法接口</param>
+        /// <param name="recipeManagement">Prcess Program(Recipe) Management场景回调方法接口</param>
+        /// <param name="dataCollection">Data Collection场景回调方法接口</param>
+        public void ScenarioInitialize(
+            IInitializeScenario itializeScenario = null,
+            IRCSCallBack rCSCallBack = null,
+            IAMSCallBack aMSCallBack = null,
+            IClock clock = null,
+            IEqtTerminalService eqtTerminalService = null,
+            IRecipeManagement recipeManagement = null,
+            IDataCollection dataCollection = null)
+        {
+            scenarioControllers.Add(Scenarios.Intialize_Scenario, new InitializeScenario(itializeScenario ?? this));
+            scenarioControllers.Add(Scenarios.Remote_Control, new RemoteControl(rCSCallBack ?? this));
+            scenarioControllers.Add(Scenarios.Alarm_Management, new AlarmManagement(aMSCallBack ?? this));
+            scenarioControllers.Add(Scenarios.Clock, new Clock(clock ?? this));
+            scenarioControllers.Add(Scenarios.Equipment_Terminal_Service, new EqtTerminalService(eqtTerminalService ?? this));
+            scenarioControllers.Add(Scenarios.Recipe_Management, new RecipeManagement(recipeManagement ?? this));
+            scenarioControllers.Add(Scenarios.Data_Collection, new DataCollection(dataCollection ?? this));
+        }
+        #endregion
+
+        #region 事件响应方法
+        //private void SecsGemService_PrimaryMessageRecived(object sender, TEventArgs<SecsMessage> e)
+        //{
+        //    var message = e.Data;
+        //    string sf = message.GetSFString();
+        //    IScenario scenario = null;
+        //    switch (sf)
+        //    {
+        //        case "S1F1":
+        //        case "S1F13":
+        //        case "S1F17":
+        //        case "S1F15":
+        //        case "S2F17":// equipment requests host time
+        //        case "S6F11":
+        //            scenario = scenarioControllers[Scenarios.Intialize_Scenario];
+        //            break;
+        //        case "S2F41":
+        //            scenario = scenarioControllers[Scenarios.Remote_Control];
+        //            break;
+        //        case "S5F3":
+        //        case "S5F103":
+        //            scenario = scenarioControllers[Scenarios.Alarm_Management];
+        //            break;
+        //        case "S2F31":
+        //            scenario = scenarioControllers[Scenarios.Clock];
+        //            break;
+        //        case "S10F1":
+        //        case "S10F5":
+        //            scenario = scenarioControllers[Scenarios.Equipment_Terminal_Service];
+        //            break;
+        //        case "S7F19":
+        //        case "S7F25":
+        //            scenario = scenarioControllers[Scenarios.Recipe_Management];
+        //            break;
+        //        case "S6F3":
+        //        case "S2F23":
+        //        case "S6F1":
+        //        case "S1F3":
+        //        case "S1F5":
+        //        case "S2F13":
+        //        case "S2F15":
+        //        case "S2F37":
+        //            scenario = scenarioControllers[Scenarios.Data_Collection];
+        //            break;
+        //        default:
+        //            break;
+        //    }
+        //    scenario?.HandleSecsMessage(message);
+        //}
         #endregion
 
         #region 静态方法
@@ -269,7 +320,9 @@ namespace Granda.ATTS.CIM
         {
             try
             {
-                return secsGemService.SendMessage(DeviceId, s, f, false, systemBytes, item, key, value);
+                var result = secsGemService.SendMessage(DeviceId, s, f, false, systemBytes, item, key, value);
+                result.Wait();
+                return result.Result;
             }
             catch (Exception ex)
             {
@@ -291,7 +344,9 @@ namespace Granda.ATTS.CIM
         {
             try
             {
-                return secsGemService.SendMessage(DeviceId, s, f, replyExpected, -1, item, key, value);
+                var result = secsGemService.SendMessage(DeviceId, s, f, replyExpected, -1, item, key, value);
+                result.Wait();
+                return result.Result;
             }
             catch (Exception ex)
             {
@@ -355,10 +410,10 @@ namespace Granda.ATTS.CIM
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        private void SecsGemService_ConnectionChanged(object sender, TEventArgs<ConnectionState> e)
+        private void SecsGemService_ConnectionChanged(object sender, ConnectionState e)
         {
-            Debug.WriteLine("connection state change: " + e.Data.ToString());
-            ConnectionChanged?.Invoke(this, new CIMEventArgs<ConnectionStatus>((ConnectionStatus)((Int32)e.Data), false));
+            Debug.WriteLine("connection state change: " + e.ToString());
+            ConnectionChanged?.Invoke(this, new CIMEventArgs<ConnectionStatus>((ConnectionStatus)((Int32)e), false));
         }
 
         /// <summary>

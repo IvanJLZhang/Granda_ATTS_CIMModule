@@ -8,8 +8,9 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>SecsClient</RootNamespace>
     <AssemblyName>SecsClient</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -20,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -29,6 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -62,7 +65,9 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -74,9 +79,25 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Granda.HSMS\Granda.HSMS.csproj">
-      <Project>{d2071314-a2a1-4890-9175-7409a9f72880}</Project>
-      <Name>Granda.HSMS</Name>
+    <ProjectReference Include="..\..\Granda.AATS.Log\Granda.AATS.Log.csproj">
+      <Project>{57e0a100-47fd-43de-bbda-7908b0dc5ddf}</Project>
+      <Name>Granda.AATS.Log</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\secs4net\secs4net\Core\Secs4Net\Secs4Net.csproj">
+      <Project>{3c8c67b8-3746-4d26-b3a8-dcb01b5aa66b}</Project>
+      <Name>Secs4Net</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\secs4net\secs4net\Extension\Serialization.Sml\Secs4Net.Sml.csproj">
+      <Project>{f7c036db-d4c9-4326-a17b-713cb00f313c}</Project>
+      <Name>Secs4Net.Sml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Granda.ATTS.CIM.Data\Granda.ATTS.CIM.Data.csproj">
+      <Project>{a992048f-ae2a-4b95-894a-76e4f955e986}</Project>
+      <Name>Granda.ATTS.CIM.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Granda.ATTS.CIM\Granda.ATTS.CIM.csproj">
+      <Project>{4717c255-74a3-4000-97ba-06c544dbd6a8}</Project>
+      <Name>Granda.ATTS.CIM</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

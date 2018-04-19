@@ -1,5 +1,6 @@
 ﻿using Granda.ATTS.CIM.Data;
 using Secs4Net;
+using Secs4Net.Sml;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -89,11 +90,18 @@ namespace Granda.ATTS.CIM.Extension
         }
 
 
-        public static SecsMessage SendMessage(this SecsGem secsGem, short deviceId, byte s, byte f, bool replyExpected, int systemBytes, Item item = null, string key = "", int value = 0)
+        public static Task<SecsMessage> SendMessage(this SecsGem secsGem, short deviceId, byte s, byte f, bool replyExpected, int systemBytes, Item item = null, string key = "", int value = 0)
         {
-            SecsMessage secsMessage = new SecsMessage(deviceId, s, f, GetFunctionName(s, f, key, value), replyExpected, systemBytes, item);
-            CIMBASE.WriteLog(AATS.Log.LogLevel.INFO, $"Send Message: S{s}F{f}:{GetFunctionName(s, f, key, value)}");
-            return secsGem.Send(secsMessage);
+            SecsMessage secsMessage = new SecsMessage(s, f, replyExpected, GetFunctionName(s, f, key, value), item);
+            CIMBASE.WriteLog(AATS.Log.LogLevel.INFO, "\r\n" + secsMessage.ToSml());
+            if (systemBytes == -1)
+            {
+                return secsGem.SendAsync(secsMessage);
+            }
+            else
+            {
+                return secsGem.SendAsync(secsMessage, systemBytes);
+            }
         }
         public static String GetSFString(this SecsMessage secsMessage)
         {

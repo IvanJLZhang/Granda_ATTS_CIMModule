@@ -128,24 +128,6 @@ namespace Granda.ATTS.CIM.StreamType
             return SendMessage(1, 14, secsMessage.SystenBytes, item);
         }
         /// <summary>
-        /// Establish Communications Acknowledge
-        /// </summary>
-        /// <returns></returns>
-        public static SecsMessage S1F14(int systemBytes, string MDLN, string SOFTREV, string ACK)
-        {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-            {
-                A(ACK),
-            });
-            stack.Push(new List<Item>() {
-                A(MDLN),
-                A(SOFTREV),
-            });
-            var item = ParseItem(stack);
-            return SendMessage(1, 14, systemBytes, item);
-        }
-        /// <summary>
         /// Request OFF-LINE
         /// </summary>
         /// <returns></returns>
