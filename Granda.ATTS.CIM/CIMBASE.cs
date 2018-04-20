@@ -251,6 +251,7 @@ namespace Granda.ATTS.CIM
             scenarioControllers.Add(Scenarios.Equipment_Terminal_Service, new EqtTerminalService(eqtTerminalService ?? this));
             scenarioControllers.Add(Scenarios.Recipe_Management, new RecipeManagement(recipeManagement ?? this));
             scenarioControllers.Add(Scenarios.Data_Collection, new DataCollection(dataCollection ?? this));
+            secsGemService.Start();
         }
         #endregion
 
@@ -413,7 +414,7 @@ namespace Granda.ATTS.CIM
         private void SecsGemService_ConnectionChanged(object sender, ConnectionState e)
         {
             Debug.WriteLine("connection state change: " + e.ToString());
-            ConnectionChanged?.Invoke(this, new CIMEventArgs<ConnectionStatus>((ConnectionStatus)((Int32)e), false));
+            ConnectionChanged?.Invoke(this, new CIMEventArgs<ConnectionStatus>((ConnectionStatus)Enum.Parse(typeof(ConnectionStatus), e.ToString()), false));
         }
 
         /// <summary>

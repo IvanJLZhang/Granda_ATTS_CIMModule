@@ -15,6 +15,7 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Secs4Net;
 using static Granda.ATTS.CIM.Data.Helper;
 using static Secs4Net.Item;
@@ -66,18 +67,17 @@ namespace Granda.ATTS.CIM.Data.Report
                     A($"{DATAID}"),
                     A($"{CEID}"),
                 });
-                stack.Push(new List<Item>());
-                stack.Push(new List<Item>()
-                {
-                    A(RPTID.ToString()),
-                });
-                stack.Push(new List<Item>(EquipmentStatus.SecsItem.Items));
-                stack.Push(new List<Item>() {
-                    A(RPTID1.ToString()),
-                });
-                stack.Push(new List<Item>());
-                stack.Push(new List<Item>(ECIDLIST.SecsItem.Items));
-
+                stack.Peek().Add(
+                    L(
+                        L(
+                            A(RPTID.ToString()),
+                            L(EquipmentStatus.SecsItem)
+                            ),
+                        L(
+                            A(RPTID1.ToString()),
+                            ECIDLIST.SecsItem
+                            )
+                    ));
                 return ParseItem(stack);
             }
         }
@@ -104,17 +104,16 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 if (_size == 0)
                     return null;
-                var stack = new Stack<List<Item>>();
+                var itemList = new List<Item>();
                 for (int index = 0; index < _size; index++)
                 {
                     var item = _items[index];
-                    stack.Push(new List<Item>()
-                    {
+                    itemList.Add(L(
                         A(item.ECID ?? String.Empty),
-                        A(item.ECV ?? String.Empty),
-                    });
+                        A(item.ECV ?? String.Empty)
+                        ));
                 }
-                return ParseItem(stack);
+                return L(itemList);
             }
         }
 
@@ -140,10 +139,6 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 return _items[index];
             }
-            set
-            {
-                _items[index] = value;
-            }
         }
 
 
@@ -158,9 +153,53 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <param name="item"></param>
         public void Add(ECIDDatas item)
         {
+            if (_size == _items.Length) EnsureCapacity(_size + 1);
             this._items[this._size++] = item;
         }
 
+        private const int _defaultCapacity = 4;
+        private void EnsureCapacity(int min)
+        {
+            if (_items.Length < min)
+            {
+                int newCapacity = _items.Length == 0 ? _defaultCapacity : _items.Length * 2;
+                if (newCapacity < min) newCapacity = min;
+                Capacity = newCapacity;
+            }
+        }
+
+        private int Capacity
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<int>() >= 0);
+                return _items.Length;
+            }
+            set
+            {
+                if (value < _size)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                Contract.EndContractBlock();
+                if (value != _items.Length)
+                {
+                    if (value > 0)
+                    {
+                        ECIDDatas[] mewItems = new ECIDDatas[value];
+                        if (_size > 0)
+                        {
+                            Array.Copy(_items, 0, mewItems, 0, _size);
+                        }
+                        _items = mewItems;
+                    }
+                    else
+                    {
+                        _items = emptyArray;
+                    }
+                }
+            }
+        }
         ///// <summary>
         ///// 将新的item添加至列表末尾处
         ///// </summary>

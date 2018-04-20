@@ -95,27 +95,25 @@ namespace Granda.ATTS.CIM.Data.Report
         {
             get
             {
-                var stack = new Stack<List<Item>>();
-                stack.Push(new List<Item>() {
-                    A(DATAID.ToString()),
-                    A(CEID.ToString()),
-                });
-                stack.Push(new List<Item>());
-                stack.Push(new List<Item>(EquipmentBaseInfo.SecsItem.Items));
-                stack.Push(new List<Item>()
-                {
-                    A(RPTID1.ToString()),
-                });
-                stack.Push(new List<Item>()
-                {
-                    A(LOTID??String.Empty),
-                    A(PTID??String.Empty),
-                    A(PTTYPE??String.Empty),
-                    A(PTUSETYPE??String.Empty),
-                    A(CSTID??String.Empty),
-                    A(PPID??String.Empty),
-                });
-                return ParseItem(stack);
+                var itemList = new List<Item>();
+                itemList.Add(A(DATAID.ToString()));
+                itemList.Add(A(CEID.ToString()));
+                itemList.Add(L(
+                    A(RPTID.ToString()),
+                    EquipmentBaseInfo.SecsItem
+                    ));
+                itemList.Add(L(
+                        A(RPTID1.ToString()),
+                        L(
+                            A(LOTID ?? String.Empty),
+                            A(PTID ?? String.Empty),
+                            A(PTTYPE ?? String.Empty),
+                            A(PTUSETYPE ?? String.Empty),
+                            A(CSTID ?? String.Empty),
+                            A(PPID ?? String.Empty)
+                            )
+                        ));
+                return L(itemList);
             }
         }
     }

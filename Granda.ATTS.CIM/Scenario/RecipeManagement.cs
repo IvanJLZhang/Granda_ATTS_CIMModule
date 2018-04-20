@@ -51,7 +51,7 @@ namespace Granda.ATTS.CIM.Scenario
                     SubScenarioName = Resource.RMS_Host_Attempts_To_Recipe_Mnt;
                     handleS7F19Message();
                     break;
-                case "S725":// formatted process program request
+                case "S7F25":// formatted process program request
                     SubScenarioName = Resource.RMS_Host_Requests_formatted_Process_program;
                     handleS7F25Message();
                     break;

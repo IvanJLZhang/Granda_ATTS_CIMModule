@@ -165,7 +165,7 @@ namespace Granda.ATTS.CIM.Scenario
         {
             var stack = new Stack<List<Item>>();
             stack.Push(new List<Item>());
-            stack.Peek().Add(A($"{hostCommand}"));
+            stack.Peek().Add(A($"{(Int32)hostCommand}"));
             stack.Push(new List<Item>());
             stack.Push(new List<Item>());
             stack.Peek().Add(A("PTID"));

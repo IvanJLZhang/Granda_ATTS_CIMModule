@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Windows.Forms;
 using Granda.ATTS.CIM;
 using Granda.ATTS.CIM.Data.ENUM;
@@ -52,12 +53,10 @@ namespace CIMClient
 
         private void btn_start_Click(object sender, EventArgs e)
         {
-            cimClient = new CIM4EQT(this.tb_ip.Text.Trim(),
-                Int32.Parse(this.tb_port.Text),
-                this.rbtn_active.Checked,
-                1000);
-            cimClient.ScenarioInitialize();
+            Secs4Net.SecsGem secsGem = new Secs4Net.SecsGem(this.rbtn_active.Checked, IPAddress.Parse(this.tb_ip.Text.Trim()), Int32.Parse(this.tb_port.Text));
+            cimClient = new CIM4EQT(secsGem, 1000);
             cimClient.ConnectionChanged += CimClient_ConnectionChanged;
+            cimClient.ScenarioInitialize(this, this, this, this, this, this, this);
         }
 
         private void CimClient_ConnectionChanged(object sender, CIMEventArgs<ConnectionStatus> e)
@@ -208,35 +207,6 @@ namespace CIMClient
             cimClient.LaunchRecipeChangeProcess(recipeChangeReport);
         }
 
-        private void btn_d_ecc_Click(object sender, EventArgs e)
-        {
-            EquipmentConstantChangeReport report = new EquipmentConstantChangeReport();
-            report.EquipmentStatus = _equipmentInfo.EquipmentStatus;
-            report.ECIDLIST = new ECIDDatas();
-            report.ECIDLIST.Add(new Func<ECIDDatas>(() =>
-            {
-                ECIDDatas eciddataList = new ECIDDatas();
-                eciddataList.Add(new ECIDDatas()
-                {
-                    ECID = "005",
-                    ECV = "10",
-                });
-                eciddataList.Add(new ECIDDatas()
-                {
-                    ECID = "006",
-                    ECV = "10",
-                });
-                eciddataList.Add(new ECIDDatas()
-                {
-                    ECID = "007",
-                    ECV = "10",
-                });
-                return eciddataList;
-            })());
-            cimClient.LaunchEquipmentConstantChangeReportProcess(report);
-        }
-
-
         public void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest, bool needReply = true)
         {
             AddLog(currentEPPDRequest.ToString());
@@ -266,6 +236,7 @@ namespace CIMClient
             report.PPID = formattedProcessProgramRequest.PPID;
             report.PPTYPE = formattedProcessProgramRequest.PPTYPE;
             report.EquipmentBaseInfo = _equipmentInfo.EquipmentBase;
+            report.LCTIME = DateTime.Now.ToString("yyyyMMddHHmmss");
             report.ProcessCommandList = new ProcessCommands();
 
             #region process Command List1
@@ -324,6 +295,7 @@ namespace CIMClient
         private void btn_d_prr_Click(object sender, EventArgs e)
         {
             ProcessResultReport report = new ProcessResultReport();
+            report.CEID = PTYPE.Glass;
             report.UNITID = "1AED06-IND";
             report.SUNITID = "";
             report.LOTID = "TestLot001";
@@ -360,6 +332,33 @@ namespace CIMClient
             report.DVNAMELIST = dvnameList;
             #endregion
             cimClient.LaunchProcessResultReportProcess(report);
+        }
+
+        private void btn_d_ecc_Click(object sender, EventArgs e)
+        {
+            EquipmentConstantChangeReport report = new EquipmentConstantChangeReport();
+            report.EquipmentStatus = _equipmentInfo.EquipmentStatus;
+            report.ECIDLIST = (new Func<ECIDDatas>(() =>
+            {
+                ECIDDatas eciddataList = new ECIDDatas();
+                eciddataList.Add(new ECIDDatas()
+                {
+                    ECID = "005",
+                    ECV = "10",
+                });
+                eciddataList.Add(new ECIDDatas()
+                {
+                    ECID = "006",
+                    ECV = "10",
+                });
+                eciddataList.Add(new ECIDDatas()
+                {
+                    ECID = "007",
+                    ECV = "10",
+                });
+                return eciddataList;
+            })());
+            cimClient.LaunchEquipmentConstantChangeReportProcess(report);
         }
         public void SelectedEquipmentStatusRequestEvent(string[] data, bool needReply = true)
         {

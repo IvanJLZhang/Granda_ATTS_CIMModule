@@ -15,9 +15,9 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Granda.ATTS.CIM.Data.ENUM;
 using Secs4Net;
-using static Granda.ATTS.CIM.Data.Helper;
 using static Secs4Net.Item;
 
 namespace Granda.ATTS.CIM.Data.Report
@@ -85,118 +85,66 @@ namespace Granda.ATTS.CIM.Data.Report
 
             get
             {
-                var stack = new Stack<List<Item>>();
-                stack.Push(new List<Item>()
-                {
-                    A(CEID.ToString()),
-                });
-                stack.Push(new List<Item>());
+                var itemList = new List<Item>();
+                itemList.Add(A($"{(Int32)CEID}"));
                 switch (CEID)
                 {
                     case PTYPE.Glass:// Glass is ended
                         #region
-                        stack.Peek().Add(A(UNITID ?? String.Empty));
-                        stack.Peek().Add(A(SUNITID ?? String.Empty));
-                        stack.Peek().Add(A(LOTID ?? String.Empty));
-                        stack.Peek().Add(A(CSTID ?? String.Empty));
-                        stack.Peek().Add(A(GLSID ?? String.Empty));
-                        stack.Peek().Add(A(OPERID ?? String.Empty));
-                        stack.Peek().Add(A(PRODID ?? String.Empty));
-                        stack.Peek().Add(A(PPID ?? String.Empty));
-
-                        stack.Push(new List<Item>());
-                        for (int index = 0; index < DVNAMELIST.Count; index++)
-                        {
-                            var dvname = DVNAMELIST[index];
-                            stack.Push(new List<Item>()
-                            {
-                                A(dvname.DVNAME),
-                            });
-                            stack.Push(new List<Item>());
-                            for (int indey = 0; indey < dvname.SITENAMELIST.Count; indey++)
-                            {
-                                var siteName = dvname.SITENAMELIST[indey];
-                                stack.Push(new List<Item>() {
-                                    A(siteName.SITENAME),
-                                    A(siteName.DV),
-                                });
-                            }
-                        }
+                        itemList.Add(L(
+                            A(UNITID ?? String.Empty),
+                            A(SUNITID ?? String.Empty),
+                            A(LOTID ?? String.Empty),
+                            A(CSTID ?? String.Empty),
+                            A(GLSID ?? String.Empty),
+                            A(OPERID ?? String.Empty),
+                            A(PRODID ?? String.Empty),
+                            A(PPID ?? String.Empty),
+                            DVNAMELIST.SecsItem
+                            ));
                         #endregion
                         break;
                     case PTYPE.Lot:// lot is ended
                         #region
-                        stack.Peek().Add(A(""));
-                        stack.Peek().Add(A(""));
-                        stack.Peek().Add(A(LOTID ?? String.Empty));
-                        stack.Peek().Add(A(CSTID ?? String.Empty));
-                        stack.Peek().Add(A(""));
-                        stack.Peek().Add(A(OPERID ?? String.Empty));
-                        stack.Peek().Add(A(PRODID ?? String.Empty));
-                        stack.Peek().Add(A(PPID ?? String.Empty));
-
-                        stack.Push(new List<Item>());
-                        for (int index = 0; index < LOTPROCESSTIMELIST.Count; index++)
-                        {
-                            var lotprocesstime = LOTPROCESSTIMELIST[index];
-                            stack.Push(new List<Item>()
-                            {
-                                A(lotprocesstime.LOTPROCESSTIME),
-                            });
-                            stack.Push(new List<Item>());
-                            for (int indey = 0; indey < lotprocesstime.LOTSTARTENDTIMELIST.Count; indey++)
-                            {
-                                var lotstartendtime = lotprocesstime.LOTSTARTENDTIMELIST[indey];
-                                stack.Push(new List<Item>() {
-                                    A(lotstartendtime.LOTSTARTENDTIME),
-                                    A(lotstartendtime.TIME),
-                                });
-                            }
-                        }
+                        itemList.Add(L(
+                            A(""),
+                            A(""),
+                            A(LOTID ?? String.Empty),
+                            A(CSTID ?? String.Empty),
+                            A(""),
+                            A(OPERID ?? String.Empty),
+                            A(PRODID ?? String.Empty),
+                            A(PPID ?? String.Empty),
+                            LOTPROCESSTIMELIST.SecsItem
+                            ));
                         #endregion
                         break;
                     case PTYPE.Mask:// mask is ended
                         #region
-                        stack.Peek().Add(A(UNITID ?? String.Empty));
-                        stack.Peek().Add(A(SUNITID ?? String.Empty));
-                        stack.Peek().Add(A(LOTID ?? String.Empty));
-                        stack.Peek().Add(A(CSTID ?? String.Empty));
-                        stack.Peek().Add(A(MASKID ?? String.Empty));
-                        stack.Peek().Add(A(OPERID ?? String.Empty));
-                        stack.Peek().Add(A(PRODID ?? String.Empty));
-                        stack.Peek().Add(A(PPID ?? String.Empty));
-
-                        stack.Push(new List<Item>());
-                        for (int index = 0; index < DVNAMELIST.Count; index++)
-                        {
-                            var dvname = DVNAMELIST[index];
-                            stack.Push(new List<Item>()
-                            {
-                                A(dvname.DVNAME),
-                            });
-                            stack.Push(new List<Item>());
-                            for (int indey = 0; indey < dvname.SITENAMELIST.Count; indey++)
-                            {
-                                var siteName = dvname.SITENAMELIST[indey];
-                                stack.Push(new List<Item>() {
-                                    A(siteName.SITENAME),
-                                    A(siteName.DV),
-                                });
-                            }
-                        }
+                        itemList.Add(L(
+                            A(UNITID ?? String.Empty),
+                            A(SUNITID ?? String.Empty),
+                            A(LOTID ?? String.Empty),
+                            A(CSTID ?? String.Empty),
+                            A(MASKID ?? String.Empty),
+                            A(OPERID ?? String.Empty),
+                            A(PRODID ?? String.Empty),
+                            A(PPID ?? String.Empty),
+                            DVNAMELIST.SecsItem
+                            ));
                         #endregion
                         break;
                     default:
                         break;
                 }
-                return ParseItem(stack);
+                return L(itemList);
             }
         }
     }
     /// <summary>
     /// Data Value List
     /// </summary>
-    public class DVNAMES
+    public class DVNAMES : IReport
     {
         /// <summary>
         /// Data Value Name
@@ -206,6 +154,27 @@ namespace Granda.ATTS.CIM.Data.Report
         /// Site Name List
         /// </summary>
         public SITENAMES SITENAMELIST { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Item SecsItem
+        {
+
+            get
+            {
+                var itemList = new List<Item>();
+                for (int index = 0; index < _size; index++)
+                {
+                    var item = _items[index];
+                    itemList.Add(L(
+                        A(item.DVNAME ?? String.Empty),
+                        item.SITENAMELIST?.SecsItem
+                        ));
+                }
+                return L(itemList);
+            }
+        }
+
 
         #region IList相关
         private DVNAMES[] _items;
@@ -229,10 +198,6 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 return _items[index];
             }
-            set
-            {
-                _items[index] = value;
-            }
         }
 
 
@@ -247,8 +212,54 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <param name="item"></param>
         public void Add(DVNAMES item)
         {
+            if (_size == _items.Length) EnsureCapacity(_size + 1);
             this._items[this._size++] = item;
         }
+
+        private const int _defaultCapacity = 4;
+        private void EnsureCapacity(int min)
+        {
+            if (_items.Length < min)
+            {
+                int newCapacity = _items.Length == 0 ? _defaultCapacity : _items.Length * 2;
+                if (newCapacity < min) newCapacity = min;
+                Capacity = newCapacity;
+            }
+        }
+
+        private int Capacity
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<int>() >= 0);
+                return _items.Length;
+            }
+            set
+            {
+                if (value < _size)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                Contract.EndContractBlock();
+                if (value != _items.Length)
+                {
+                    if (value > 0)
+                    {
+                        DVNAMES[] mewItems = new DVNAMES[value];
+                        if (_size > 0)
+                        {
+                            Array.Copy(_items, 0, mewItems, 0, _size);
+                        }
+                        _items = mewItems;
+                    }
+                    else
+                    {
+                        _items = emptyArray;
+                    }
+                }
+            }
+        }
+
 
         ///// <summary>
         ///// 将新的item添加至列表末尾处
@@ -267,11 +278,12 @@ namespace Granda.ATTS.CIM.Data.Report
             this._size = 0;
         }
         #endregion
+
     }
     /// <summary>
     /// Site Name List
     /// </summary>
-    public class SITENAMES
+    public class SITENAMES : IReport
     {
         /// <summary>
         /// Site Name
@@ -281,6 +293,27 @@ namespace Granda.ATTS.CIM.Data.Report
         /// Data Value
         /// </summary>
         public string DV { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Item SecsItem
+        {
+            get
+            {
+                var itemList = new List<Item>();
+                for (int index = 0; index < _size; index++)
+                {
+                    var item = _items[index];
+                    itemList.Add(L(
+                        A(item.SITENAME ?? String.Empty),
+                       A(item.DV ?? String.Empty)
+                        ));
+                }
+                return L(itemList);
+
+            }
+        }
+
 
         #region IList相关
         private SITENAMES[] _items;
@@ -304,10 +337,6 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 return _items[index];
             }
-            set
-            {
-                _items[index] = value;
-            }
         }
 
 
@@ -322,9 +351,53 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <param name="item"></param>
         public void Add(SITENAMES item)
         {
+            if (_size == _items.Length) EnsureCapacity(_size + 1);
             this._items[this._size++] = item;
         }
 
+        private const int _defaultCapacity = 4;
+        private void EnsureCapacity(int min)
+        {
+            if (_items.Length < min)
+            {
+                int newCapacity = _items.Length == 0 ? _defaultCapacity : _items.Length * 2;
+                if (newCapacity < min) newCapacity = min;
+                Capacity = newCapacity;
+            }
+        }
+
+        private int Capacity
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<int>() >= 0);
+                return _items.Length;
+            }
+            set
+            {
+                if (value < _size)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                Contract.EndContractBlock();
+                if (value != _items.Length)
+                {
+                    if (value > 0)
+                    {
+                        SITENAMES[] mewItems = new SITENAMES[value];
+                        if (_size > 0)
+                        {
+                            Array.Copy(_items, 0, mewItems, 0, _size);
+                        }
+                        _items = mewItems;
+                    }
+                    else
+                    {
+                        _items = emptyArray;
+                    }
+                }
+            }
+        }
         ///// <summary>
         ///// 将新的item添加至列表末尾处
         ///// </summary>
@@ -347,7 +420,7 @@ namespace Granda.ATTS.CIM.Data.Report
     /// <summary>
     /// Lot Process Time List
     /// </summary>
-    public class LOTPROCESSTIMES
+    public class LOTPROCESSTIMES : IReport
     {
         /// <summary>
         /// Lot Process Time
@@ -357,7 +430,26 @@ namespace Granda.ATTS.CIM.Data.Report
         ///  Lot Start or End Time List
         /// </summary>
         public LOTSTARTENDTIMES LOTSTARTENDTIMELIST { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Item SecsItem
+        {
+            get
+            {
+                var itemList = new List<Item>();
+                for (int index = 0; index < _size; index++)
+                {
+                    var item = _items[index];
+                    itemList.Add(L(
+                        A(item.LOTPROCESSTIME ?? String.Empty),
+                       item.LOTSTARTENDTIMELIST?.SecsItem
+                        ));
+                }
+                return L(itemList);
 
+            }
+        }
         #region IList相关
         private LOTPROCESSTIMES[] _items;
         private static readonly LOTPROCESSTIMES[] emptyArray = new LOTPROCESSTIMES[0];
@@ -380,10 +472,6 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 return _items[index];
             }
-            set
-            {
-                _items[index] = value;
-            }
         }
 
 
@@ -398,9 +486,53 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <param name="item"></param>
         public void Add(LOTPROCESSTIMES item)
         {
+            if (_size == _items.Length) EnsureCapacity(_size + 1);
             this._items[this._size++] = item;
         }
 
+        private const int _defaultCapacity = 4;
+        private void EnsureCapacity(int min)
+        {
+            if (_items.Length < min)
+            {
+                int newCapacity = _items.Length == 0 ? _defaultCapacity : _items.Length * 2;
+                if (newCapacity < min) newCapacity = min;
+                Capacity = newCapacity;
+            }
+        }
+
+        private int Capacity
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<int>() >= 0);
+                return _items.Length;
+            }
+            set
+            {
+                if (value < _size)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                Contract.EndContractBlock();
+                if (value != _items.Length)
+                {
+                    if (value > 0)
+                    {
+                        LOTPROCESSTIMES[] mewItems = new LOTPROCESSTIMES[value];
+                        if (_size > 0)
+                        {
+                            Array.Copy(_items, 0, mewItems, 0, _size);
+                        }
+                        _items = mewItems;
+                    }
+                    else
+                    {
+                        _items = emptyArray;
+                    }
+                }
+            }
+        }
         ///// <summary>
         ///// 将新的item添加至列表末尾处
         ///// </summary>
@@ -422,7 +554,7 @@ namespace Granda.ATTS.CIM.Data.Report
     /// <summary>
     /// Lot Start or End Time List
     /// </summary>
-    public class LOTSTARTENDTIMES
+    public class LOTSTARTENDTIMES : IReport
     {
         /// <summary>
         /// Lot Start or end Time
@@ -432,6 +564,25 @@ namespace Granda.ATTS.CIM.Data.Report
         /// Time
         /// </summary>
         public string TIME { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Item SecsItem
+        {
+            get
+            {
+                var itemList = new List<Item>();
+                for (int index = 0; index < _size; index++)
+                {
+                    var item = _items[index];
+                    itemList.Add(L(
+                        A(item.LOTSTARTENDTIME ?? String.Empty),
+                       A(item.TIME ?? String.Empty)));
+                }
+                return L(itemList);
+            }
+        }
+
 
         #region IList相关
         private LOTSTARTENDTIMES[] _items;
@@ -455,10 +606,6 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 return _items[index];
             }
-            set
-            {
-                _items[index] = value;
-            }
         }
 
 
@@ -473,9 +620,53 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <param name="item"></param>
         public void Add(LOTSTARTENDTIMES item)
         {
+            if (_size == _items.Length) EnsureCapacity(_size + 1);
             this._items[this._size++] = item;
         }
 
+        private const int _defaultCapacity = 4;
+        private void EnsureCapacity(int min)
+        {
+            if (_items.Length < min)
+            {
+                int newCapacity = _items.Length == 0 ? _defaultCapacity : _items.Length * 2;
+                if (newCapacity < min) newCapacity = min;
+                Capacity = newCapacity;
+            }
+        }
+
+        private int Capacity
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<int>() >= 0);
+                return _items.Length;
+            }
+            set
+            {
+                if (value < _size)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                Contract.EndContractBlock();
+                if (value != _items.Length)
+                {
+                    if (value > 0)
+                    {
+                        LOTSTARTENDTIMES[] mewItems = new LOTSTARTENDTIMES[value];
+                        if (_size > 0)
+                        {
+                            Array.Copy(_items, 0, mewItems, 0, _size);
+                        }
+                        _items = mewItems;
+                    }
+                    else
+                    {
+                        _items = emptyArray;
+                    }
+                }
+            }
+        }
         ///// <summary>
         ///// 将新的item添加至列表末尾处
         ///// </summary>

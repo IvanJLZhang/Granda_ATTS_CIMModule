@@ -114,10 +114,17 @@ namespace Granda.ATTS.CIM.Extension
         /// <returns></returns>
         public static int GetCommandValue(this SecsMessage secsMessage)
         {
-            var commandItem = secsMessage.SecsItem.Count >= 1 ? secsMessage.SecsItem.Items[0] : null;
-            if (commandItem != null)
+            if (secsMessage.SecsItem.Format == SecsFormat.List)
             {
-                Int32.TryParse(commandItem.GetString(), out int result);
+                var commandItem = secsMessage.SecsItem.Count >= 1 ? secsMessage.SecsItem.Items[0] : null;
+                if (commandItem != null)
+                {
+                    Int32.TryParse(commandItem.GetString(), out int result);
+                    return result;
+                }
+            }else if(secsMessage.SecsItem.Format == SecsFormat.ASCII)
+            {
+                Int32.TryParse(secsMessage.SecsItem.GetString(), out int result);
                 return result;
             }
             return -1;

@@ -135,10 +135,14 @@ namespace Granda.ATTS.CIM.Scenario
             {
                 foreach (var item in itemList.Items)
                 {
-                    if (item.Count == 1)
+                    if (item.Format == SecsFormat.ASCII)
+                    {
                         result.Add(item.GetString());
-                    else
+                    }
+                    else if (item.Format == SecsFormat.List)
+                    {
                         result.AddRange(GetData(item));
+                    }
                 }
             }
             return result.ToArray();

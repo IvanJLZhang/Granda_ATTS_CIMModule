@@ -81,7 +81,7 @@ namespace Granda.ATTS.CIM.Data.ENUM
                                 Int32.TryParse(keyValue[0].Trim(), out int result);
                                 if (result > 0)
                                 {
-                                    _eqstcodelist[key].Add(keyValue[1].Trim(), result);
+                                    _eqstcodelist[key].Add(keyValue[1].Trim().Replace(",", ""), result);
                                 }
                             }
                         }

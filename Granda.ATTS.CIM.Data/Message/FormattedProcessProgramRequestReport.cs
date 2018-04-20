@@ -117,33 +117,13 @@ namespace Granda.ATTS.CIM.Data.Message
             {
                 var stack = new Stack<List<Item>>();
                 stack.Push(new List<Item>() {
-                    A(PPID),
+                    A(PPID??String.Empty),
                     A(PPTYPE.ToString()),
-                    A(EquipmentBaseInfo.MDLN),
-                    A(EquipmentBaseInfo.SOFTREV),
-                    A(LCTIME),
+                    A(EquipmentBaseInfo.MDLN??String.Empty),
+                    A(EquipmentBaseInfo.SOFTREV??String.Empty),
+                    A(LCTIME??String.Empty),
                 });
-                stack.Push(new List<Item>());
-                for (int index = 0; index < ProcessCommandList.Count; index++)
-                {
-                    var processCommand = ProcessCommandList[index];
-                    stack.Push(new List<Item>() {
-                        A(processCommand.CCODE),
-                        A(processCommand.RCPSTEP),
-                        A(processCommand.UNITID),
-                        A(processCommand.SUNITID),
-                    });
-                    stack.Push(new List<Item>() { });
-                    for (int indey = 0; indey < processCommand.ParameterList.Count; indey++)
-                    {
-                        var parmaeter = processCommand.ParameterList[indey];
-                        stack.Push(new List<Item>() {
-                            A(parmaeter.PPARMNAME),
-                            A(parmaeter.PPARMVALUE),
-                        });
-                    }
-                }
-
+                stack.Peek().Add(ProcessCommandList.SecsItem);
                 return ParseItem(stack);
             }
         }

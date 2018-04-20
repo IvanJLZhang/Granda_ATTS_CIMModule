@@ -174,7 +174,7 @@ namespace Granda.ATTS.CIM
         /// <returns></returns>
         public bool LaunchRecipeChangeProcess(RecipeChangeReport report)
         {
-            var rm = scenarioControllers[Scenarios.Data_Collection] as RecipeManagement;
+            var rm = scenarioControllers[Scenarios.Recipe_Management] as RecipeManagement;
             return rm.LaunchRecipeChangeReportProcess(report);
         }
 
@@ -185,7 +185,7 @@ namespace Granda.ATTS.CIM
         /// <returns></returns>
         public bool LaunchCurrentEPPDReportProcess(CurrentEPPDReport report)
         {
-            var rm = scenarioControllers[Scenarios.Data_Collection] as RecipeManagement;
+            var rm = scenarioControllers[Scenarios.Recipe_Management] as RecipeManagement;
             return rm.LaunchCurrentEPPDReportProcess(report);
         }
 
@@ -196,7 +196,7 @@ namespace Granda.ATTS.CIM
         /// <returns></returns>
         public bool LaunchFormattedProcessProgramReport(FormattedProcessProgramReport report)
         {
-            var rm = scenarioControllers[Scenarios.Data_Collection] as RecipeManagement;
+            var rm = scenarioControllers[Scenarios.Recipe_Management] as RecipeManagement;
             return rm.LaunchFormattedProcessProgramReport(report);
         }
         #endregion

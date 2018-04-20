@@ -13,7 +13,9 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Granda.ATTS.CIM.Data.ENUM;
 using Secs4Net;
 using static Granda.ATTS.CIM.Data.Helper;
@@ -60,24 +62,21 @@ namespace Granda.ATTS.CIM.Data.Report
         {
             get
             {
-                var stack = new Stack<List<Item>>();
-                stack.Push(new List<Item>()
-                {
-                    A($"{SFCD}"),
-                });
+                var itemlist = new List<Item>();
+                itemlist.Add(A($"{(Int32)SFCD}"));
                 switch (SFCD)
                 {
                     case SFCD.EquipmentStatus:
-                        stack.Push(new List<Item>(EquipmentStatus.SecsItem.Items));
+                        itemlist.Add(EquipmentStatus.SecsItem);
                         break;
                     case SFCD.PortStatus:
-                        stack.Push(new List<Item>(PortStatusDataList.SecsItem.Items));
+                        itemlist.Add(PortStatusDataList.SecsItem);
                         break;
                     case SFCD.UnitStatus:
-                        stack.Push(new List<Item>(UnitStatusDataList.SecsItem.Items));
+                        itemlist.Add(UnitStatusDataList.SecsItem);
                         break;
                     case SFCD.MaskStatus:
-                        stack.Push(new List<Item>(MaskStatusDataList.SecsItem.Items));
+                        itemlist.Add(MaskStatusDataList.SecsItem);
                         break;
                     case SFCD.OperationMode:
                         break;
@@ -96,8 +95,7 @@ namespace Granda.ATTS.CIM.Data.Report
                     default:
                         break;
                 }
-
-                return ParseItem(stack);
+                return L(itemlist);
             }
         }
     }
@@ -154,25 +152,24 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 if (_size == 0)
                     return null;
-                var stack = new Stack<List<Item>>();
-                //stack.Push(new List<Item>());
+
+                var itemList = new List<Item>();
                 for (int index = 0; index < _size; index++)
                 {
                     var data = _items[index];
-                    stack.Push(new List<Item>() {
+                    itemList.Add(L(
                         A(data.PTID),
                         A(data.PTTYPE),
                         A(data.PTUSETYPE),
-                        A($"{data.TRSMODE}"),
-                        A($"{data.PTST}"),
+                        A($"{(Int32)data.TRSMODE}"),
+                        A($"{(Int32)data.PTST}"),
                         A(data.CSTID),
                         A(data.LOTID),
                         A(data.PPID),
-                        A($"{data.SLOTINFO}"),
-                    });
+                        A($"{(Int32)data.SLOTINFO}")
+                        ));
                 }
-
-                return ParseItem(stack);
+                return L(itemList);
             }
         }
 
@@ -198,10 +195,6 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 return _items[index];
             }
-            set
-            {
-                _items[index] = value;
-            }
         }
 
 
@@ -216,9 +209,53 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <param name="item"></param>
         public void Add(PortStatusDatas item)
         {
+            if (_size == _items.Length) EnsureCapacity(_size + 1);
             this._items[this._size++] = item;
         }
 
+        private const int _defaultCapacity = 4;
+        private void EnsureCapacity(int min)
+        {
+            if (_items.Length < min)
+            {
+                int newCapacity = _items.Length == 0 ? _defaultCapacity : _items.Length * 2;
+                if (newCapacity < min) newCapacity = min;
+                Capacity = newCapacity;
+            }
+        }
+
+        private int Capacity
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<int>() >= 0);
+                return _items.Length;
+            }
+            set
+            {
+                if (value < _size)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                Contract.EndContractBlock();
+                if (value != _items.Length)
+                {
+                    if (value > 0)
+                    {
+                        PortStatusDatas[] mewItems = new PortStatusDatas[value];
+                        if (_size > 0)
+                        {
+                            Array.Copy(_items, 0, mewItems, 0, _size);
+                        }
+                        _items = mewItems;
+                    }
+                    else
+                    {
+                        _items = emptyArray;
+                    }
+                }
+            }
+        }
         ///// <summary>
         ///// 将新的item添加至列表末尾处
         ///// </summary>
@@ -293,20 +330,18 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 if (_size <= 0)
                     return null;
-                var stack = new Stack<List<Item>>();
+                var itemList = new List<Item>();
                 for (int index = 0; index < _size; index++)
                 {
                     var item = _items[index];
-                    stack.Push(new List<Item>()
-                    {
-                        A(item.UNITID),
+                    itemList.Add(L(
+                        A(item.UNITID ?? String.Empty),
                         A(item.UNITST.ToString()),
-                        A(item.UNITSTCODE),
-                    });
-                    stack.Push(new List<Item>(USLOTNOLIST.SecsItem.Items));
+                        A(item.UNITSTCODE ?? String.Empty),
+                        USLOTNOLIST?.SecsItem
+                        ));
                 }
-
-                return ParseItem(stack);
+                return L(itemList);
             }
         }
 
@@ -332,10 +367,6 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 return _items[index];
             }
-            set
-            {
-                _items[index] = value;
-            }
         }
 
 
@@ -350,9 +381,53 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <param name="item"></param>
         public void Add(UnitStatusDatas item)
         {
+            if (_size == _items.Length) EnsureCapacity(_size + 1);
             this._items[this._size++] = item;
         }
 
+        private const int _defaultCapacity = 4;
+        private void EnsureCapacity(int min)
+        {
+            if (_items.Length < min)
+            {
+                int newCapacity = _items.Length == 0 ? _defaultCapacity : _items.Length * 2;
+                if (newCapacity < min) newCapacity = min;
+                Capacity = newCapacity;
+            }
+        }
+
+        private int Capacity
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<int>() >= 0);
+                return _items.Length;
+            }
+            set
+            {
+                if (value < _size)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                Contract.EndContractBlock();
+                if (value != _items.Length)
+                {
+                    if (value > 0)
+                    {
+                        UnitStatusDatas[] mewItems = new UnitStatusDatas[value];
+                        if (_size > 0)
+                        {
+                            Array.Copy(_items, 0, mewItems, 0, _size);
+                        }
+                        _items = mewItems;
+                    }
+                    else
+                    {
+                        _items = emptyArray;
+                    }
+                }
+            }
+        }
         ///// <summary>
         ///// 将新的item添加至列表末尾处
         ///// </summary>
@@ -393,17 +468,16 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 if (_size <= 0)
                     return null;
-                var stack = new Stack<List<Item>>();
+                var itemList = new List<Item>();
                 for (int index = 0; index < _size; index++)
                 {
                     var uslotno = _items[index];
-                    stack.Push(new List<Item>()
-                    {
-                        A(uslotno.USLOTNO),
-                        A(uslotno.GLSID),
-                    });
+                    itemList.Add(L(
+                        A(uslotno.USLOTNO ?? String.Empty),
+                        A(uslotno.GLSID ?? String.Empty)
+                        ));
                 }
-                return ParseItem(stack);
+                return L(itemList);
             }
         }
 
@@ -429,10 +503,6 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 return _items[index];
             }
-            set
-            {
-                _items[index] = value;
-            }
         }
 
 
@@ -447,9 +517,53 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <param name="item"></param>
         public void Add(USLOTNOS item)
         {
+            if (_size == _items.Length) EnsureCapacity(_size + 1);
             this._items[this._size++] = item;
         }
 
+        private const int _defaultCapacity = 4;
+        private void EnsureCapacity(int min)
+        {
+            if (_items.Length < min)
+            {
+                int newCapacity = _items.Length == 0 ? _defaultCapacity : _items.Length * 2;
+                if (newCapacity < min) newCapacity = min;
+                Capacity = newCapacity;
+            }
+        }
+
+        private int Capacity
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<int>() >= 0);
+                return _items.Length;
+            }
+            set
+            {
+                if (value < _size)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                Contract.EndContractBlock();
+                if (value != _items.Length)
+                {
+                    if (value > 0)
+                    {
+                        USLOTNOS[] mewItems = new USLOTNOS[value];
+                        if (_size > 0)
+                        {
+                            Array.Copy(_items, 0, mewItems, 0, _size);
+                        }
+                        _items = mewItems;
+                    }
+                    else
+                    {
+                        _items = emptyArray;
+                    }
+                }
+            }
+        }
         ///// <summary>
         ///// 将新的item添加至列表末尾处
         ///// </summary>
@@ -491,20 +605,16 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 if (_size == 0)
                     return null;
-                var stack = new Stack<List<Item>>();
+                var itemList = new List<Item>();
                 for (int index = 0; index < _size; index++)
                 {
                     var item = _items[index];
-                    stack.Push(new List<Item>()
-                    {
-                        A(UNITID),
-                    });
-                    if (MaskStatusList != null && MaskStatusList.Count > 0)
-                    {
-                        stack.Push(new List<Item>(MaskStatusList.SecsItem.Items));
-                    }
+                    itemList.Add(L(
+                        A(item.UNITID ?? String.Empty),
+                        MaskStatusList?.SecsItem
+                        ));
                 }
-                return ParseItem(stack);
+                return L(itemList);
 
             }
         }
@@ -531,10 +641,6 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 return _items[index];
             }
-            set
-            {
-                _items[index] = value;
-            }
         }
 
 
@@ -549,9 +655,53 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <param name="item"></param>
         public void Add(MaskStatusDatas item)
         {
+            if (_size == _items.Length) EnsureCapacity(_size + 1);
             this._items[this._size++] = item;
         }
 
+        private const int _defaultCapacity = 4;
+        private void EnsureCapacity(int min)
+        {
+            if (_items.Length < min)
+            {
+                int newCapacity = _items.Length == 0 ? _defaultCapacity : _items.Length * 2;
+                if (newCapacity < min) newCapacity = min;
+                Capacity = newCapacity;
+            }
+        }
+
+        private int Capacity
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<int>() >= 0);
+                return _items.Length;
+            }
+            set
+            {
+                if (value < _size)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                Contract.EndContractBlock();
+                if (value != _items.Length)
+                {
+                    if (value > 0)
+                    {
+                        MaskStatusDatas[] mewItems = new MaskStatusDatas[value];
+                        if (_size > 0)
+                        {
+                            Array.Copy(_items, 0, mewItems, 0, _size);
+                        }
+                        _items = mewItems;
+                    }
+                    else
+                    {
+                        _items = emptyArray;
+                    }
+                }
+            }
+        }
         ///// <summary>
         ///// 将新的item添加至列表末尾处
         ///// </summary>
@@ -600,22 +750,20 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 if (_size == 0)
                     return null;
+                var itemList = new List<Item>();
+
                 var stack = new Stack<List<Item>>();
                 for (int index = 0; index < _size; index++)
                 {
                     var item = _items[index];
-                    stack.Push(new List<Item>()
-                    {
+                    itemList.Add(L(
                         A(item.MASKID),
-                        A (item.MASKST),
+                        A(item.MASKST),
                         A(item.MASKUSECNT),
-                    });
-                    if (SUNITMaskStatusList != null && SUNITMaskStatusList.Count > 0)
-                    {
-                        stack.Push(new List<Item>(SUNITMaskStatusList.SecsItem.Items));
-                    }
+                        SUNITMaskStatusList?.SecsItem
+                        ));
                 }
-                return ParseItem(stack);
+                return L(itemList);
             }
         }
 
@@ -641,10 +789,6 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 return _items[index];
             }
-            set
-            {
-                _items[index] = value;
-            }
         }
 
 
@@ -659,9 +803,53 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <param name="item"></param>
         public void Add(MaskStatuss item)
         {
+            if (_size == _items.Length) EnsureCapacity(_size + 1);
             this._items[this._size++] = item;
         }
 
+        private const int _defaultCapacity = 4;
+        private void EnsureCapacity(int min)
+        {
+            if (_items.Length < min)
+            {
+                int newCapacity = _items.Length == 0 ? _defaultCapacity : _items.Length * 2;
+                if (newCapacity < min) newCapacity = min;
+                Capacity = newCapacity;
+            }
+        }
+
+        private int Capacity
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<int>() >= 0);
+                return _items.Length;
+            }
+            set
+            {
+                if (value < _size)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                Contract.EndContractBlock();
+                if (value != _items.Length)
+                {
+                    if (value > 0)
+                    {
+                        MaskStatuss[] mewItems = new MaskStatuss[value];
+                        if (_size > 0)
+                        {
+                            Array.Copy(_items, 0, mewItems, 0, _size);
+                        }
+                        _items = mewItems;
+                    }
+                    else
+                    {
+                        _items = emptyArray;
+                    }
+                }
+            }
+        }
         ///// <summary>
         ///// 将新的item添加至列表末尾处
         ///// </summary>

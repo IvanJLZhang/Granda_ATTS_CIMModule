@@ -27,7 +27,6 @@ namespace SecsServer
             secsGem = new SecsGem(false, IPAddress.Parse("192.168.0.145"), 1024);
             secsGem.ConnectionChanged += SecsGem_ConnectionChanged;
             secsGem.PrimaryMessageReceived += SecsGem_PrimaryMessageReceived;
-            secsGem.Start();
             cimServer = new CIM4HST(secsGem);
             cimServer.ScenarioInitialize(this);
 

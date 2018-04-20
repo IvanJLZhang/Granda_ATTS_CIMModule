@@ -329,7 +329,7 @@ namespace Granda.ATTS.CIM.Scenario
             var replyMsg = S2F17();
             if (replyMsg != null && replyMsg.GetSFString() == "S2F18")
             {
-                var dateTimeStr = replyMsg.SecsItem.Items[0].GetString();
+                var dateTimeStr = replyMsg.SecsItem.GetString();
                 CIMBASE.WriteLog(LogLevel.DEBUG, "get response datetime string: " + dateTimeStr);
                 itializeScenario?.UpdateDateTime(dateTimeStr);
                 return true;

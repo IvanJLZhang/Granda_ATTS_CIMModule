@@ -50,7 +50,7 @@ namespace Granda.ATTS.CIM.Data.ENUM
                             var keyValue = line.Split(':');
                             if (keyValue.Length == 2)
                             {
-                                _ptusetypelist.Add(keyValue[1], keyValue[0]);
+                                _ptusetypelist.Add(keyValue[1].Trim().Replace(",", ""), keyValue[0]);
                             }
                         }
                     }

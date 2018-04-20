@@ -15,6 +15,7 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Secs4Net;
 using static Granda.ATTS.CIM.Data.Helper;
 using static Secs4Net.Item;
@@ -109,30 +110,17 @@ namespace Granda.ATTS.CIM.Data.Message
         {
             get
             {
-                var stack = new Stack<List<Item>>();
-                stack.Push(new List<Item>() {
-                    A(TRID ?? String.Empty),
+                return L(A(TRID ?? String.Empty),
                     A(SMPLN ?? String.Empty),
-                    A(STIME ?? String.Empty)
-                });
-                stack.Push(new List<Item>());
-                for (int index = 0; index < SVIDLIST.Count; index++)
-                {
-                    var svid = SVIDLIST[index];
-                    stack.Push(new List<Item>() {
-                        A(svid.SVID),
-                        A(svid.SV),
-                    });
-                }
-
-                return ParseItem(stack);
+                    A(STIME ?? String.Empty),
+                    SVIDLIST?.SecsItem);
             }
         }
     }
     /// <summary>
     /// SVID List class
     /// </summary>
-    public class SVIDS
+    public class SVIDS : IReport
     {
         /// <summary>
         /// Status Variable ID
@@ -142,6 +130,27 @@ namespace Granda.ATTS.CIM.Data.Message
         /// Status Variable
         /// </summary>
         public string SV { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Item SecsItem
+        {
+
+            get
+            {
+                var itemList = new List<Item>();
+                for (int index = 0; index < _size; index++)
+                {
+                    var item = _items[index];
+                    itemList.Add(L(
+                        A(item.SVID ?? String.Empty),
+                        A(item.SV ?? String.Empty)
+                        ));
+                }
+                return L(itemList);
+            }
+        }
+
 
         #region IList相关
         private SVIDS[] _items;
@@ -165,10 +174,6 @@ namespace Granda.ATTS.CIM.Data.Message
             {
                 return _items[index];
             }
-            set
-            {
-                _items[index] = value;
-            }
         }
 
 
@@ -183,8 +188,63 @@ namespace Granda.ATTS.CIM.Data.Message
         /// <param name="item"></param>
         public void Add(SVIDS item)
         {
+            if (_size == _items.Length) EnsureCapacity(_size + 1);
             this._items[this._size++] = item;
         }
+
+        private const int _defaultCapacity = 4;
+        private void EnsureCapacity(int min)
+        {
+            if (_items.Length < min)
+            {
+                int newCapacity = _items.Length == 0 ? _defaultCapacity : _items.Length * 2;
+                if (newCapacity < min) newCapacity = min;
+                Capacity = newCapacity;
+            }
+        }
+
+        private int Capacity
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<int>() >= 0);
+                return _items.Length;
+            }
+            set
+            {
+                if (value < _size)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                Contract.EndContractBlock();
+                if (value != _items.Length)
+                {
+                    if (value > 0)
+                    {
+                        SVIDS[] mewItems = new SVIDS[value];
+                        if (_size > 0)
+                        {
+                            Array.Copy(_items, 0, mewItems, 0, _size);
+                        }
+                        _items = mewItems;
+                    }
+                    else
+                    {
+                        _items = emptyArray;
+                    }
+                }
+            }
+        }
+
+
+        ///// <summary>
+        ///// 将新的item添加至列表末尾处
+        ///// </summary>
+        //public void Add(string paramName, string paramValue)
+        //{
+        //    var item = new Parameters() { PPARMNAME = paramName, PPARMVALUE = paramValue };
+        //    this._items[this._size++] = item;
+        //}
         /// <summary>
         /// 清空列表
         /// </summary>

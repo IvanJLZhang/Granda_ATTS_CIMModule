@@ -13,7 +13,9 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Granda.ATTS.CIM.Data.ENUM;
 using Secs4Net;
 using static Granda.ATTS.CIM.Data.Helper;
@@ -83,41 +85,45 @@ namespace Granda.ATTS.CIM.Data.Report
                     A(CEID.ToString()),
                 });
                 stack.Push(new List<Item>());
-                stack.Push(new List<Item>()
-                {
+                stack.Peek().Add(L(
                     A(RPTID.ToString()),
-                });
-                stack.Push(new List<Item>(EquipmentStatus.SecsItem.Items));
-                stack.Push(new List<Item>() {
-                    A(RPTID1.ToString()),
-                });
-                stack.Push(new List<Item>() {
-                    A(PPID),
-                    A(PPTYPE.ToString()),
-                    A($"{PPCINFO}"),
-                    A(LCTIME),
+                    L(EquipmentStatus.SecsItem)
+                ));
 
-                });
-                stack.Push(new List<Item>() { });
-                for (int index = 0; index < ProcessCommandList.Count; index++)
+                var ccodeList = new Func<ProcessCommands, Item>((ProcessCommandList) =>
                 {
-                    var processCommand = ProcessCommandList[index];
-                    stack.Push(new List<Item>() {
-                        A(processCommand.CCODE),
-                        A(processCommand.RCPSTEP),
-                        A(processCommand.UNITID),
-                        A(processCommand.SUNITID),
-                    });
-                    stack.Push(new List<Item>() { });
-                    for (int indey = 0; indey < processCommand.ParameterList.Count; indey++)
+                    List<Item> items = new List<Item>();
+                    for (int index = 0; index < ProcessCommandList.Count; index++)
                     {
-                        var parmaeter = processCommand.ParameterList[indey];
-                        stack.Push(new List<Item>() {
-                            A(parmaeter.PPARMNAME),
-                            A(parmaeter.PPARMVALUE),
-                        });
+                        var processCommand = ProcessCommandList[index];
+                        var itemList = new List<Item>();
+                        for (int indey = 0; indey < processCommand.ParameterList.Count; indey++)
+                        {
+                            var parmaeter = processCommand.ParameterList[indey];
+                            itemList.Add(L(new List<Item>() {
+                                A(parmaeter.PPARMNAME??String.Empty),
+                                A(parmaeter.PPARMVALUE??String.Empty),
+                             }));
+                        }
+                        items.Add(L(
+                            A(processCommand.CCODE ?? String.Empty),
+                            A(processCommand.RCPSTEP ?? String.Empty),
+                            A(processCommand.UNITID ?? String.Empty),
+                            A(processCommand.SUNITID ?? String.Empty),
+                            L(itemList)
+                         ));
                     }
-                }
+                    return L(items);
+                });
+                stack.Peek().Add(L(
+                    A(RPTID1.ToString()),
+                    L(
+                        A(PPID ?? String.Empty),
+                        A(PPTYPE.ToString()),
+                        A($"{(Int32)PPCINFO}"),
+                        A(LCTIME ?? String.Empty)
+                    ),
+                    ccodeList(this.ProcessCommandList)));
                 return ParseItem(stack);
             }
         }
@@ -125,7 +131,7 @@ namespace Granda.ATTS.CIM.Data.Report
     /// <summary>
     /// process command list
     /// </summary>
-    public class ProcessCommands
+    public class ProcessCommands : IReport
     {
         /// <summary>
         /// Command Code
@@ -147,6 +153,30 @@ namespace Granda.ATTS.CIM.Data.Report
         /// Process paramter list
         /// </summary>
         public Parameters ParameterList { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Item SecsItem
+        {
+            get
+            {
+                var itemList = new List<Item>();
+                for (int index = 0; index < _size; index++)
+                {
+                    var item = _items[index];
+                    itemList.Add(L(
+                         A(item.CCODE ?? String.Empty),
+                         A(item.RCPSTEP ?? String.Empty),
+                         A(item.UNITID ?? String.Empty),
+                         A(item.SUNITID ?? String.Empty),
+                         item.ParameterList.SecsItem
+                         ));
+                }
+                return L(itemList);
+            }
+
+        }
+
 
         #region IList相关
         private ProcessCommands[] _items;
@@ -170,10 +200,6 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 return _items[index];
             }
-            set
-            {
-                _items[index] = value;
-            }
         }
 
 
@@ -188,8 +214,54 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <param name="item"></param>
         public void Add(ProcessCommands item)
         {
+            if (_size == _items.Length) EnsureCapacity(_size + 1);
             this._items[this._size++] = item;
         }
+
+        private const int _defaultCapacity = 4;
+        private void EnsureCapacity(int min)
+        {
+            if (_items.Length < min)
+            {
+                int newCapacity = _items.Length == 0 ? _defaultCapacity : _items.Length * 2;
+                if (newCapacity < min) newCapacity = min;
+                Capacity = newCapacity;
+            }
+        }
+
+        private int Capacity
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<int>() >= 0);
+                return _items.Length;
+            }
+            set
+            {
+                if (value < _size)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                Contract.EndContractBlock();
+                if (value != _items.Length)
+                {
+                    if (value > 0)
+                    {
+                        ProcessCommands[] mewItems = new ProcessCommands[value];
+                        if (_size > 0)
+                        {
+                            Array.Copy(_items, 0, mewItems, 0, _size);
+                        }
+                        _items = mewItems;
+                    }
+                    else
+                    {
+                        _items = emptyArray;
+                    }
+                }
+            }
+        }
+
 
         ///// <summary>
         ///// 将新的item添加至列表末尾处
@@ -212,7 +284,7 @@ namespace Granda.ATTS.CIM.Data.Report
     /// <summary>
     /// Process parameter list
     /// </summary>
-    public class Parameters
+    public class Parameters : IReport
     {
         /// <summary>
         /// process parameter name
@@ -222,6 +294,27 @@ namespace Granda.ATTS.CIM.Data.Report
         /// process parameter value
         /// </summary>
         public string PPARMVALUE { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        public Item SecsItem
+        {
+
+            get
+            {
+                var itemList = new List<Item>();
+                for (int index = 0; index < _size; index++)
+                {
+                    var item = _items[index];
+                    itemList.Add(L(
+                            A(item.PPARMNAME ?? String.Empty),
+                            A(item.PPARMVALUE ?? String.Empty)
+                            ));
+                }
+                return L(itemList);
+            }
+        }
+
 
         #region IList相关
         private Parameters[] _items;
@@ -245,10 +338,6 @@ namespace Granda.ATTS.CIM.Data.Report
             {
                 return _items[index];
             }
-            set
-            {
-                _items[index] = value;
-            }
         }
 
 
@@ -263,17 +352,63 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <param name="item"></param>
         public void Add(Parameters item)
         {
+            if (_size == _items.Length) EnsureCapacity(_size + 1);
             this._items[this._size++] = item;
         }
 
-        /// <summary>
-        /// 将新的item添加至列表末尾处
-        /// </summary>
-        public void Add(string paramName, string paramValue)
+        private const int _defaultCapacity = 4;
+        private void EnsureCapacity(int min)
         {
-            var item = new Parameters() { PPARMNAME = paramName, PPARMVALUE = paramValue };
-            this._items[this._size++] = item;
+            if (_items.Length < min)
+            {
+                int newCapacity = _items.Length == 0 ? _defaultCapacity : _items.Length * 2;
+                if (newCapacity < min) newCapacity = min;
+                Capacity = newCapacity;
+            }
         }
+
+        private int Capacity
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<int>() >= 0);
+                return _items.Length;
+            }
+            set
+            {
+                if (value < _size)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                Contract.EndContractBlock();
+                if (value != _items.Length)
+                {
+                    if (value > 0)
+                    {
+                        Parameters[] mewItems = new Parameters[value];
+                        if (_size > 0)
+                        {
+                            Array.Copy(_items, 0, mewItems, 0, _size);
+                        }
+                        _items = mewItems;
+                    }
+                    else
+                    {
+                        _items = emptyArray;
+                    }
+                }
+            }
+        }
+
+
+        ///// <summary>
+        ///// 将新的item添加至列表末尾处
+        ///// </summary>
+        //public void Add(string paramName, string paramValue)
+        //{
+        //    var item = new Parameters() { PPARMNAME = paramName, PPARMVALUE = paramValue };
+        //    this._items[this._size++] = item;
+        //}
         /// <summary>
         /// 清空列表
         /// </summary>

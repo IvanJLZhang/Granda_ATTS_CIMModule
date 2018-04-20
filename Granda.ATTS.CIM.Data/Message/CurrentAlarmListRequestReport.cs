@@ -13,7 +13,9 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using Secs4Net;
 using static Granda.ATTS.CIM.Data.Helper;
 using static Secs4Net.Item;
@@ -84,20 +86,24 @@ namespace Granda.ATTS.CIM.Data.Message
         {
             get
             {
-                var stack = new Stack<List<Item>>();
-                stack.Push(new List<Item>());
-                foreach (var item in _items)
+                var itemList = new List<Item>();
+                for (int index = 0; index < _size; index++)
                 {
-                    stack.Push(new List<Item>() {
-                        A(item.UNITID),
-                    });
-                    stack.Push(new List<Item>());
-                    foreach (var ALID in item.ALIDLIST)
-                    {
-                        stack.Peek().Add(A(ALID));
-                    }
+                    var item = _items[index];
+                    itemList.Add(L(
+                        A(item.UNITID ?? String.Empty),
+                        new Func<Item>(() =>
+                        {
+                            var itemList1 = new List<Item>();
+                            foreach (var ALID in item.ALIDLIST)
+                            {
+                                itemList1.Add(A(ALID));
+                            }
+                            return L(itemList1);
+                        })()
+                        ));
                 }
-                return ParseItem(stack);
+                return L(itemList);
             }
         }
 
@@ -123,10 +129,6 @@ namespace Granda.ATTS.CIM.Data.Message
             {
                 return _items[index];
             }
-            set
-            {
-                _items[index] = value;
-            }
         }
 
 
@@ -141,8 +143,61 @@ namespace Granda.ATTS.CIM.Data.Message
         /// <param name="item"></param>
         public void Add(CurrentAlarmListReport item)
         {
+            if (_size == _items.Length) EnsureCapacity(_size + 1);
             this._items[this._size++] = item;
         }
+
+        private const int _defaultCapacity = 4;
+        private void EnsureCapacity(int min)
+        {
+            if (_items.Length < min)
+            {
+                int newCapacity = _items.Length == 0 ? _defaultCapacity : _items.Length * 2;
+                if (newCapacity < min) newCapacity = min;
+                Capacity = newCapacity;
+            }
+        }
+
+        private int Capacity
+        {
+            get
+            {
+                Contract.Ensures(Contract.Result<int>() >= 0);
+                return _items.Length;
+            }
+            set
+            {
+                if (value < _size)
+                {
+                    throw new ArgumentOutOfRangeException();
+                }
+                Contract.EndContractBlock();
+                if (value != _items.Length)
+                {
+                    if (value > 0)
+                    {
+                        CurrentAlarmListReport[] mewItems = new CurrentAlarmListReport[value];
+                        if (_size > 0)
+                        {
+                            Array.Copy(_items, 0, mewItems, 0, _size);
+                        }
+                        _items = mewItems;
+                    }
+                    else
+                    {
+                        _items = emptyArray;
+                    }
+                }
+            }
+        }
+        ///// <summary>
+        ///// 将新的item添加至列表末尾处
+        ///// </summary>
+        //public void Add(string paramName, string paramValue)
+        //{
+        //    var item = new Parameters() { PPARMNAME = paramName, PPARMVALUE = paramValue };
+        //    this._items[this._size++] = item;
+        //}
         /// <summary>
         /// 清空列表
         /// </summary>

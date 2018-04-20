@@ -35,33 +35,35 @@
             this.tb_port = new System.Windows.Forms.TextBox();
             this.lb_connectionState = new System.Windows.Forms.Label();
             this.tb_msg = new System.Windows.Forms.TextBox();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btn_start = new System.Windows.Forms.Button();
             this.rbtn_active = new System.Windows.Forms.RadioButton();
             this.rbtn_passive = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btn_i_datetime = new System.Windows.Forms.Button();
+            this.btn_i_offline = new System.Windows.Forms.Button();
             this.btn_i_online = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
-            this.btn_i_offline = new System.Windows.Forms.Button();
-            this.btn_i_datetime = new System.Windows.Forms.Button();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btn_d_prr = new System.Windows.Forms.Button();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.btn_r_process_control = new System.Windows.Forms.Button();
-            this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.btn_rc_rcr = new System.Windows.Forms.Button();
-            this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.btn_e_send_display_message = new System.Windows.Forms.Button();
-            this.groupBox6 = new System.Windows.Forms.GroupBox();
-            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.clearToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.btn_d_ecc = new System.Windows.Forms.Button();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.contextMenuStrip1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox6.SuspendLayout();
-            this.contextMenuStrip1.SuspendLayout();
+            this.groupBox7.SuspendLayout();
             this.SuspendLayout();
             // 
             // tb_ip
@@ -119,6 +121,20 @@
             this.tb_msg.Size = new System.Drawing.Size(764, 321);
             this.tb_msg.TabIndex = 5;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.clearToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(107, 26);
+            // 
+            // clearToolStripMenuItem
+            // 
+            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(106, 22);
+            this.clearToolStripMenuItem.Text = "Clear";
+            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
+            // 
             // btn_start
             // 
             this.btn_start.Location = new System.Drawing.Point(591, 15);
@@ -153,7 +169,6 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.btn_i_datetime);
             this.groupBox1.Controls.Add(this.btn_i_offline);
             this.groupBox1.Controls.Add(this.btn_i_online);
             this.groupBox1.Location = new System.Drawing.Point(15, 409);
@@ -163,49 +178,38 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Initialize";
             // 
-            // btn_i_online
-            // 
-            this.btn_i_online.Location = new System.Drawing.Point(27, 26);
-            this.btn_i_online.Name = "btn_i_online";
-            this.btn_i_online.Size = new System.Drawing.Size(93, 31);
-            this.btn_i_online.TabIndex = 0;
-            this.btn_i_online.Text = "Online";
-            this.toolTip1.SetToolTip(this.btn_i_online, "Launch Online Process");
-            this.btn_i_online.UseVisualStyleBackColor = true;
-            this.btn_i_online.Click += new System.EventHandler(this.btn_i_online_Click);
-            // 
-            // btn_i_offline
-            // 
-            this.btn_i_offline.Location = new System.Drawing.Point(150, 26);
-            this.btn_i_offline.Name = "btn_i_offline";
-            this.btn_i_offline.Size = new System.Drawing.Size(93, 31);
-            this.btn_i_offline.TabIndex = 1;
-            this.btn_i_offline.Text = "Offline";
-            this.toolTip1.SetToolTip(this.btn_i_offline, "Launch Offline Process");
-            this.btn_i_offline.UseVisualStyleBackColor = true;
-            this.btn_i_offline.Click += new System.EventHandler(this.btn_i_offline_Click);
-            // 
             // btn_i_datetime
             // 
-            this.btn_i_datetime.Location = new System.Drawing.Point(268, 26);
+            this.btn_i_datetime.Location = new System.Drawing.Point(27, 26);
             this.btn_i_datetime.Name = "btn_i_datetime";
-            this.btn_i_datetime.Size = new System.Drawing.Size(93, 31);
+            this.btn_i_datetime.Size = new System.Drawing.Size(158, 31);
             this.btn_i_datetime.TabIndex = 2;
             this.btn_i_datetime.Text = "DateTime";
             this.toolTip1.SetToolTip(this.btn_i_datetime, "Launch Request Date and Time Process");
             this.btn_i_datetime.UseVisualStyleBackColor = true;
             this.btn_i_datetime.Click += new System.EventHandler(this.btn_i_datetime_Click);
             // 
-            // groupBox2
+            // btn_i_offline
             // 
-            this.groupBox2.Controls.Add(this.btn_d_ecc);
-            this.groupBox2.Controls.Add(this.btn_d_prr);
-            this.groupBox2.Location = new System.Drawing.Point(400, 409);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(379, 172);
-            this.groupBox2.TabIndex = 10;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Data Collection";
+            this.btn_i_offline.Location = new System.Drawing.Point(209, 26);
+            this.btn_i_offline.Name = "btn_i_offline";
+            this.btn_i_offline.Size = new System.Drawing.Size(158, 31);
+            this.btn_i_offline.TabIndex = 1;
+            this.btn_i_offline.Text = "Offline";
+            this.toolTip1.SetToolTip(this.btn_i_offline, "Launch Offline Process");
+            this.btn_i_offline.UseVisualStyleBackColor = true;
+            this.btn_i_offline.Click += new System.EventHandler(this.btn_i_offline_Click);
+            // 
+            // btn_i_online
+            // 
+            this.btn_i_online.Location = new System.Drawing.Point(27, 26);
+            this.btn_i_online.Name = "btn_i_online";
+            this.btn_i_online.Size = new System.Drawing.Size(158, 31);
+            this.btn_i_online.TabIndex = 0;
+            this.btn_i_online.Text = "Online";
+            this.toolTip1.SetToolTip(this.btn_i_online, "Launch Online Process");
+            this.btn_i_online.UseVisualStyleBackColor = true;
+            this.btn_i_online.Click += new System.EventHandler(this.btn_i_online_Click);
             // 
             // btn_d_prr
             // 
@@ -218,16 +222,6 @@
             this.btn_d_prr.UseVisualStyleBackColor = true;
             this.btn_d_prr.Click += new System.EventHandler(this.btn_d_prr_Click);
             // 
-            // groupBox3
-            // 
-            this.groupBox3.Controls.Add(this.btn_r_process_control);
-            this.groupBox3.Location = new System.Drawing.Point(15, 587);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(379, 83);
-            this.groupBox3.TabIndex = 10;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "Remote Control";
-            // 
             // btn_r_process_control
             // 
             this.btn_r_process_control.Location = new System.Drawing.Point(27, 26);
@@ -238,16 +232,6 @@
             this.toolTip1.SetToolTip(this.btn_r_process_control, "Launch Process Control Report");
             this.btn_r_process_control.UseVisualStyleBackColor = true;
             this.btn_r_process_control.Click += new System.EventHandler(this.btn_r_process_control_Click);
-            // 
-            // groupBox4
-            // 
-            this.groupBox4.Controls.Add(this.btn_rc_rcr);
-            this.groupBox4.Location = new System.Drawing.Point(400, 587);
-            this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(379, 83);
-            this.groupBox4.TabIndex = 11;
-            this.groupBox4.TabStop = false;
-            this.groupBox4.Text = "Recipe Management";
             // 
             // btn_rc_rcr
             // 
@@ -260,16 +244,6 @@
             this.btn_rc_rcr.UseVisualStyleBackColor = true;
             this.btn_rc_rcr.Click += new System.EventHandler(this.btn_rc_rcr_Click);
             // 
-            // groupBox5
-            // 
-            this.groupBox5.Controls.Add(this.btn_e_send_display_message);
-            this.groupBox5.Location = new System.Drawing.Point(15, 498);
-            this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(379, 83);
-            this.groupBox5.TabIndex = 10;
-            this.groupBox5.TabStop = false;
-            this.groupBox5.Text = "Equipment Terminal Service";
-            // 
             // btn_e_send_display_message
             // 
             this.btn_e_send_display_message.Location = new System.Drawing.Point(27, 26);
@@ -280,6 +254,58 @@
             this.toolTip1.SetToolTip(this.btn_e_send_display_message, "Launch Online Process");
             this.btn_e_send_display_message.UseVisualStyleBackColor = true;
             this.btn_e_send_display_message.Click += new System.EventHandler(this.btn_e_send_display_message_Click);
+            // 
+            // btn_d_ecc
+            // 
+            this.btn_d_ecc.Location = new System.Drawing.Point(206, 26);
+            this.btn_d_ecc.Name = "btn_d_ecc";
+            this.btn_d_ecc.Size = new System.Drawing.Size(158, 31);
+            this.btn_d_ecc.TabIndex = 1;
+            this.btn_d_ecc.Text = "EQT Constant Change";
+            this.toolTip1.SetToolTip(this.btn_d_ecc, "Launch Process Result Report");
+            this.btn_d_ecc.UseVisualStyleBackColor = true;
+            this.btn_d_ecc.Click += new System.EventHandler(this.btn_d_ecc_Click);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.btn_d_ecc);
+            this.groupBox2.Controls.Add(this.btn_d_prr);
+            this.groupBox2.Location = new System.Drawing.Point(400, 409);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(379, 83);
+            this.groupBox2.TabIndex = 10;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Data Collection";
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.btn_r_process_control);
+            this.groupBox3.Location = new System.Drawing.Point(15, 587);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(379, 83);
+            this.groupBox3.TabIndex = 10;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "Remote Control";
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.btn_rc_rcr);
+            this.groupBox4.Location = new System.Drawing.Point(400, 587);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(379, 83);
+            this.groupBox4.TabIndex = 11;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Recipe Management";
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.btn_e_send_display_message);
+            this.groupBox5.Location = new System.Drawing.Point(15, 498);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(379, 83);
+            this.groupBox5.TabIndex = 10;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Equipment Terminal Service";
             // 
             // groupBox6
             // 
@@ -297,36 +323,22 @@
             this.groupBox6.TabIndex = 12;
             this.groupBox6.TabStop = false;
             // 
-            // contextMenuStrip1
+            // groupBox7
             // 
-            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.clearToolStripMenuItem});
-            this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(107, 26);
-            // 
-            // clearToolStripMenuItem
-            // 
-            this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(106, 22);
-            this.clearToolStripMenuItem.Text = "Clear";
-            this.clearToolStripMenuItem.Click += new System.EventHandler(this.clearToolStripMenuItem_Click);
-            // 
-            // btn_d_ecc
-            // 
-            this.btn_d_ecc.Location = new System.Drawing.Point(27, 115);
-            this.btn_d_ecc.Name = "btn_d_ecc";
-            this.btn_d_ecc.Size = new System.Drawing.Size(158, 31);
-            this.btn_d_ecc.TabIndex = 1;
-            this.btn_d_ecc.Text = "EQT Constant Change";
-            this.toolTip1.SetToolTip(this.btn_d_ecc, "Launch Process Result Report");
-            this.btn_d_ecc.UseVisualStyleBackColor = true;
-            this.btn_d_ecc.Click += new System.EventHandler(this.btn_d_ecc_Click);
+            this.groupBox7.Controls.Add(this.btn_i_datetime);
+            this.groupBox7.Location = new System.Drawing.Point(400, 498);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(379, 83);
+            this.groupBox7.TabIndex = 11;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Clock";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(798, 685);
+            this.Controls.Add(this.groupBox7);
             this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
@@ -336,6 +348,7 @@
             this.Controls.Add(this.groupBox6);
             this.Name = "Form1";
             this.Text = "Equipment";
+            this.contextMenuStrip1.ResumeLayout(false);
             this.groupBox1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
@@ -343,7 +356,7 @@
             this.groupBox5.ResumeLayout(false);
             this.groupBox6.ResumeLayout(false);
             this.groupBox6.PerformLayout();
-            this.contextMenuStrip1.ResumeLayout(false);
+            this.groupBox7.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -377,6 +390,7 @@
         private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem clearToolStripMenuItem;
         private System.Windows.Forms.Button btn_d_ecc;
+        private System.Windows.Forms.GroupBox groupBox7;
     }
 }
 
