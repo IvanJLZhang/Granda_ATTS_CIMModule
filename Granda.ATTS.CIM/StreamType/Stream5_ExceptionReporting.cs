@@ -1,11 +1,5 @@
 ﻿using Secs4Net;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static Granda.ATTS.CIM.CIMBASE;
-using static Granda.ATTS.CIM.Extension.SmlExtension;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.StreamType
 {
@@ -42,12 +36,7 @@ namespace Granda.ATTS.CIM.StreamType
         /// <returns></returns>
         public static SecsMessage S5F4(this SecsMessage secsMessage, int ack)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-            {
-                A(ack.ToString()),
-            });
-            return SendMessage(5, 4, secsMessage.SystenBytes, ParseItem(stack));
+            return SendMessage(5, 4, secsMessage.SystenBytes, A(ack.ToString()));
         }
 
         /// <summary>

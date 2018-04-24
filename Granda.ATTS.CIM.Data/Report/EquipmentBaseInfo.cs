@@ -16,7 +16,6 @@
 using System;
 using System.Collections.Generic;
 using Secs4Net;
-using static Granda.ATTS.CIM.Data.Helper;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.Data.Report
 {
@@ -42,14 +41,10 @@ namespace Granda.ATTS.CIM.Data.Report
         {
             get
             {
-                var stack = new Stack<List<Item>>();
-                stack.Push(new List<Item>()
-                {
-                    A(MDLN ?? String.Empty),
-                    A(SOFTREV ?? String.Empty),
-                });
-
-                return ParseItem(stack);
+                var itemList = new List<Item>();
+                itemList.Add(A(MDLN ?? String.Empty));
+                itemList.Add(A(SOFTREV ?? String.Empty));
+                return L(itemList);
             }
         }
         /// <summary>

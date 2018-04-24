@@ -13,15 +13,11 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
-using Granda.ATTS.CIM.Data.ENUM;
-using Secs4Net;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+using Granda.ATTS.CIM.Data.ENUM;
+using Secs4Net;
 using static Secs4Net.Item;
-using static Granda.ATTS.CIM.Data.Helper;
 namespace Granda.ATTS.CIM.Data.Report
 {
     /// <summary>
@@ -48,14 +44,11 @@ namespace Granda.ATTS.CIM.Data.Report
         {
             get
             {
-                var stack = new Stack<List<Item>>();
-                stack.Push(new List<Item>()
-                {
-                    A(CRST.ToString()),
-                    A(EQST.ToString()),
-                    A(EQSTCODE.ToString()),
-                });
-                return ParseItem(stack);
+                var itemList = new List<Item>();
+                itemList.Add(A(CRST.ToString()));
+                itemList.Add(A(EQST.ToString()));
+                itemList.Add(A(EQSTCODE.ToString()));
+                return L(itemList);
             }
         }
         /// <summary>

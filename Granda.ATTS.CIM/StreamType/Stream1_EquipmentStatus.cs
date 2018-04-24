@@ -1,8 +1,6 @@
-﻿using Secs4Net;
-using System;
-using System.Collections.Generic;
+﻿using System;
+using Secs4Net;
 using static Granda.ATTS.CIM.CIMBASE;
-using static Granda.ATTS.CIM.Extension.SmlExtension;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.StreamType
 {
@@ -27,14 +25,7 @@ namespace Granda.ATTS.CIM.StreamType
 
         public static SecsMessage S1F2(this SecsMessage secsMessage, string MDLN, string SOFTREV)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(MDLN),
-                A(SOFTREV),
-            });
-            var item = ParseItem(stack);
-
-            return SendMessage(1, 2, secsMessage.SystenBytes, item);
+            return SendMessage(1, 2, secsMessage.SystenBytes, L(A(MDLN ?? String.Empty), A(SOFTREV ?? String.Empty)));
         }
         /// <summary>
         /// Selected Equipment Status Request
@@ -58,12 +49,7 @@ namespace Granda.ATTS.CIM.StreamType
         /// <returns></returns>
         public static SecsMessage S1F5(int SFCD)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(SFCD.ToString()),
-            });
-            var item = ParseItem(stack);
-            return SendMessage(1, 5, true, item, SFCD, "SFCD");
+            return SendMessage(1, 5, true, A(SFCD.ToString()), SFCD, "SFCD");
         }
         /// <summary>
         /// Formatted Status Request (FSR) ack
@@ -73,34 +59,34 @@ namespace Granda.ATTS.CIM.StreamType
         {
             return SendMessage(1, 6, secsMessage.SystenBytes, item);
         }
-        /// <summary>
-        /// 待定
-        /// </summary>
-        /// <param name="SVID"></param>
-        /// <returns></returns>
-        public static SecsMessage S1F11(string SVID)
-        {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(SVID),
-            });
-            var item = ParseItem(stack);
-            return SendMessage(1, 11, true, item);
-        }
-        /// <summary>
-        /// 待定
-        /// </summary>
-        /// <param name="SVID"></param>
-        /// <returns></returns>
-        public static SecsMessage S1F12(string SVID)
-        {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(SVID),
-            });
-            var item = ParseItem(stack);
-            return SendMessage(1, 12, false, item);
-        }
+        ///// <summary>
+        ///// 待定
+        ///// </summary>
+        ///// <param name="SVID"></param>
+        ///// <returns></returns>
+        //public static SecsMessage S1F11(string SVID)
+        //{
+        //    var stack = new Stack<List<Item>>();
+        //    stack.Push(new List<Item>() {
+        //        A(SVID),
+        //    });
+        //    var item = ParseItem(stack);
+        //    return SendMessage(1, 11, true, item);
+        //}
+        ///// <summary>
+        ///// 待定
+        ///// </summary>
+        ///// <param name="SVID"></param>
+        ///// <returns></returns>
+        //public static SecsMessage S1F12(string SVID)
+        //{
+        //    var stack = new Stack<List<Item>>();
+        //    stack.Push(new List<Item>() {
+        //        A(SVID),
+        //    });
+        //    var item = ParseItem(stack);
+        //    return SendMessage(1, 12, false, item);
+        //}
         /// <summary>
         /// Establish Communication Request
         /// </summary>
@@ -115,17 +101,13 @@ namespace Granda.ATTS.CIM.StreamType
         /// <returns></returns>
         public static SecsMessage S1F14(this SecsMessage secsMessage, string MDLN, string SOFTREV, string ACK)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-            {
-                A(ACK),
-            });
-            stack.Push(new List<Item>() {
-                A(MDLN),
-                A(SOFTREV),
-            });
-            var item = ParseItem(stack);
-            return SendMessage(1, 14, secsMessage.SystenBytes, item);
+            return SendMessage(1, 14, secsMessage.SystenBytes, L(
+                A(ACK ?? String.Empty),
+                L(
+                    A(MDLN ?? String.Empty),
+                    A(SOFTREV ?? String.Empty)
+                    )
+                ));
         }
         /// <summary>
         /// Request OFF-LINE
@@ -142,12 +124,7 @@ namespace Granda.ATTS.CIM.StreamType
         /// <returns></returns>
         public static SecsMessage S1F16(this SecsMessage secsMessage, string OFLACK)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-            {
-                A(OFLACK),
-            });
-            var item = ParseItem(stack);
+            var item = A(OFLACK);
             return SendMessage(1, 16, secsMessage.SystenBytes, item);
         }
 
@@ -157,13 +134,7 @@ namespace Granda.ATTS.CIM.StreamType
         /// <returns></returns>
         public static SecsMessage S1F17(string CRST)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-            {
-                A(CRST),
-            });
-            var item = ParseItem(stack);
-            return SendMessage(1, 17, true, item);
+            return SendMessage(1, 17, true, A(CRST ?? String.Empty));
         }
         /// <summary>
         /// ON-LINE Acknowledge
@@ -171,12 +142,7 @@ namespace Granda.ATTS.CIM.StreamType
         /// <returns></returns>
         public static SecsMessage S1F18(this SecsMessage secsMessage, string ONLACK)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-            {
-                A(ONLACK),
-            });
-            var item = ParseItem(stack);
+            var item = A(ONLACK);
             return SendMessage(1, 18, secsMessage.SystenBytes, item);
         }
     }

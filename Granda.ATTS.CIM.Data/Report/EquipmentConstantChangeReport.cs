@@ -17,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Secs4Net;
-using static Granda.ATTS.CIM.Data.Helper;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.Data.Report
 {
@@ -62,23 +61,20 @@ namespace Granda.ATTS.CIM.Data.Report
                 CEID = 109;
                 RPTID = 100;
                 RPTID1 = 109;
-                var stack = new Stack<List<Item>>();
-                stack.Push(new List<Item>() {
-                    A($"{DATAID}"),
-                    A($"{CEID}"),
-                });
-                stack.Peek().Add(
+                var itemList = new List<Item>();
+                itemList.Add(A($"{DATAID}"));
+                itemList.Add(A($"{CEID}"));
+                itemList.Add(
                     L(
                         L(
                             A(RPTID.ToString()),
-                            L(EquipmentStatus.SecsItem)
-                            ),
+                            EquipmentStatus.SecsItem),
                         L(
                             A(RPTID1.ToString()),
                             ECIDLIST.SecsItem
                             )
                     ));
-                return ParseItem(stack);
+                return L(itemList);
             }
         }
     }

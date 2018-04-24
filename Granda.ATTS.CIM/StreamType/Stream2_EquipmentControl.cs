@@ -1,7 +1,5 @@
 ﻿using Secs4Net;
-using System.Collections.Generic;
 using static Granda.ATTS.CIM.CIMBASE;
-using static Granda.ATTS.CIM.Extension.SmlExtension;
 using static Secs4Net.Item;
 
 namespace Granda.ATTS.CIM.StreamType
@@ -24,38 +22,38 @@ namespace Granda.ATTS.CIM.StreamType
         {
             return SendMessage(2, 14, secsMessage.SystenBytes, item);
         }
-        /// <summary>
-        /// New Equipment Constants Send
-        /// </summary>
-        /// <param name="ECID"></param>
-        /// <param name="ECV"></param>
-        /// <returns></returns>
-        public static SecsMessage S2F15(string ECID, string ECV)
-        {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(ECID),
-                A(ECV),
-            });
-            var item = ParseItem(stack);
+        ///// <summary>
+        ///// New Equipment Constants Send
+        ///// </summary>
+        ///// <param name="ECID"></param>
+        ///// <param name="ECV"></param>
+        ///// <returns></returns>
+        //public static SecsMessage S2F15(string ECID, string ECV)
+        //{
+        //    var stack = new Stack<List<Item>>();
+        //    stack.Push(new List<Item>() {
+        //        A(ECID),
+        //        A(ECV),
+        //    });
+        //    var item = ParseItem(stack);
 
-            return SendMessage(2, 15, true, item);
-        }
-        /// <summary>
-        /// New Equipment Constant Ack.
-        /// </summary>
-        /// <param name="EAC"></param>
-        /// <returns></returns>
-        public static SecsMessage S2F16(string EAC)
-        {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(EAC),
-            });
-            var item = ParseItem(stack);
+        //    return SendMessage(2, 15, true, item);
+        //}
+        ///// <summary>
+        ///// New Equipment Constant Ack.
+        ///// </summary>
+        ///// <param name="EAC"></param>
+        ///// <returns></returns>
+        //public static SecsMessage S2F16(string EAC)
+        //{
+        //    var stack = new Stack<List<Item>>();
+        //    stack.Push(new List<Item>() {
+        //        A(EAC),
+        //    });
+        //    var item = ParseItem(stack);
 
-            return SendMessage(2, 15, false, item);
-        }
+        //    return SendMessage(2, 15, false, item);
+        //}
 
         /// <summary>
         /// Date and Time Request
@@ -71,13 +69,7 @@ namespace Granda.ATTS.CIM.StreamType
         /// <returns></returns>
         public static SecsMessage S2F18(this SecsMessage secsMessage, string TIME)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(TIME),
-            });
-            var item = ParseItem(stack);
-
-            return SendMessage(2, 18, secsMessage.SystenBytes, item);
+            return SendMessage(2, 18, secsMessage.SystenBytes, A(TIME ?? string.Empty));
         }
         //  <L[5]
         //	1.<A[2] ‘2 Bytes’ [TRID]>
@@ -102,29 +94,23 @@ namespace Granda.ATTS.CIM.StreamType
         /// <returns></returns>
         public static SecsMessage S2F24(this SecsMessage secsMessage, string TIAACK)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(TIAACK),
-            });
-            var item = ParseItem(stack);
-
-            return SendMessage(2, 24, secsMessage.SystenBytes, item);
+            return SendMessage(2, 24, secsMessage.SystenBytes, A(TIAACK ?? string.Empty));
         }
 
-        /// <summary>
-        /// Trace Initialize Acknowledge 待定
-        /// </summary>
-        /// <returns></returns>
-        public static SecsMessage S2F29(string ECID)
-        {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(ECID),
-            });
-            var item = ParseItem(stack);
+        ///// <summary>
+        ///// Trace Initialize Acknowledge 待定
+        ///// </summary>
+        ///// <returns></returns>
+        //public static SecsMessage S2F29(string ECID)
+        //{
+        //    var stack = new Stack<List<Item>>();
+        //    stack.Push(new List<Item>() {
+        //        A(ECID),
+        //    });
+        //    var item = ParseItem(stack);
 
-            return SendMessage(2, 29, true, item);
-        }
+        //    return SendMessage(2, 29, true, item);
+        //}
         //  <L[n]
         //	1.<L[5]
         //		1.<A[4] ‘4 Bytes’ [ECID]>
@@ -134,21 +120,21 @@ namespace Granda.ATTS.CIM.StreamType
         //		5.<A[10] ’10 Bytes’ [ECV]>
 
         //※  n is EC List count
-        /// <summary>
-        /// Equipment Constant Name List Reply
-        /// </summary>
-        /// <param name="ECID"></param>
-        /// <returns></returns>
-        public static SecsMessage S2F30(string ECID)
-        {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(ECID),
-            });
-            var item = ParseItem(stack);
+        ///// <summary>
+        ///// Equipment Constant Name List Reply
+        ///// </summary>
+        ///// <param name="ECID"></param>
+        ///// <returns></returns>
+        //public static SecsMessage S2F30(string ECID)
+        //{
+        //    var stack = new Stack<List<Item>>();
+        //    stack.Push(new List<Item>() {
+        //        A(ECID),
+        //    });
+        //    var item = ParseItem(stack);
 
-            return SendMessage(2, 30, false, item);
-        }
+        //    return SendMessage(2, 30, false, item);
+        //}
         /// <summary>
         /// Date and Time Set Request (DTS)
         /// </summary>
@@ -156,13 +142,7 @@ namespace Granda.ATTS.CIM.StreamType
         /// <returns></returns>
         public static SecsMessage S2F31(string TIME)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(TIME),
-            });
-            var item = ParseItem(stack);
-
-            return SendMessage(2, 31, true, item);
+            return SendMessage(2, 31, true, A(TIME ?? string.Empty));
         }
         /// <summary>
         /// Date and Time Set Acknowledge (DTA)
@@ -170,13 +150,7 @@ namespace Granda.ATTS.CIM.StreamType
         /// <returns></returns>
         public static SecsMessage S2F32(this SecsMessage secsMessage, string TIACK)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(TIACK),
-            });
-            var item = ParseItem(stack);
-
-            return SendMessage(2, 32, secsMessage.SystenBytes, item);
+            return SendMessage(2, 32, secsMessage.SystenBytes, A(TIACK ?? string.Empty));
         }
         /// <summary>
         /// Enable or Disable Event Report
@@ -192,12 +166,7 @@ namespace Granda.ATTS.CIM.StreamType
         /// <returns></returns>
         public static SecsMessage S2F38(this SecsMessage secsMessage, int ack)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(ack.ToString()),
-            });
-            var item = ParseItem(stack);
-            return SendMessage(2, 38, secsMessage.SystenBytes, item);
+            return SendMessage(2, 38, secsMessage.SystenBytes, A(ack.ToString()));
         }
 
         /// <summary>
@@ -231,12 +200,7 @@ namespace Granda.ATTS.CIM.StreamType
         /// <returns></returns>
         public static SecsMessage S2F42(this SecsMessage secsMessage, int rcmd, int ack)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(rcmd.ToString()),
-                A(ack.ToString()),
-            });
-            return SendMessage(2, 42, secsMessage.SystenBytes, ParseItem(stack));
+            return SendMessage(2, 42, secsMessage.SystenBytes, L(A(rcmd.ToString()), A(ack.ToString())));
         }
 
         /// <summary>

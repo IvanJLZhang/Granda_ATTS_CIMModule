@@ -59,7 +59,6 @@
     <Compile Include="ENUM\SFCD.cs" />
     <Compile Include="ENUM\SLOTINFO.cs" />
     <Compile Include="ENUM\TRSMODE.cs" />
-    <Compile Include="Helper.cs" />
     <Compile Include="Message\AlarmEnableDisableRequest.cs" />
     <Compile Include="Message\CurrentAlarmListRequestReport.cs" />
     <Compile Include="Message\CurrentEPPDRequestReport.cs" />

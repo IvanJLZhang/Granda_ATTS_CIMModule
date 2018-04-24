@@ -15,21 +15,19 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
-using System.Text;
+using Granda.ATTS.CIM.Data;
+using Granda.ATTS.CIM.Data.ENUM;
+using Granda.ATTS.CIM.Data.Message;
+using Granda.ATTS.CIM.Data.Report;
 using Granda.ATTS.CIM.Extension;
 using Granda.ATTS.CIM.Model;
 using Secs4Net;
-using static Secs4Net.Item;
-using static Granda.ATTS.CIM.StreamType.Stream6_DataCollection;
 using static Granda.ATTS.CIM.StreamType.Stream1_EquipmentStatus;
 using static Granda.ATTS.CIM.StreamType.Stream2_EquipmentControl;
-using static Granda.ATTS.CIM.Extension.SmlExtension;
-using System.Diagnostics;
-using Granda.ATTS.CIM.Data;
-using Granda.ATTS.CIM.Data.Report;
-using Granda.ATTS.CIM.Data.Message;
-using Granda.ATTS.CIM.Data.ENUM;
+using static Granda.ATTS.CIM.StreamType.Stream6_DataCollection;
+using static Secs4Net.Item;
 
 namespace Granda.ATTS.CIM.Scenario
 {
@@ -188,13 +186,12 @@ namespace Granda.ATTS.CIM.Scenario
         public bool LaunchSelectedEquipmentStatusReportProcess(string[] report)
         {
             SubScenarioName = Resource.DCS_Host_request_value_status;
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>());
+            var itemList = new List<Item>();
             foreach (var item in report)
             {
-                stack.Peek().Add(A(item));
+                itemList.Add(A(item ?? String.Empty));
             }
-            PrimaryMessage.S1F4(ParseItem(stack));
+            PrimaryMessage.S1F4(L(itemList));
             return true;
         }
         /// <summary>
@@ -234,13 +231,12 @@ namespace Granda.ATTS.CIM.Scenario
         public bool LaunchEquipmentConstantsDataReportProcess(string[] report)
         {
             SubScenarioName = Resource.DCS_Equipment_Constants_Request;
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>());
+            var itemList = new List<Item>();
             foreach (var item in report)
             {
-                stack.Peek().Add(A(item));
+                itemList.Add(A(item ?? String.Empty));
             }
-            PrimaryMessage.S2F14(ParseItem(stack));
+            PrimaryMessage.S2F14(L(itemList));
             return true;
         }
         #region host message

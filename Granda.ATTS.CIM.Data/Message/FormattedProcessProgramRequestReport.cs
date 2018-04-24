@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Data.Report;
 using Secs4Net;
-using static Granda.ATTS.CIM.Data.Helper;
 using static Secs4Net.Item;
 
 namespace Granda.ATTS.CIM.Data.Message
@@ -115,16 +114,14 @@ namespace Granda.ATTS.CIM.Data.Message
         {
             get
             {
-                var stack = new Stack<List<Item>>();
-                stack.Push(new List<Item>() {
-                    A(PPID??String.Empty),
-                    A(PPTYPE.ToString()),
-                    A(EquipmentBaseInfo.MDLN??String.Empty),
-                    A(EquipmentBaseInfo.SOFTREV??String.Empty),
-                    A(LCTIME??String.Empty),
-                });
-                stack.Peek().Add(ProcessCommandList.SecsItem);
-                return ParseItem(stack);
+                var itemList = new List<Item>();
+                itemList.Add(A(PPID ?? String.Empty));
+                itemList.Add(A(PPTYPE.ToString()));
+                itemList.Add(A(EquipmentBaseInfo.MDLN ?? String.Empty));
+                itemList.Add(A(EquipmentBaseInfo.SOFTREV ?? String.Empty));
+                itemList.Add(A(LCTIME ?? String.Empty));
+                itemList.Add(ProcessCommandList.SecsItem);
+                return L(itemList);
             }
         }
     }

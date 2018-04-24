@@ -17,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Secs4Net;
-using static Granda.ATTS.CIM.Data.Helper;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.Data.Message
 {

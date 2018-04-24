@@ -17,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using Granda.ATTS.CIM.Data.ENUM;
 using Secs4Net;
-using static Granda.ATTS.CIM.Data.Helper;
 using static Secs4Net.Item;
 
 namespace Granda.ATTS.CIM.Data.Message
@@ -81,17 +80,21 @@ namespace Granda.ATTS.CIM.Data.Message
         {
             get
             {
-                var stack = new Stack<List<Item>>();
-                stack.Push(new List<Item>() {
-                    A(UNITID),
-                    A(PPTYPE.ToString()),
-                });
-                stack.Push(new List<Item>());
-                foreach (var item in PPIDLIST)
-                {
-                    stack.Peek().Add(A(item));
-                }
-                return ParseItem(stack);
+                var itemList = new List<Item>();
+                itemList.Add(A(UNITID ?? String.Empty));
+                itemList.Add(A(PPTYPE.ToString()));
+                itemList.Add(L(
+                    new Func<IList<string>, Item>((ppidList) =>
+                    {
+                        var itemList1 = new List<Item>();
+                        for (int index = 0; index < ppidList.Count; index++)
+                        {
+                            itemList1.Add(A(ppidList[index]));
+                        }
+                        return L(itemList1);
+                    })(PPIDLIST)
+                    ));
+                return L(itemList);
             }
 
         }

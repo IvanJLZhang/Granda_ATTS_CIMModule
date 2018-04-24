@@ -181,25 +181,25 @@ namespace Granda.ATTS.CIM.Extension
             }
         }
 
-        public static Item ParseItem(Stack<List<Item>> stack)
-        {
-            Item rootItem = null;
-            do
-            {
-                var itemList = stack.Pop();
-                var item = itemList.Count > 0 ? L(itemList) : L();
-                if (stack.Count > 0)
-                {
-                    stack.Peek().Add(item);
-                }
-                else
-                {
-                    rootItem = item;
-                }
-            } while (stack.Count > 0);
+        //public static Item ParseItem(Stack<List<Item>> stack)
+        //{
+        //    Item rootItem = null;
+        //    do
+        //    {
+        //        var itemList = stack.Pop();
+        //        var item = itemList.Count > 0 ? L(itemList) : L();
+        //        if (stack.Count > 0)
+        //        {
+        //            stack.Peek().Add(item);
+        //        }
+        //        else
+        //        {
+        //            rootItem = item;
+        //        }
+        //    } while (stack.Count > 0);
 
-            return rootItem;
-        }
+        //    return rootItem;
+        //}
         #endregion
 
         //#region SecsMessage to SML Str

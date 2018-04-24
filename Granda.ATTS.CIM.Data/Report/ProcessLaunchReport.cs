@@ -15,11 +15,8 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Secs4Net;
 using static Secs4Net.Item;
-using static Granda.ATTS.CIM.Data.Helper;
 namespace Granda.ATTS.CIM.Data.Report
 {
     /// <summary>
@@ -99,10 +96,11 @@ namespace Granda.ATTS.CIM.Data.Report
                 itemList.Add(A(DATAID.ToString()));
                 itemList.Add(A(CEID.ToString()));
                 itemList.Add(L(
-                    A(RPTID.ToString()),
-                    EquipmentBaseInfo.SecsItem
-                    ));
-                itemList.Add(L(
+                    L(
+                        A(RPTID.ToString()),
+                        EquipmentBaseInfo.SecsItem
+                    ),
+                    L(
                         A(RPTID1.ToString()),
                         L(
                             A(LOTID ?? String.Empty),
@@ -112,7 +110,7 @@ namespace Granda.ATTS.CIM.Data.Report
                             A(CSTID ?? String.Empty),
                             A(PPID ?? String.Empty)
                             )
-                        ));
+                        )));
                 return L(itemList);
             }
         }

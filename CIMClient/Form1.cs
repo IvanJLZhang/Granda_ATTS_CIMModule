@@ -71,17 +71,17 @@ namespace CIMClient
         #region Initialization Scenario
         private void btn_i_online_Click(object sender, EventArgs e)
         {
-            cimClient.LaunchOnOffLineProcess(true, _equipmentInfo);
+            cimClient?.LaunchOnOffLineProcess(true, _equipmentInfo);
         }
 
         private void btn_i_offline_Click(object sender, EventArgs e)
         {
-            cimClient.LaunchOnOffLineProcess(false, _equipmentInfo);
+            cimClient?.LaunchOnOffLineProcess(false, _equipmentInfo);
         }
 
         private void btn_i_datetime_Click(object sender, EventArgs e)
         {
-            cimClient.LaunchRequestDateTimeProcess();
+            cimClient?.LaunchRequestDateTimeProcess();
         }
 
         public void UpdateControlState(CRST controlState)
@@ -100,7 +100,7 @@ namespace CIMClient
         #region Equipment Terminal Service
         private void btn_e_send_display_message_Click(object sender, EventArgs e)
         {
-            cimClient.LaunchSendDisplayMessageProcess(new string[]
+            cimClient?.LaunchSendDisplayMessageProcess(new string[]
             {
                 "Test message",
                 "Test message1",
@@ -135,7 +135,7 @@ namespace CIMClient
                 PTTYPE = PTTYPE.PTTYPELIST["Load Port"],
                 PTUSETYPE = PTUSETYPE.PTUSETYPELIST["Good"],
             };
-            cimClient.LaunchProcessReport(RCMD.START, processLaunchReport, this._equipmentInfo);
+            cimClient?.LaunchProcessReport(RCMD.START, processLaunchReport, this._equipmentInfo);
         }
 
         public void RemoteControlCommandRequestEvent(RemoteControlCommandRequest remoteControlCommandJob)
@@ -204,7 +204,7 @@ namespace CIMClient
             recipeChangeReport.ProcessCommandList.Add(processCommands);
             #endregion
 
-            cimClient.LaunchRecipeChangeProcess(recipeChangeReport);
+            cimClient?.LaunchRecipeChangeProcess(recipeChangeReport);
         }
 
         public void CurrentEPPDRequestEvent(CurrentEPPDRequest currentEPPDRequest, bool needReply = true)
@@ -213,7 +213,7 @@ namespace CIMClient
             if (!needReply)
                 return;
 
-            cimClient.LaunchCurrentEPPDReportProcess(new CurrentEPPDReport()
+            cimClient?.LaunchCurrentEPPDReportProcess(new CurrentEPPDReport()
             {
                 UNITID = currentEPPDRequest.UNITID,
                 PPTYPE = currentEPPDRequest.PPTYPE,
@@ -287,7 +287,7 @@ namespace CIMClient
             report.ProcessCommandList.Add(processCommands);
             #endregion
 
-            cimClient.LaunchFormattedProcessProgramReport(report);
+            cimClient?.LaunchFormattedProcessProgramReport(report);
         }
         #endregion
 
@@ -331,7 +331,7 @@ namespace CIMClient
             });
             report.DVNAMELIST = dvnameList;
             #endregion
-            cimClient.LaunchProcessResultReportProcess(report);
+            cimClient?.LaunchProcessResultReportProcess(report);
         }
 
         private void btn_d_ecc_Click(object sender, EventArgs e)
@@ -358,14 +358,14 @@ namespace CIMClient
                 });
                 return eciddataList;
             })());
-            cimClient.LaunchEquipmentConstantChangeReportProcess(report);
+            cimClient?.LaunchEquipmentConstantChangeReportProcess(report);
         }
         public void SelectedEquipmentStatusRequestEvent(string[] data, bool needReply = true)
         {
             if (!needReply)
                 return;
             // 需要根据data中的SVID查询得到SV的值
-            cimClient.LaunchSelectedEquipmentStatusReportProcess(new string[]
+            cimClient?.LaunchSelectedEquipmentStatusReportProcess(new string[]
             {
                 "0.015",
                 "0.015",
@@ -377,7 +377,7 @@ namespace CIMClient
             if (!needReply)
                 return;
             // 需要根据data中的ECID查询得到ECV的值
-            cimClient.LaunchEquipmentConstantsDataReportProcess(new string[] {
+            cimClient?.LaunchEquipmentConstantsDataReportProcess(new string[] {
                 "10",
                 "11",
             });
@@ -417,7 +417,7 @@ namespace CIMClient
                 default:
                     break;
             }
-            cimClient.LaunchFormattedStatusReportProcess(report);
+            cimClient?.LaunchFormattedStatusReportProcess(report);
         }
 
         public void EnableDisableEventReportRequestEvent(string[] ceidArr)
@@ -455,7 +455,7 @@ namespace CIMClient
                     return svidList;
                 })(),
             };
-            cimClient.LaunchTraceDataInitializationReportProcess(report);
+            cimClient?.LaunchTraceDataInitializationReportProcess(report);
         }
         #endregion
 
@@ -492,7 +492,7 @@ namespace CIMClient
                     "6242",
                 },
             });
-            cimClient.LaunchCurrentAlarmListReport(report);
+            cimClient?.LaunchCurrentAlarmListReport(report);
         }
         #endregion
 

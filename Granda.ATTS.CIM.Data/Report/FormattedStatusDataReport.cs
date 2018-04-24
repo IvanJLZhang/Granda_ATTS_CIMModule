@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Granda.ATTS.CIM.Data.ENUM;
 using Secs4Net;
-using static Granda.ATTS.CIM.Data.Helper;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.Data.Report
 {

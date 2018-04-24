@@ -13,17 +13,13 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
+using System;
 using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Data.Message;
-using Granda.ATTS.CIM.Data.Report;
 using Granda.ATTS.CIM.Extension;
 using Secs4Net;
-using System;
-using System.Collections.Generic;
-using static Granda.ATTS.CIM.Extension.SmlExtension;
 using static Granda.ATTS.CIM.StreamType.Stream6_DataCollection;
 using static Granda.ATTS.CIM.StreamType.Stream7_ProcessProgramManagement;
-using static Secs4Net.Item;
 
 namespace Granda.ATTS.CIM.Scenario
 {
@@ -156,22 +152,22 @@ namespace Granda.ATTS.CIM.Scenario
         /// <returns></returns>
         public bool LaunchFormattedRecipeRequestProcess()
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>()
-                {
-                    A("PPID"),
-                    A("UNITID"),
-                    A("SUNITID"),
-                    A("SSUNITID"),
-                    A("PPTYPE"),
-                });
+            //var stack = new Stack<List<Item>>();
+            //stack.Push(new List<Item>()
+            //    {
+            //        A("PPID"),
+            //        A("UNITID"),
+            //        A("SUNITID"),
+            //        A("SSUNITID"),
+            //        A("PPTYPE"),
+            //    });
 
-            var replyMsg = S7F25(ParseItem(stack));
-            if (replyMsg != null && replyMsg.GetSFString() == "S19F26")
-            {
-                // 需要相应实现
-                return true;
-            }
+            //var replyMsg = S7F25(ParseItem(stack));
+            //if (replyMsg != null && replyMsg.GetSFString() == "S19F26")
+            //{
+            //    // 需要相应实现
+            //    return true;
+            //}
             return false;
         }
         #endregion

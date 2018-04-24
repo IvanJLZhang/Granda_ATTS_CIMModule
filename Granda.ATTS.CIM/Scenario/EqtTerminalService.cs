@@ -13,13 +13,13 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Granda.ATTS.CIM.Extension;
 using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.StreamType;
 using Secs4Net;
-using System.Collections.Generic;
-using System.Diagnostics;
-using static Granda.ATTS.CIM.Extension.SmlExtension;
 using static Granda.ATTS.CIM.StreamType.Stream10_TerminalServices;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.Scenario
@@ -75,19 +75,25 @@ namespace Granda.ATTS.CIM.Scenario
         /// <returns></returns>
         public bool SendMessages(string[] messages, bool byOP = true)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                // Terminal number
-                // 0: Single or main terminal,
-                // >0: Additional terminals at the same equipment.
-                A("0"),
-            });
-            stack.Push(new List<Item>());
-            foreach (var msg in messages)
-            {
-                stack.Peek().Add(A(msg));
-            }
-            var item = ParseItem(stack);
+            if (messages.Length <= 0)
+                return false;
+            var itemList = new List<Item>();
+            // Terminal number
+            // 0: Single or main terminal,
+            // >0: Additional terminals at the same equipment.
+            itemList.Add(A("0"));
+            itemList.Add(
+                new Func<string[], Item>((messageArr) =>
+                {
+                    var itemList1 = new List<Item>();
+                    foreach (var ite in messageArr)
+                    {
+                        itemList1.Add(A(ite ?? String.Empty));
+                    }
+                    return itemList1.Count > 1 ? L(itemList1) : itemList1[0];
+                })(messages)
+                );
+            var item = L(itemList);
             if (byOP)
             {
                 var replyMsg = S10F1(item);

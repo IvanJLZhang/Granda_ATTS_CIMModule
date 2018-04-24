@@ -1,11 +1,6 @@
-﻿using Secs4Net;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
+using Secs4Net;
 using static Granda.ATTS.CIM.CIMBASE;
-using static Granda.ATTS.CIM.Extension.SmlExtension;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.StreamType
 {
@@ -34,12 +29,7 @@ namespace Granda.ATTS.CIM.StreamType
         /// <returns></returns>
         public static SecsMessage S6F4(this SecsMessage secsMessage, int ack)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(ack.ToString()),
-            });
-            var item = ParseItem(stack);
-            return SendMessage(6, 4, secsMessage.SystenBytes, item);
+            return SendMessage(6, 4, secsMessage.SystenBytes, A(ack.ToString()));
         }
 
         /// <summary>
@@ -56,12 +46,7 @@ namespace Granda.ATTS.CIM.StreamType
         /// <returns></returns>
         public static SecsMessage S6F12(this SecsMessage secsMessage, string ack)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>() {
-                A(ack),
-            });
-            var item = ParseItem(stack);
-            return SendMessage(6, 12, secsMessage.SystenBytes, item);
+            return SendMessage(6, 12, secsMessage.SystenBytes, A(ack ?? String.Empty));
         }
 
         /// <summary>

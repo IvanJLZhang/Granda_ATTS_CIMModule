@@ -13,6 +13,8 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
+using System;
+using System.Diagnostics;
 using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Data.Message;
@@ -20,14 +22,9 @@ using Granda.ATTS.CIM.Data.Report;
 using Granda.ATTS.CIM.Extension;
 using Granda.ATTS.CIM.Model;
 using Secs4Net;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using static Granda.ATTS.CIM.Extension.ExtensionHelper;
-using static Granda.ATTS.CIM.Extension.SmlExtension;
 using static Granda.ATTS.CIM.StreamType.Stream2_EquipmentControl;
 using static Granda.ATTS.CIM.StreamType.Stream6_DataCollection;
-using static Secs4Net.Item;
 
 namespace Granda.ATTS.CIM.Scenario
 {
@@ -163,37 +160,37 @@ namespace Granda.ATTS.CIM.Scenario
         /// <returns></returns>
         public bool LaunchHostCommand(RCMD hostCommand)
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>());
-            stack.Peek().Add(A($"{(Int32)hostCommand}"));
-            stack.Push(new List<Item>());
-            stack.Push(new List<Item>());
-            stack.Peek().Add(A("PTID"));
-            stack.Peek().Add(A("PTID"));
-            stack.Push(new List<Item>());
-            stack.Peek().Add(A("CSTID"));
-            stack.Peek().Add(A("CSTID"));
-            stack.Push(new List<Item>());
-            stack.Peek().Add(A("LOTID"));
-            stack.Peek().Add(A("CSTID"));
-            var item = ParseItem(stack);
+            //var stack = new Stack<List<Item>>();
+            //stack.Push(new List<Item>());
+            //stack.Peek().Add(A($"{(Int32)hostCommand}"));
+            //stack.Push(new List<Item>());
+            //stack.Push(new List<Item>());
+            //stack.Peek().Add(A("PTID"));
+            //stack.Peek().Add(A("PTID"));
+            //stack.Push(new List<Item>());
+            //stack.Peek().Add(A("CSTID"));
+            //stack.Peek().Add(A("CSTID"));
+            //stack.Push(new List<Item>());
+            //stack.Peek().Add(A("LOTID"));
+            //stack.Peek().Add(A("CSTID"));
+            //var item = ParseItem(stack);
 
-            var replyMsg = S2F41(item, (int)hostCommand);
-            if (replyMsg != null && replyMsg.GetSFString() == "S4F42")
-            {
-                try
-                {
-                    int ack = replyMsg.GetCommandValue();
-                    if (ack == (int)hostCommand)
-                    {
-                        return true;
-                    }
-                }
-                catch (InvalidOperationException)
-                {
-                    return false;
-                }
-            }
+            //var replyMsg = S2F41(item, (int)hostCommand);
+            //if (replyMsg != null && replyMsg.GetSFString() == "S4F42")
+            //{
+            //    try
+            //    {
+            //        int ack = replyMsg.GetCommandValue();
+            //        if (ack == (int)hostCommand)
+            //        {
+            //            return true;
+            //        }
+            //    }
+            //    catch (InvalidOperationException)
+            //    {
+            //        return false;
+            //    }
+            //}
             return false;
         }
         #endregion

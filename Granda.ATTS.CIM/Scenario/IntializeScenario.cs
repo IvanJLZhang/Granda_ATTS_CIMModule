@@ -284,7 +284,6 @@ namespace Granda.ATTS.CIM.Scenario
                     EQST = this._equipmentStatusInfo.EQST,
                     EQSTCODE = this._equipmentStatusInfo.EQSTCODE,
                 },
-                DATAID = 0,
                 RPTID = 100,
             };
             var replyMsg = S6F11(controlStateChangeReport.SecsItem, (int)ceid);

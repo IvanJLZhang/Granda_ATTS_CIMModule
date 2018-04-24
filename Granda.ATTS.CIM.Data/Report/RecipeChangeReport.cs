@@ -18,7 +18,6 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Granda.ATTS.CIM.Data.ENUM;
 using Secs4Net;
-using static Granda.ATTS.CIM.Data.Helper;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.Data.Report
 {
@@ -78,53 +77,26 @@ namespace Granda.ATTS.CIM.Data.Report
                 CEID = 401;
                 RPTID = 100;
                 RPTID1 = 401;
-
-                var stack = new Stack<List<Item>>();
-                stack.Push(new List<Item>() {
-                    A(DATAID.ToString()),
-                    A(CEID.ToString()),
-                });
-                stack.Push(new List<Item>());
-                stack.Peek().Add(L(
-                    A(RPTID.ToString()),
-                    L(EquipmentStatus.SecsItem)
-                ));
-
-                var ccodeList = new Func<ProcessCommands, Item>((ProcessCommandList) =>
-                {
-                    List<Item> items = new List<Item>();
-                    for (int index = 0; index < ProcessCommandList.Count; index++)
-                    {
-                        var processCommand = ProcessCommandList[index];
-                        var itemList = new List<Item>();
-                        for (int indey = 0; indey < processCommand.ParameterList.Count; indey++)
-                        {
-                            var parmaeter = processCommand.ParameterList[indey];
-                            itemList.Add(L(new List<Item>() {
-                                A(parmaeter.PPARMNAME??String.Empty),
-                                A(parmaeter.PPARMVALUE??String.Empty),
-                             }));
-                        }
-                        items.Add(L(
-                            A(processCommand.CCODE ?? String.Empty),
-                            A(processCommand.RCPSTEP ?? String.Empty),
-                            A(processCommand.UNITID ?? String.Empty),
-                            A(processCommand.SUNITID ?? String.Empty),
-                            L(itemList)
-                         ));
-                    }
-                    return L(items);
-                });
-                stack.Peek().Add(L(
-                    A(RPTID1.ToString()),
+                var itemList = new List<Item>();
+                itemList.Add(A(DATAID.ToString()));
+                itemList.Add(A(CEID.ToString()));
+                itemList.Add(L(
                     L(
-                        A(PPID ?? String.Empty),
-                        A(PPTYPE.ToString()),
-                        A($"{(Int32)PPCINFO}"),
-                        A(LCTIME ?? String.Empty)
-                    ),
-                    ccodeList(this.ProcessCommandList)));
-                return ParseItem(stack);
+                        A(RPTID.ToString()),
+                        EquipmentStatus.SecsItem
+                        ),
+                    L(
+                        A(RPTID1.ToString()),
+                        L(
+                             A(PPID ?? String.Empty),
+                             A(PPTYPE.ToString()),
+                             A($"{(Int32)PPCINFO}"),
+                             A(LCTIME ?? String.Empty),
+                             ProcessCommandList.SecsItem
+                            )
+                        )
+                    ));
+                return L(itemList);
             }
         }
     }

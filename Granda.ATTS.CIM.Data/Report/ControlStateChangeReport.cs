@@ -15,7 +15,6 @@
 #endregion
 using System.Collections.Generic;
 using Secs4Net;
-using static Granda.ATTS.CIM.Data.Helper;
 using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.Data.Report
 {
@@ -27,7 +26,7 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <summary>
         /// 数据ID
         /// </summary>
-        public int DATAID { get; set; }
+        public int DATAID { get; private set; }
         /// <summary>
         /// Collected event ID
         /// </summary>
@@ -47,16 +46,17 @@ namespace Granda.ATTS.CIM.Data.Report
         {
             get
             {
-                var stack = new Stack<List<Item>>();
-                stack.Push(new List<Item>());
-                stack.Peek().Add(A(DATAID.ToString()));// DATAID 始终设为0
-                stack.Peek().Add(A(CEID.ToString()));
-                stack.Push(new List<Item>());
-                stack.Push(new List<Item>());
-                stack.Peek().Add(A(RPTID == 0 ? "100" : RPTID.ToString()));// RPTID 设为100
-                stack.Push(new List<Item>(this.EquipmentStatus.SecsItem.Items));
-
-                return ParseItem(stack);
+                DATAID = 0;
+                var itemList = new List<Item>();
+                itemList.Add(A(DATAID.ToString()));
+                itemList.Add(A(CEID.ToString()));
+                itemList.Add(L(
+                    L(
+                        A(RPTID == 0 ? "100" : RPTID.ToString()),
+                        this.EquipmentStatus.SecsItem
+                        )
+                    ));
+                return L(itemList);
             }
         }
     }

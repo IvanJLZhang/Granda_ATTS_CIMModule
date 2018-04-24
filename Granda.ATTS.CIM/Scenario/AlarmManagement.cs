@@ -13,7 +13,6 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
-using System.Collections.Generic;
 using System.Diagnostics;
 using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Data.Message;
@@ -22,9 +21,7 @@ using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.StreamType;
 using Secs4Net;
 using static Granda.ATTS.CIM.Extension.ExtensionHelper;
-using static Granda.ATTS.CIM.Extension.SmlExtension;
 using static Granda.ATTS.CIM.StreamType.Stream5_ExceptionReporting;
-using static Secs4Net.Item;
 
 namespace Granda.ATTS.CIM.Scenario
 {
@@ -104,14 +101,14 @@ namespace Granda.ATTS.CIM.Scenario
         /// <returns></returns>
         public bool LaunchListAlarmRequestProcess()
         {
-            var stack = new Stack<List<Item>>();
-            stack.Push(new List<Item>());
-            stack.Peek().Add(A("UNITID"));
-            var replyMsg = S5F103(ParseItem(stack));
-            if (replyMsg != null && replyMsg.GetSFString() == "S5F104")
-            {
-                return true;
-            }
+            //var stack = new Stack<List<Item>>();
+            //stack.Push(new List<Item>());
+            //stack.Peek().Add(A("UNITID"));
+            //var replyMsg = S5F103(ParseItem(stack));
+            //if (replyMsg != null && replyMsg.GetSFString() == "S5F104")
+            //{
+            //    return true;
+            //}
 
             return false;
         }
