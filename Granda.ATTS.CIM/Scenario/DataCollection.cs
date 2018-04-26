@@ -17,17 +17,17 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Granda.HSMS;
 using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Data.Message;
 using Granda.ATTS.CIM.Data.Report;
 using Granda.ATTS.CIM.Extension;
 using Granda.ATTS.CIM.Model;
-using Secs4Net;
+using static Granda.HSMS.Item;
 using static Granda.ATTS.CIM.StreamType.Stream1_EquipmentStatus;
 using static Granda.ATTS.CIM.StreamType.Stream2_EquipmentControl;
 using static Granda.ATTS.CIM.StreamType.Stream6_DataCollection;
-using static Secs4Net.Item;
 
 namespace Granda.ATTS.CIM.Scenario
 {

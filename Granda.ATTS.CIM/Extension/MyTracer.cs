@@ -3,7 +3,7 @@
 //using System.Diagnostics;
 //using System.Linq;
 //using System.Text;
-//using Secs4Net;
+//using Granda.HSMS;
 
 //namespace Granda.ATTS.CIM.Extension
 //{

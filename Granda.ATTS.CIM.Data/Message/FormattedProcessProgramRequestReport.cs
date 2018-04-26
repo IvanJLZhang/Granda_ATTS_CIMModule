@@ -17,9 +17,8 @@ using System;
 using System.Collections.Generic;
 using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Data.Report;
-using Secs4Net;
-using static Secs4Net.Item;
-
+using Granda.HSMS;
+using static Granda.HSMS.Item;
 namespace Granda.ATTS.CIM.Data.Message
 {
     /// <summary>

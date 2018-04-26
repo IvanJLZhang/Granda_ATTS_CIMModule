@@ -1,10 +1,10 @@
-﻿using Secs4Net;
+﻿using Granda.HSMS;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using static Secs4Net.Item;
+using static Granda.HSMS.Item;
 
 namespace Granda.ATTS.CIM.Extension
 {

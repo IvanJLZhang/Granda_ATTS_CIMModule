@@ -13,9 +13,9 @@
 // 	
 //----------------------------------------------------------------------------*/
 #endregion
-using Secs4Net;
 using System;
 using System.Collections.Generic;
+using Granda.HSMS;
 
 namespace Granda.ATTS.CIM.Data.Message
 {

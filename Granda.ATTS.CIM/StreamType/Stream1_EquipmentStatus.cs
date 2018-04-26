@@ -1,7 +1,7 @@
 ﻿using System;
-using Secs4Net;
+using Granda.HSMS;
+using static Granda.HSMS.Item;
 using static Granda.ATTS.CIM.CIMBASE;
-using static Secs4Net.Item;
 namespace Granda.ATTS.CIM.StreamType
 {
     internal static class Stream1_EquipmentStatus

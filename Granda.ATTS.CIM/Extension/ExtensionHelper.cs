@@ -1,13 +1,7 @@
-﻿using Granda.ATTS.CIM.Data;
-using Secs4Net;
-using Secs4Net.Sml;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
+﻿using System;
 using System.Threading.Tasks;
-using static Secs4Net.SecsGem;
+using Granda.ATTS.CIM.Data;
+using Granda.HSMS;
 
 namespace Granda.ATTS.CIM.Extension
 {
@@ -90,7 +84,7 @@ namespace Granda.ATTS.CIM.Extension
         }
 
 
-        public static Task<SecsMessage> SendMessage(this SecsGem secsGem, short deviceId, byte s, byte f, bool replyExpected, int systemBytes, Item item = null, string key = "", int value = 0)
+        public static Task<SecsMessage> SendMessage(this SecsHsms secsGem, short deviceId, byte s, byte f, bool replyExpected, int systemBytes, Item item = null, string key = "", int value = 0)
         {
             SecsMessage secsMessage = new SecsMessage(s, f, replyExpected, GetFunctionName(s, f, key, value), item);
             CIMBASE.WriteLog(AATS.Log.LogLevel.INFO, "\r\n" + secsMessage.ToSml());

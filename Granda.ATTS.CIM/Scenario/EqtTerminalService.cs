@@ -19,9 +19,9 @@ using System.Diagnostics;
 using Granda.ATTS.CIM.Extension;
 using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.StreamType;
-using Secs4Net;
+using Granda.HSMS;
 using static Granda.ATTS.CIM.StreamType.Stream10_TerminalServices;
-using static Secs4Net.Item;
+using static Granda.HSMS.Item;
 namespace Granda.ATTS.CIM.Scenario
 {
     internal class EqtTerminalService : BaseScenario, IScenario

@@ -1,7 +1,6 @@
-﻿using Secs4Net;
+﻿using Granda.HSMS;
 using static Granda.ATTS.CIM.CIMBASE;
-using static Secs4Net.Item;
-
+using static Granda.HSMS.Item;
 namespace Granda.ATTS.CIM.StreamType
 {
     internal static class Stream2_EquipmentControl

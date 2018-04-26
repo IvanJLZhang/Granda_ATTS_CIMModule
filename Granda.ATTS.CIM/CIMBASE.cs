@@ -23,7 +23,7 @@ using Granda.ATTS.CIM.Data.Message;
 using Granda.ATTS.CIM.Extension;
 using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.Scenario;
-using Secs4Net;
+using Granda.HSMS;
 using static Granda.ATTS.CIM.Extension.ExtensionHelper;
 namespace Granda.ATTS.CIM
 {
@@ -53,7 +53,7 @@ namespace Granda.ATTS.CIM
         /// 设备ID
         /// </summary>
         private static short DeviceId { get; set; } = 1;
-        private static SecsGem secsGemService = null;
+        private static SecsHsms secsGemService = null;
         /// <summary>
         /// 场景控制器集合
         /// </summary>
@@ -148,7 +148,7 @@ namespace Granda.ATTS.CIM
         /// </summary>
         /// <param name="secsGem"></param>
         /// <param name="deviceId">设备Id号， 默认为1</param>
-        public CIMBASE(SecsGem secsGem, short deviceId) : this()
+        public CIMBASE(SecsHsms secsGem, short deviceId) : this()
         {
             secsGemService = secsGem;
             secsGemService.ConnectionChanged += SecsGemService_ConnectionChanged;
@@ -164,8 +164,7 @@ namespace Granda.ATTS.CIM
         /// <param name="deviceId">设备Id号， 默认为1</param>
         public CIMBASE(string ipAddress, int port, bool isActive, short deviceId) : this()
         {
-            secsGemService = new SecsGem(isActive, IPAddress.Parse(ipAddress), port);
-            secsGemService.ConnectionChanged += SecsGemService_ConnectionChanged;
+            secsGemService = new SecsHsms(isActive, IPAddress.Parse(ipAddress), port);
             secsGemService.ConnectionChanged += SecsGemService_ConnectionChanged;
             secsGemService.PrimaryMessageReceived += SecsGemService_PrimaryMessageReceived;
             DeviceId = deviceId;
@@ -408,10 +407,10 @@ namespace Granda.ATTS.CIM
         /// <summary>
         /// 接口方法，触发事件，无需调用
         /// </summary>
-        private void SecsGemService_ConnectionChanged(object sender, ConnectionState e)
+        private void SecsGemService_ConnectionChanged(object sender, TEventArgs<ConnectionState> e)
         {
             Debug.WriteLine("connection state change: " + e.ToString());
-            ConnectionChanged?.Invoke(this, new CIMEventArgs<ConnectionStatus>((ConnectionStatus)Enum.Parse(typeof(ConnectionStatus), e.ToString()), false));
+            ConnectionChanged?.Invoke(this, new CIMEventArgs<ConnectionStatus>((ConnectionStatus)Enum.Parse(typeof(ConnectionStatus), e.Data.ToString()), false));
         }
 
         /// <summary>

@@ -17,8 +17,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using Granda.ATTS.CIM.Data.ENUM;
-using Secs4Net;
-using static Secs4Net.Item;
+using Granda.HSMS;
+using static Granda.HSMS.Item;
 namespace Granda.ATTS.CIM.Data.Report
 {
     /// <summary>
@@ -357,12 +357,22 @@ namespace Granda.ATTS.CIM.Data.Report
                 for (int index = 0; index < _size; index++)
                 {
                     var item = _items[index];
-                    itemList.Add(L(
-                        A(item.UNITID ?? String.Empty),
-                        A(item.UNITST.ToString()),
-                        A(item.UNITSTCODE ?? String.Empty),
-                        USLOTNOLIST == null ? L() : USLOTNOLIST.SecsItem
-                        ));
+                    if (item.USLOTNOLIST == null)
+                    {
+                        itemList.Add(L(
+                            A(item.UNITID ?? String.Empty),
+                            A(item.UNITST.ToString()),
+                            A(item.UNITSTCODE ?? String.Empty)));
+                    }
+                    else
+                    {
+                        itemList.Add(L(
+                             A(item.UNITID ?? String.Empty),
+                             A(item.UNITST.ToString()),
+                             A(item.UNITSTCODE ?? String.Empty),
+                             item.USLOTNOLIST.SecsItem
+                             ));
+                    }
                 }
                 return L(itemList);
             }

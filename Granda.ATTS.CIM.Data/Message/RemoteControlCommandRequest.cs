@@ -15,7 +15,7 @@
 #endregion
 using System;
 using Granda.ATTS.CIM.Data.ENUM;
-using Secs4Net;
+using Granda.HSMS;
 
 namespace Granda.ATTS.CIM.Data.Message
 {

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Granda.ATTS.CIM.Data</RootNamespace>
     <AssemblyName>Granda.ATTS.CIM.Data</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -97,13 +97,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\secs4net\secs4net\Core\Secs4Net\Secs4Net.csproj">
-      <Project>{3c8c67b8-3746-4d26-b3a8-dcb01b5aa66b}</Project>
-      <Name>Secs4Net</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\secs4net\secs4net\Extension\Serialization.Sml\Secs4Net.Sml.csproj">
-      <Project>{f7c036db-d4c9-4326-a17b-713cb00f313c}</Project>
-      <Name>Secs4Net.Sml</Name>
+    <ProjectReference Include="..\..\Granda.HSMS\Granda.HSMS.csproj">
+      <Project>{d2071314-a2a1-4890-9175-7409a9f72880}</Project>
+      <Name>Granda.HSMS</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

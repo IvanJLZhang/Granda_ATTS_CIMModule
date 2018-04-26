@@ -16,8 +16,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using Secs4Net;
-using static Secs4Net.Item;
+using Granda.HSMS;
+using static Granda.HSMS.Item;
 namespace Granda.ATTS.CIM.Data.Report
 {
     /// <summary>

@@ -17,7 +17,7 @@ using System;
 using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Data.Message;
 using Granda.ATTS.CIM.Extension;
-using Secs4Net;
+using Granda.HSMS;
 using static Granda.ATTS.CIM.StreamType.Stream6_DataCollection;
 using static Granda.ATTS.CIM.StreamType.Stream7_ProcessProgramManagement;
 

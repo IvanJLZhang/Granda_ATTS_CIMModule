@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
@@ -8,10 +6,7 @@ using Granda.ATTS.CIM;
 using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Data.Report;
 using Granda.ATTS.CIM.Scenario;
-using static Granda.ATTS.CIM.Extension.SmlExtension;
-using Secs4Net;
-using Secs4Net.Sml;
-using static Secs4Net.Item;
+using Granda.HSMS;
 namespace SecsClient
 {
     public partial class Client : Form,
@@ -25,7 +20,7 @@ namespace SecsClient
 
 
         CIM4EQT cimClient;
-        SecsGem secsGem;
+        SecsHsms secsGem;
         EquipmentInfo _equipmentInfo = new EquipmentInfo()
         {
             CRST = CRST.O,
@@ -38,7 +33,7 @@ namespace SecsClient
         {
             Thread.CurrentThread.Name = "Main";
 
-            secsGem = new SecsGem(true, IPAddress.Parse("192.168.0.145"), 1024);
+            secsGem = new SecsHsms(true, IPAddress.Parse("192.168.0.145"), 1024);
             secsGem.ConnectionChanged += SecsGem_ConnectionChanged;
             secsGem.PrimaryMessageReceived += SecsGem_PrimaryMessageReceived;
             secsGem.Start();
@@ -55,9 +50,9 @@ namespace SecsClient
             SmlLog(e.Message.ToSml());
         }
 
-        private void SecsGem_ConnectionChanged(object sender, ConnectionState e)
+        private void SecsGem_ConnectionChanged(object sender, TEventArgs<ConnectionState> e)
         {
-            LogMsg("Connection Change: " + e.ToString());
+            LogMsg("Connection Change: " + e.Data.ToString());
         }
 
         private void btnSecSend_Click(object sender, EventArgs e)

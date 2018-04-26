@@ -16,7 +16,7 @@
 using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.Scenario;
-using Secs4Net;
+using Granda.HSMS;
 using System;
 
 namespace Granda.ATTS.CIM
@@ -41,7 +41,7 @@ namespace Granda.ATTS.CIM
         /// </summary>
         /// <param name="secsGem"></param>
         /// <param name="deviceId">设备Id号， 默认为1</param>
-        public CIM4HST(SecsGem secsGem, short deviceId = 1) : base(secsGem, deviceId)
+        public CIM4HST(SecsHsms secsGem, short deviceId = 1) : base(secsGem, deviceId)
         {
         }
         /// <summary>

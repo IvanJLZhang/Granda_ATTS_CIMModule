@@ -1,4 +1,4 @@
-﻿using Secs4Net;
+﻿using Granda.HSMS;
 namespace Granda.ATTS.CIM.Data
 {
     /// <summary>

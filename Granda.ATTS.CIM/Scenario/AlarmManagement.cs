@@ -19,7 +19,7 @@ using Granda.ATTS.CIM.Data.Message;
 using Granda.ATTS.CIM.Extension;
 using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.StreamType;
-using Secs4Net;
+using Granda.HSMS;
 using static Granda.ATTS.CIM.Extension.ExtensionHelper;
 using static Granda.ATTS.CIM.StreamType.Stream5_ExceptionReporting;
 

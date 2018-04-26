@@ -6,7 +6,7 @@ using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Data.Report;
 using Granda.ATTS.CIM.Extension;
 using Granda.ATTS.CIM.Model;
-using Secs4Net;
+using Granda.HSMS;
 using static Granda.ATTS.CIM.Extension.ExtensionHelper;
 using static Granda.ATTS.CIM.StreamType.Stream1_EquipmentStatus;
 using static Granda.ATTS.CIM.StreamType.Stream2_EquipmentControl;

@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
 using Granda.ATTS.CIM;
 using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Scenario;
-using Secs4Net;
-using Secs4Net.Sml;
+using Granda.HSMS;
 namespace SecsServer
 {
     public partial class Server : Form,
@@ -18,13 +16,13 @@ namespace SecsServer
             InitializeComponent();
             this.Load += Server_Load;
         }
-        SecsGem secsGem;
+        SecsHsms secsGem;
         CIM4HST cimServer;
         private void Server_Load(object sender, EventArgs e)
         {
             Thread.CurrentThread.Name = "Main";
 
-            secsGem = new SecsGem(false, IPAddress.Parse("192.168.0.145"), 1024);
+            secsGem = new SecsHsms(false, IPAddress.Parse("192.168.0.145"), 1024);
             secsGem.ConnectionChanged += SecsGem_ConnectionChanged;
             secsGem.PrimaryMessageReceived += SecsGem_PrimaryMessageReceived;
             cimServer = new CIM4HST(secsGem);
@@ -51,9 +49,9 @@ namespace SecsServer
             //secsGem.SendAsync(reply.ToSecsMessage(), e.MessageId);
         }
 
-        private void SecsGem_ConnectionChanged(object sender, ConnectionState e)
+        private void SecsGem_ConnectionChanged(object sender, TEventArgs<ConnectionState> e)
         {
-            LogMsg("Connection Change: " + e.ToString());
+            LogMsg("Connection Change: " + e.Data.ToString());
         }
 
         private void btnSendPrimaryMsg_Click(object sender, EventArgs e)

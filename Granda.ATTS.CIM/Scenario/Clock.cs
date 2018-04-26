@@ -15,7 +15,7 @@
 #endregion
 using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Extension;
-using Secs4Net;
+using Granda.HSMS;
 using System;
 using System.Diagnostics;
 using static Granda.ATTS.CIM.StreamType.Stream2_EquipmentControl;
