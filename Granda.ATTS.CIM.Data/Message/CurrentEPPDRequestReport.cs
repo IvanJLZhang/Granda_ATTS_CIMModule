@@ -84,14 +84,14 @@ namespace Granda.ATTS.CIM.Data.Message
                 itemList.Add(A(UNITID ?? String.Empty));
                 itemList.Add(A(PPTYPE.ToString()));
                 itemList.Add(L(
-                    new Func<IList<string>, Item>((ppidList) =>
+                    new Func<IList<string>, List<Item>>((ppidList) =>
                     {
                         var itemList1 = new List<Item>();
                         for (int index = 0; index < ppidList.Count; index++)
                         {
                             itemList1.Add(A(ppidList[index]));
                         }
-                        return L(itemList1);
+                        return itemList1;
                     })(PPIDLIST)
                     ));
                 return L(itemList);

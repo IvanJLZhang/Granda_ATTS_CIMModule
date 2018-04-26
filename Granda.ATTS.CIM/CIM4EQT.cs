@@ -227,7 +227,7 @@ namespace Granda.ATTS.CIM
         public bool LaunchProcessReport(RCMD rcmd, ProcessLaunchReport processLaunchReport, EquipmentInfo equipmentInfo)
         {
             var rc = scenarioControllers[Scenarios.Remote_Control] as RemoteControl;
-            return rc.LaunchProcessReport(rcmd, processLaunchReport, equipmentInfo.EquipmentBase);
+            return rc.LaunchProcessReport(rcmd, processLaunchReport, equipmentInfo.EquipmentStatus);
         }
         #endregion
 

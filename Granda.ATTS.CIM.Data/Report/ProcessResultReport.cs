@@ -168,7 +168,7 @@ namespace Granda.ATTS.CIM.Data.Report
                     var item = _items[index];
                     itemList.Add(L(
                         A(item.DVNAME ?? String.Empty),
-                        item.SITENAMELIST?.SecsItem
+                        item.SITENAMELIST == null ? L() : item.SITENAMELIST.SecsItem
                         ));
                 }
                 return L(itemList);
@@ -443,7 +443,7 @@ namespace Granda.ATTS.CIM.Data.Report
                     var item = _items[index];
                     itemList.Add(L(
                         A(item.LOTPROCESSTIME ?? String.Empty),
-                       item.LOTSTARTENDTIMELIST?.SecsItem
+                       item.LOTSTARTENDTIMELIST == null ? L() : item.LOTSTARTENDTIMELIST.SecsItem
                         ));
                 }
                 return L(itemList);

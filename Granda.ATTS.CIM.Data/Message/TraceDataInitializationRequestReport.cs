@@ -112,7 +112,7 @@ namespace Granda.ATTS.CIM.Data.Message
                 return L(A(TRID ?? String.Empty),
                     A(SMPLN ?? String.Empty),
                     A(STIME ?? String.Empty),
-                    SVIDLIST?.SecsItem);
+                    SVIDLIST == null ? L() : SVIDLIST.SecsItem);
             }
         }
     }

@@ -95,7 +95,7 @@ namespace Granda.ATTS.CIM.Scenario
         /// <returns></returns>
         public bool LaunchProcessReport(RCMD rcmd,
             ProcessLaunchReport processLaunchReport,
-            EquipmentBaseInfo equipmentBaseInfo)
+            EquipmentStatus equipmentStatus)
         {
             int ceid = 0;
             switch (rcmd)
@@ -124,7 +124,7 @@ namespace Granda.ATTS.CIM.Scenario
                 CIMBASE.WriteLog(AATS.Log.LogLevel.ERROR, "CEID value is out of range. CEID: " + ceid);
                 return false;
             }
-            ProcessLaunchReport newReport = new ProcessLaunchReport(0, ceid, 100, equipmentBaseInfo, 301)
+            ProcessLaunchReport newReport = new ProcessLaunchReport(0, ceid, 100, equipmentStatus, 301)
             {
                 LOTID = processLaunchReport.LOTID,
                 PTID = processLaunchReport.PTID,

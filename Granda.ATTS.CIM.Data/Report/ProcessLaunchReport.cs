@@ -30,14 +30,14 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <param name="dATAID"></param>
         /// <param name="cEID"></param>
         /// <param name="rPTID"></param>
-        /// <param name="equipmentBaseInfo"></param>
+        /// <param name="equipmentStatus"></param>
         /// <param name="rPTID1"></param>
-        public ProcessLaunchReport(int dATAID, int cEID, int rPTID, EquipmentBaseInfo equipmentBaseInfo, int rPTID1) : this()
+        public ProcessLaunchReport(int dATAID, int cEID, int rPTID, EquipmentStatus equipmentStatus, int rPTID1) : this()
         {
             DATAID = dATAID;
             CEID = cEID;
             RPTID = rPTID;
-            EquipmentBaseInfo = equipmentBaseInfo;
+            EquipmentStatus = equipmentStatus;
             RPTID1 = rPTID1;
         }
 
@@ -56,7 +56,7 @@ namespace Granda.ATTS.CIM.Data.Report
         /// <summary>
         /// 设备基本信息
         /// </summary>
-        public EquipmentBaseInfo EquipmentBaseInfo { get; private set; }
+        public EquipmentStatus EquipmentStatus { get; private set; }
         /// <summary>
         /// report id
         /// </summary>
@@ -98,7 +98,7 @@ namespace Granda.ATTS.CIM.Data.Report
                 itemList.Add(L(
                     L(
                         A(RPTID.ToString()),
-                        EquipmentBaseInfo.SecsItem
+                        EquipmentStatus.SecsItem
                     ),
                     L(
                         A(RPTID1.ToString()),

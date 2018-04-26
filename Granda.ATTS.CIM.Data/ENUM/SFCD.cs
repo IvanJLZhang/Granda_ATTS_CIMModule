@@ -46,28 +46,32 @@ namespace Granda.ATTS.CIM.Data.ENUM
         /// </summary>
         SubUnitStatus = 05,
         /// <summary>
-        /// 06: Mask Status Request
+        /// 06: Sub-Sub-Unit Status Request
         /// </summary>
-        MaskStatus = 06,
+        SSubUnitStatus = 06,
         /// <summary>
-        /// 07: Material Status Request
+        /// 07: Mask Status Request
         /// </summary>
-        MaterialStatus = 07,
+        MaskStatus = 07,
         /// <summary>
-        /// 08: Sorter Job List Request
+        /// 08: Material Status Request
         /// </summary>
-        SorterJobList = 08,
+        MaterialStatus = 08,
         /// <summary>
-        /// 09: Crate Port Status Request
+        /// 09: Sorter Job List Request
         /// </summary>
-        CratePortStatus = 09,
+        SorterJobList = 09,
         /// <summary>
-        /// 10: Port load-request and Unloader-request report start
+        /// 10: Crate Port Status Request
         /// </summary>
-        PortLoad = 10,
+        CratePortStatus = 10,
         /// <summary>
-        /// 11: Equipment Recycle Status Request
+        /// 11: Port load-request and Unloader-request report start
         /// </summary>
-        EquipmentRecycleStatus = 11,
+        PortLoad = 11,
+        /// <summary>
+        /// 12: Equipment Recycle Status Request
+        /// </summary>
+        EquipmentRecycleStatus = 12,
     }
 }

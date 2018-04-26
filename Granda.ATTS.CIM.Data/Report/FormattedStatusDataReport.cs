@@ -55,6 +55,23 @@ namespace Granda.ATTS.CIM.Data.Report
         /// </summary>
         public MaskStatusDatas MaskStatusDataList { get; set; }
         /// <summary>
+        /// Operation Mode
+        /// <para/>
+        /// Some EQP has variable operation mode code as assigned in constant.
+        ///Whenever EQP change operation mode, it should report to Host.
+        ///Ex) 01 or 02 or 03 or 04 …
+        /// </summary>
+        public string OPERMODE { get; set; }
+        /// <summary>
+        /// Operation Mode Description<para/>
+        /// Description of Operation Mode
+        /// (Ex)
+        /// <para/>01: All processing mode
+        /// <para/>02: CVD only
+        /// <para/>03: Docking cleaner only
+        /// </summary>
+        public string OPERMODEDESC { get; set; }
+        /// <summary>
         /// 
         /// </summary>
         public Item SecsItem
@@ -69,15 +86,22 @@ namespace Granda.ATTS.CIM.Data.Report
                         itemlist.Add(EquipmentStatus.SecsItem);
                         break;
                     case SFCD.PortStatus:
-                        itemlist.Add(PortStatusDataList.SecsItem);
+                        if (PortStatusDataList != null) itemlist.Add(PortStatusDataList.SecsItem);
+                        else itemlist.Add(L());
                         break;
                     case SFCD.UnitStatus:
-                        itemlist.Add(UnitStatusDataList.SecsItem);
+                        if (UnitStatusDataList != null) itemlist.Add(UnitStatusDataList.SecsItem);
+                        else itemlist.Add(L());
                         break;
                     case SFCD.MaskStatus:
-                        itemlist.Add(MaskStatusDataList.SecsItem);
+                        if (MaskStatusDataList != null) itemlist.Add(MaskStatusDataList.SecsItem);
+                        else itemlist.Add(L());
                         break;
                     case SFCD.OperationMode:
+                        itemlist.Add(L(
+                            A(OPERMODE ?? String.Empty),
+                            A(OPERMODEDESC ?? String.Empty)
+                            ));
                         break;
                     case SFCD.SubUnitStatus:
                         break;
@@ -337,7 +361,7 @@ namespace Granda.ATTS.CIM.Data.Report
                         A(item.UNITID ?? String.Empty),
                         A(item.UNITST.ToString()),
                         A(item.UNITSTCODE ?? String.Empty),
-                        USLOTNOLIST?.SecsItem
+                        USLOTNOLIST == null ? L() : USLOTNOLIST.SecsItem
                         ));
                 }
                 return L(itemList);
@@ -608,10 +632,18 @@ namespace Granda.ATTS.CIM.Data.Report
                 for (int index = 0; index < _size; index++)
                 {
                     var item = _items[index];
-                    itemList.Add(L(
-                        A(item.UNITID ?? String.Empty),
-                        MaskStatusList?.SecsItem
-                        ));
+                    if (item.MaskStatusList == null)
+                    {
+                        itemList.Add(L(
+                                    A(item.UNITID ?? String.Empty)));
+                    }
+                    else
+                    {
+                        itemList.Add(L(
+                                    A(item.UNITID ?? String.Empty),
+                                    item.MaskStatusList.SecsItem
+                                    ));
+                    }
                 }
                 return L(itemList);
 
@@ -755,12 +787,21 @@ namespace Granda.ATTS.CIM.Data.Report
                 for (int index = 0; index < _size; index++)
                 {
                     var item = _items[index];
-                    itemList.Add(L(
-                        A(item.MASKID),
-                        A(item.MASKST),
-                        A(item.MASKUSECNT),
-                        SUNITMaskStatusList?.SecsItem
-                        ));
+                    if (item.SUNITMaskStatusList == null)
+                    {
+                        itemList.Add(L(
+                             A(item.MASKID),
+                             A(item.MASKST),
+                             A(item.MASKUSECNT)));
+                    }
+                    else
+                    {
+                        itemList.Add(L(
+                              A(item.MASKID),
+                              A(item.MASKST),
+                              A(item.MASKUSECNT),
+                              item.SUNITMaskStatusList.SecsItem));
+                    }
                 }
                 return L(itemList);
             }

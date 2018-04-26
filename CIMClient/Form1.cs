@@ -395,14 +395,347 @@ namespace CIMClient
                     report.EquipmentStatus = _equipmentInfo.EquipmentStatus;
                     break;
                 case SFCD.PortStatus:
+                    report.PortStatusDataList = new PortStatusDatas();
+                    report.PortStatusDataList.Add(new PortStatusDatas()
+                    {
+                        PTID = "01",
+                        PTTYPE = PTTYPE.PTTYPELIST["Both Port(Load/Unload)"],
+                        PTUSETYPE = PTUSETYPE.PTUSETYPELIST["Normal using type"],
+                        TRSMODE = TRSMODE.AUTO,
+                        PTST = PTST.LoadRequest,
+                        CSTID = "CST001",
+                        LOTID = "TestLot001",
+                        PPID = "TestRecipe001",
+                        SLOTINFO = SLOTINFO.Empty,
+                    });
+                    report.PortStatusDataList.Add(new PortStatusDatas()
+                    {
+                        PTID = "02",
+                        PTTYPE = PTTYPE.PTTYPELIST["Both Port(Load/Unload)"],
+                        PTUSETYPE = PTUSETYPE.PTUSETYPELIST["Normal using type"],
+                        TRSMODE = TRSMODE.AUTO,
+                        PTST = PTST.LoadRequest,
+                        CSTID = "CST001",
+                        LOTID = "TestLot001",
+                        PPID = "TestRecipe001",
+                        SLOTINFO = SLOTINFO.Empty,
+                    });
+                    report.PortStatusDataList.Add(new PortStatusDatas()
+                    {
+                        PTID = "03",
+                        PTTYPE = PTTYPE.PTTYPELIST["Both Port(Load/Unload)"],
+                        PTUSETYPE = PTUSETYPE.PTUSETYPELIST["Normal using type"],
+                        TRSMODE = TRSMODE.AUTO,
+                        PTST = PTST.LoadRequest,
+                        CSTID = "CST001",
+                        LOTID = "TestLot001",
+                        PPID = "TestRecipe001",
+                        SLOTINFO = SLOTINFO.Empty,
+                    });
                     break;
                 case SFCD.OperationMode:
+                    report.OPERMODE = "01";
+                    report.OPERMODEDESC = "01";
                     break;
                 case SFCD.UnitStatus:
+                    report.UnitStatusDataList = new UnitStatusDatas();
+                    report.UnitStatusDataList.Add(new UnitStatusDatas()
+                    {
+                        UNITID = "1AED06-IND",
+                        UNITST = CommonStatus.R,
+                        UNITSTCODE = "301",
+                        USLOTNOLIST = new Func<USLOTNOS>(() =>
+                        {
+                            USLOTNOS uSLOTNOS = new USLOTNOS();
+                            uSLOTNOS.Add(new USLOTNOS()
+                            {
+                                USLOTNO = "0001",
+                                GLSID = "TestGlass001",
+                            });
+                            uSLOTNOS.Add(new USLOTNOS()
+                            {
+                                USLOTNO = "0002",
+                                GLSID = "TestGlass001",
+                            });
+                            return uSLOTNOS;
+
+                        })(),
+
+                    });
+                    report.UnitStatusDataList.Add(new UnitStatusDatas()
+                    {
+                        UNITID = "1AED06-INE",
+                        UNITST = CommonStatus.R,
+                        UNITSTCODE = "301",
+                        USLOTNOLIST = new Func<USLOTNOS>(() =>
+                        {
+                            USLOTNOS uSLOTNOS = new USLOTNOS();
+                            uSLOTNOS.Add(new USLOTNOS()
+                            {
+                                USLOTNO = "0001",
+                                GLSID = "TestGlass001",
+                            });
+                            uSLOTNOS.Add(new USLOTNOS()
+                            {
+                                USLOTNO = "0002",
+                                GLSID = "TestGlass001",
+                            });
+                            return uSLOTNOS;
+
+                        })(),
+
+                    });
                     break;
                 case SFCD.SubUnitStatus:
                     break;
                 case SFCD.MaskStatus:
+                    report.MaskStatusDataList = new MaskStatusDatas();
+                    report.MaskStatusDataList.Add(new MaskStatusDatas()
+                    {
+                        UNITID = "1AED06-IND",
+                        MaskStatusList = new Func<MaskStatuss>(() =>
+                        {
+                            MaskStatuss maskStatuss = new MaskStatuss();
+                            maskStatuss.Add(new MaskStatuss()
+                            {
+                                MASKID = "TestMask001",
+                                MASKST = "10",
+                                MASKUSECNT = "2",
+                                SUNITMaskStatusList = new Func<MaskStatusDatas>(() =>
+                                {
+                                    MaskStatusDatas maskStatusDatas = new MaskStatusDatas();
+                                    maskStatusDatas.Add(new MaskStatusDatas()
+                                    {
+                                        UNITID = " 1AED06-P01",
+                                        MaskStatusList = new Func<MaskStatuss>(() =>
+                                        {
+                                            MaskStatuss maskStatuss1 = new MaskStatuss();
+                                            maskStatuss1.Add(new MaskStatuss()
+                                            {
+                                                MASKID = "TestMask001",
+                                                MASKST = "10",
+                                                MASKUSECNT = "2",
+                                                SUNITMaskStatusList = null,
+                                            });
+                                            maskStatuss1.Add(new MaskStatuss()
+                                            {
+                                                MASKID = "TestMask002",
+                                                MASKST = "10",
+                                                MASKUSECNT = "2",
+                                                SUNITMaskStatusList = null,
+                                            });
+                                            return maskStatuss1;
+                                        })()
+                                    });
+                                    maskStatusDatas.Add(new MaskStatusDatas()
+                                    {
+                                        UNITID = " 1AED06-P02",
+                                        MaskStatusList = new Func<MaskStatuss>(() =>
+                                        {
+                                            MaskStatuss maskStatuss1 = new MaskStatuss();
+                                            maskStatuss1.Add(new MaskStatuss()
+                                            {
+                                                MASKID = "TestMask001",
+                                                MASKST = "10",
+                                                MASKUSECNT = "2",
+                                                SUNITMaskStatusList = null,
+                                            });
+                                            maskStatuss1.Add(new MaskStatuss()
+                                            {
+                                                MASKID = "TestMask002",
+                                                MASKST = "10",
+                                                MASKUSECNT = "2",
+                                                SUNITMaskStatusList = null,
+                                            });
+                                            return maskStatuss1;
+                                        })()
+                                    });
+                                    return maskStatusDatas;
+                                })(),
+                            });
+                            maskStatuss.Add(new MaskStatuss()
+                            {
+                                MASKID = "TestMask002",
+                                MASKST = "10",
+                                MASKUSECNT = "2",
+                                SUNITMaskStatusList = new Func<MaskStatusDatas>(() =>
+                                {
+                                    MaskStatusDatas maskStatusDatas = new MaskStatusDatas();
+                                    maskStatusDatas.Add(new MaskStatusDatas()
+                                    {
+                                        UNITID = " 1AED06-P01",
+                                        MaskStatusList = new Func<MaskStatuss>(() =>
+                                        {
+                                            MaskStatuss maskStatuss1 = new MaskStatuss();
+                                            maskStatuss1.Add(new MaskStatuss()
+                                            {
+                                                MASKID = "TestMask001",
+                                                MASKST = "10",
+                                                MASKUSECNT = "2",
+                                                SUNITMaskStatusList = null,
+                                            });
+                                            maskStatuss1.Add(new MaskStatuss()
+                                            {
+                                                MASKID = "TestMask002",
+                                                MASKST = "10",
+                                                MASKUSECNT = "2",
+                                                SUNITMaskStatusList = null,
+                                            });
+                                            return maskStatuss1;
+                                        })()
+                                    });
+                                    maskStatusDatas.Add(new MaskStatusDatas()
+                                    {
+                                        UNITID = " 1AED06-P02",
+                                        MaskStatusList = new Func<MaskStatuss>(() =>
+                                        {
+                                            MaskStatuss maskStatuss1 = new MaskStatuss();
+                                            maskStatuss1.Add(new MaskStatuss()
+                                            {
+                                                MASKID = "TestMask001",
+                                                MASKST = "10",
+                                                MASKUSECNT = "2",
+                                                SUNITMaskStatusList = null,
+                                            });
+                                            maskStatuss1.Add(new MaskStatuss()
+                                            {
+                                                MASKID = "TestMask002",
+                                                MASKST = "10",
+                                                MASKUSECNT = "2",
+                                                SUNITMaskStatusList = null,
+                                            });
+                                            return maskStatuss1;
+                                        })()
+                                    });
+                                    return maskStatusDatas;
+                                })(),
+                            });
+                            return maskStatuss;
+                        })(),
+                    });
+                    report.MaskStatusDataList.Add(new MaskStatusDatas()
+                    {
+                        UNITID = "1AED06-INE",
+                        MaskStatusList = new Func<MaskStatuss>(() =>
+                        {
+                            MaskStatuss maskStatuss = new MaskStatuss();
+                            maskStatuss.Add(new MaskStatuss()
+                            {
+                                MASKID = "TestMask001",
+                                MASKST = "10",
+                                MASKUSECNT = "2",
+                                SUNITMaskStatusList = new Func<MaskStatusDatas>(() =>
+                                {
+                                    MaskStatusDatas maskStatusDatas = new MaskStatusDatas();
+                                    maskStatusDatas.Add(new MaskStatusDatas()
+                                    {
+                                        UNITID = " 1AED06-P01",
+                                        MaskStatusList = new Func<MaskStatuss>(() =>
+                                        {
+                                            MaskStatuss maskStatuss1 = new MaskStatuss();
+                                            maskStatuss1.Add(new MaskStatuss()
+                                            {
+                                                MASKID = "TestMask001",
+                                                MASKST = "10",
+                                                MASKUSECNT = "2",
+                                                SUNITMaskStatusList = null,
+                                            });
+                                            maskStatuss1.Add(new MaskStatuss()
+                                            {
+                                                MASKID = "TestMask002",
+                                                MASKST = "10",
+                                                MASKUSECNT = "2",
+                                                SUNITMaskStatusList = null,
+                                            });
+                                            return maskStatuss1;
+                                        })()
+                                    });
+                                    maskStatusDatas.Add(new MaskStatusDatas()
+                                    {
+                                        UNITID = " 1AED06-P02",
+                                        MaskStatusList = new Func<MaskStatuss>(() =>
+                                        {
+                                            MaskStatuss maskStatuss1 = new MaskStatuss();
+                                            maskStatuss1.Add(new MaskStatuss()
+                                            {
+                                                MASKID = "TestMask001",
+                                                MASKST = "10",
+                                                MASKUSECNT = "2",
+                                                SUNITMaskStatusList = null,
+                                            });
+                                            maskStatuss1.Add(new MaskStatuss()
+                                            {
+                                                MASKID = "TestMask002",
+                                                MASKST = "10",
+                                                MASKUSECNT = "2",
+                                                SUNITMaskStatusList = null,
+                                            });
+                                            return maskStatuss1;
+                                        })()
+                                    });
+                                    return maskStatusDatas;
+                                })(),
+                            });
+                            maskStatuss.Add(new MaskStatuss()
+                            {
+                                MASKID = "TestMask002",
+                                MASKST = "10",
+                                MASKUSECNT = "2",
+                                SUNITMaskStatusList = new Func<MaskStatusDatas>(() =>
+                                {
+                                    MaskStatusDatas maskStatusDatas = new MaskStatusDatas();
+                                    maskStatusDatas.Add(new MaskStatusDatas()
+                                    {
+                                        UNITID = " 1AED06-P01",
+                                        MaskStatusList = new Func<MaskStatuss>(() =>
+                                        {
+                                            MaskStatuss maskStatuss1 = new MaskStatuss();
+                                            maskStatuss1.Add(new MaskStatuss()
+                                            {
+                                                MASKID = "TestMask001",
+                                                MASKST = "10",
+                                                MASKUSECNT = "2",
+                                                SUNITMaskStatusList = null,
+                                            });
+                                            maskStatuss1.Add(new MaskStatuss()
+                                            {
+                                                MASKID = "TestMask002",
+                                                MASKST = "10",
+                                                MASKUSECNT = "2",
+                                                SUNITMaskStatusList = null,
+                                            });
+                                            return maskStatuss1;
+                                        })()
+                                    });
+                                    maskStatusDatas.Add(new MaskStatusDatas()
+                                    {
+                                        UNITID = " 1AED06-P02",
+                                        MaskStatusList = new Func<MaskStatuss>(() =>
+                                        {
+                                            MaskStatuss maskStatuss1 = new MaskStatuss();
+                                            maskStatuss1.Add(new MaskStatuss()
+                                            {
+                                                MASKID = "TestMask001",
+                                                MASKST = "10",
+                                                MASKUSECNT = "2",
+                                                SUNITMaskStatusList = null,
+                                            });
+                                            maskStatuss1.Add(new MaskStatuss()
+                                            {
+                                                MASKID = "TestMask002",
+                                                MASKST = "10",
+                                                MASKUSECNT = "2",
+                                                SUNITMaskStatusList = null,
+                                            });
+                                            return maskStatuss1;
+                                        })()
+                                    });
+                                    return maskStatusDatas;
+                                })(),
+                            });
+                            return maskStatuss;
+                        })(),
+                    });
                     break;
                 case SFCD.MaterialStatus:
                     break;
