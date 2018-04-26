@@ -216,6 +216,7 @@ namespace Granda.ATTS.CIM
                 default:
                     break;
             }
+            LogAdapter.WriteLog(new LogRecord(LogLevel.INFO, "receive primary message\r\n" + message.ToSml()));
             message.SystenBytes = e.MessageId;
             scenario?.HandleSecsMessage(message);
         }
@@ -249,57 +250,6 @@ namespace Granda.ATTS.CIM
             scenarioControllers.Add(Scenarios.Data_Collection, new DataCollection(dataCollection ?? this));
             secsGemService.Start();
         }
-        #endregion
-
-        #region 事件响应方法
-        //private void SecsGemService_PrimaryMessageRecived(object sender, TEventArgs<SecsMessage> e)
-        //{
-        //    var message = e.Data;
-        //    string sf = message.GetSFString();
-        //    IScenario scenario = null;
-        //    switch (sf)
-        //    {
-        //        case "S1F1":
-        //        case "S1F13":
-        //        case "S1F17":
-        //        case "S1F15":
-        //        case "S2F17":// equipment requests host time
-        //        case "S6F11":
-        //            scenario = scenarioControllers[Scenarios.Intialize_Scenario];
-        //            break;
-        //        case "S2F41":
-        //            scenario = scenarioControllers[Scenarios.Remote_Control];
-        //            break;
-        //        case "S5F3":
-        //        case "S5F103":
-        //            scenario = scenarioControllers[Scenarios.Alarm_Management];
-        //            break;
-        //        case "S2F31":
-        //            scenario = scenarioControllers[Scenarios.Clock];
-        //            break;
-        //        case "S10F1":
-        //        case "S10F5":
-        //            scenario = scenarioControllers[Scenarios.Equipment_Terminal_Service];
-        //            break;
-        //        case "S7F19":
-        //        case "S7F25":
-        //            scenario = scenarioControllers[Scenarios.Recipe_Management];
-        //            break;
-        //        case "S6F3":
-        //        case "S2F23":
-        //        case "S6F1":
-        //        case "S1F3":
-        //        case "S1F5":
-        //        case "S2F13":
-        //        case "S2F15":
-        //        case "S2F37":
-        //            scenario = scenarioControllers[Scenarios.Data_Collection];
-        //            break;
-        //        default:
-        //            break;
-        //    }
-        //    scenario?.HandleSecsMessage(message);
-        //}
         #endregion
 
         #region 静态方法
@@ -343,6 +293,8 @@ namespace Granda.ATTS.CIM
             {
                 var result = secsGemService.SendMessage(DeviceId, s, f, replyExpected, -1, item, key, value);
                 result.Wait();
+                if (result.Result != null)
+                    WriteLog(LogLevel.INFO, "Receive Secondary message: \r\n" + result.Result.ToSml());
                 return result.Result;
             }
             catch (Exception ex)

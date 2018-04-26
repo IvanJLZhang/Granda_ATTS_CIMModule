@@ -17,7 +17,7 @@ namespace SecsServer
             this.Load += Server_Load;
         }
         SecsHsms secsGem;
-        CIM4HST cimServer;
+        CIM4EQT cimServer;
         private void Server_Load(object sender, EventArgs e)
         {
             Thread.CurrentThread.Name = "Main";
@@ -25,7 +25,8 @@ namespace SecsServer
             secsGem = new SecsHsms(false, IPAddress.Parse("192.168.0.145"), 1024);
             secsGem.ConnectionChanged += SecsGem_ConnectionChanged;
             secsGem.PrimaryMessageReceived += SecsGem_PrimaryMessageReceived;
-            cimServer = new CIM4HST(secsGem);
+            //secsGem.Start();
+            cimServer = new CIM4EQT(secsGem);
             cimServer.ScenarioInitialize(this);
 
             Application.ThreadException += Application_ThreadException;
@@ -36,17 +37,16 @@ namespace SecsServer
         {
             SmlLog(e.Message.ToSml());
 
-            string reply = @"Establish Communication Request:'S1F14'
-  <L [2] 
-    <A [1] '0'>
-    <L [2] 
-      <A [4] 'MDLN'>
-      <A [7] 'SOFTREV'>
-    >
-  >
-.";
-            //Thread.Sleep(1000);
-            //secsGem.SendAsync(reply.ToSecsMessage(), e.MessageId);
+//            string reply = @"Establish Communication Request:S1F14
+//  <L [2] 
+//    <A [1] '0'>
+//    <L [2] 
+//      <A [4] 'MDLN'>
+//      <A [7] 'SOFTREV'>
+//    >
+//  >
+//.";
+//            secsGem.SendAsync(reply.ToSecsMessage(), e.MessageId);
         }
 
         private void SecsGem_ConnectionChanged(object sender, TEventArgs<ConnectionState> e)
@@ -56,7 +56,12 @@ namespace SecsServer
 
         private void btnSendPrimaryMsg_Click(object sender, EventArgs e)
         {
-            secsGem.SendAsync(this.primaryMsgToSend.Text.ToSecsMessage());
+            secsGem.SendAsync(@"Establish Communication Request:S1F13 W
+  <L [2] 
+    <A [4] 'MDLN'>
+    <A [7] 'SOFTREV'>
+  >
+.".ToSecsMessage());
         }
 
         private void btnSecSend_Click(object sender, EventArgs e)

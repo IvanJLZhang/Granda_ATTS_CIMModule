@@ -33,12 +33,12 @@ namespace SecsClient
         {
             Thread.CurrentThread.Name = "Main";
 
-            secsGem = new SecsHsms(true, IPAddress.Parse("192.168.0.145"), 1024);
+            secsGem = new SecsHsms(true, IPAddress.Parse("192.168.0.145"), 7000);
             secsGem.ConnectionChanged += SecsGem_ConnectionChanged;
             secsGem.PrimaryMessageReceived += SecsGem_PrimaryMessageReceived;
             secsGem.Start();
-            cimClient = new CIM4EQT(secsGem);
-            cimClient.ScenarioInitialize(this);
+            //cimClient = new CIM4EQT(secsGem);
+            //cimClient.ScenarioInitialize(this);
 
 
             Application.ThreadException += Application_ThreadException;
@@ -48,6 +48,16 @@ namespace SecsClient
         private void SecsGem_PrimaryMessageReceived(object sender, PrimaryMessageWrapper e)
         {
             SmlLog(e.Message.ToSml());
+            string reply = @"Establish Communication Request:S1F14
+  <L [2] 
+    <A [1] '0'>
+    <L [2] 
+      <A [4] 'MDLN'>
+      <A [7] 'SOFTREV'>
+    >
+  >
+.";
+            secsGem.SendAsync(reply.ToSecsMessage(), e.MessageId);
         }
 
         private void SecsGem_ConnectionChanged(object sender, TEventArgs<ConnectionState> e)
@@ -64,11 +74,13 @@ namespace SecsClient
         {
             try
             {
-                //var result = secsGem.SendAsync(this.primaryMsgToSend.Text.ToSecsMessage());
-                //result.Wait();
-                //var reply = result.Result;
-                //SmlLog(reply.ToSml());
-                cimClient.LaunchOnOffLineProcess(true, this._equipmentInfo);
+                //cimClient.LaunchOnOffLineProcess(true, this._equipmentInfo);
+                secsGem.SendAsync(@"Establish Communication Request:S1F13 W
+  <L [2] 
+    <A [4] 'MDLN'>
+    <A [7] 'SOFTREV'>
+  >
+.".ToSecsMessage());
 
             }
             catch (Exception)

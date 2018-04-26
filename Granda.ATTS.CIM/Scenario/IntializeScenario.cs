@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading;
 using Granda.AATS.Log;
 using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Data.ENUM;
@@ -81,6 +82,7 @@ namespace Granda.ATTS.CIM.Scenario
                             // send OFF_LINE Acknowledge
                             // 0: Accepted, 1: Not Accepted
                             secsMessage.S1F16("0");
+                            //Thread.Sleep(1000);
                             // send Control State Change(OFF_LINE)
                             launchControlStateProcess((int)CRST.O);
                             break;
