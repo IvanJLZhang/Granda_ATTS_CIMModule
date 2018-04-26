@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
+using System.Threading;
 using Granda.AATS.Log;
 using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Data.Message;
