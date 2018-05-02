@@ -37,17 +37,20 @@ namespace Granda.ATTS.CIM.Scenario
         #endregion
 
         #region message handle methods
-        public void HandleSecsMessage(SecsMessage secsMessage)
+        public bool HandleSecsMessage(SecsMessage secsMessage)
         {
+            bool ret = false;
             switch (secsMessage.GetSFString())
             {
                 case "S2F17":// equipment requests host time
                              // 在initialize scenario中有处理此消息， 所以这里不再重复
+                    ret = true;
                     break;
                 case "S2F31":// host instructs equipment to set time
                     SubScenarioName = Resource.CLKS_Host_Instructs_Time;
                     string dateTimeStr = secsMessage.SecsItem.GetString();
-                    if (!String.IsNullOrEmpty(dateTimeStr))
+                    ret = !String.IsNullOrEmpty(dateTimeStr);
+                    if (ret)
                     {
                         clock.UpdateDateTime(dateTimeStr);
                         secsMessage.S2F32("0");
@@ -56,6 +59,7 @@ namespace Granda.ATTS.CIM.Scenario
                 default:
                     break;
             }
+            return ret;
         }
         #endregion
 

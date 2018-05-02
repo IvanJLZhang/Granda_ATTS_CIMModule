@@ -42,22 +42,21 @@ namespace Granda.ATTS.CIM.Scenario
         #endregion
 
         #region message handle methods
-        public void HandleSecsMessage(SecsMessage secsMessage)
+        public bool HandleSecsMessage(SecsMessage secsMessage)
         {
             PrimaryMessage = secsMessage;
             switch (PrimaryMessage.GetSFString())
             {
                 case "S2F41":// host command
                     int rcmd = PrimaryMessage.GetCommandValue();
-                    handleRCMDMessage(rcmd);
-                    break;
+                    return handleRCMDMessage(rcmd);
                 default:
                     break;
             }
+            return false;
         }
-        private void handleRCMDMessage(int rcmd)
+        private bool handleRCMDMessage(int rcmd)
         {
-            PrimaryMessage.S2F42(rcmd, 0);// 立即回复S2F42
             switch ((RCMD)rcmd)
             {
                 case RCMD.START:
@@ -82,8 +81,13 @@ namespace Granda.ATTS.CIM.Scenario
                     break;
             }
             RemoteControlCommandRequest remoteControlCommandJob = new RemoteControlCommandRequest();
-            remoteControlCommandJob.Parse(PrimaryMessage.SecsItem);
-            remoteControlScenario.RemoteControlCommandRequestEvent(remoteControlCommandJob);
+            var ret = remoteControlCommandJob.Parse(PrimaryMessage.SecsItem);
+            if (ret)
+            {
+                PrimaryMessage.S2F42(rcmd, 0);// 立即回复S2F42
+                remoteControlScenario.RemoteControlCommandRequestEvent(remoteControlCommandJob);
+            }
+            return ret;
         }
         #endregion
 

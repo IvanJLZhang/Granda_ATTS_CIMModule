@@ -56,7 +56,7 @@ namespace Granda.ATTS.CIM.Data.Message
         /// 
         /// </summary>
         /// <param name="item"></param>
-        public void Parse(Item item)
+        public bool Parse(Item item)
         {
             if (item.Items.Count == 5)
             {
@@ -75,7 +75,9 @@ namespace Granda.ATTS.CIM.Data.Message
                 }
 
                 SVIDList = svidList;
+                return true;
             }
+            return false;
         }
     }
     /// <summary>

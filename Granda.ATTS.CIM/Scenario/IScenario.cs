@@ -10,6 +10,6 @@ namespace Granda.ATTS.CIM.Scenario
         /// <summary>
         /// 处理primary message
         /// </summary>
-        void HandleSecsMessage(SecsMessage secsMessage);
+        bool HandleSecsMessage(SecsMessage secsMessage);
     }
 }

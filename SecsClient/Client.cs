@@ -2,15 +2,11 @@
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using Granda.ATTS.CIM;
-using Granda.ATTS.CIM.Data.ENUM;
-using Granda.ATTS.CIM.Data.Report;
-using Granda.ATTS.CIM.Scenario;
-using Granda.HSMS;
+using Secs4Frmk4;
+using static Secs4Frmk4.Sml.SmlExtension;
 namespace SecsClient
 {
-    public partial class Client : Form,
-        IInitializeScenario
+    public partial class Client : Form
     {
         public Client()
         {
@@ -19,21 +15,20 @@ namespace SecsClient
         }
 
 
-        CIM4EQT cimClient;
-        SecsHsms secsGem;
-        EquipmentInfo _equipmentInfo = new EquipmentInfo()
-        {
-            CRST = CRST.O,
-            EQST = CommonStatus.I,
-            EQSTCODE = 1000,
-            MDLN = "equipment",
-            SOFTREV = "v1.0.",
-        };
+        SecsGem secsGem;
+        //EquipmentInfo _equipmentInfo = new EquipmentInfo()
+        //{
+        //    CRST = CRST.O,
+        //    EQST = CommonStatus.I,
+        //    EQSTCODE = 1000,
+        //    MDLN = "equipment",
+        //    SOFTREV = "v1.0.",
+        //};
         private void Client_Load(object sender, EventArgs e)
         {
             Thread.CurrentThread.Name = "Main";
 
-            secsGem = new SecsHsms(true, IPAddress.Parse("192.168.0.145"), 7000);
+            secsGem = new SecsGem(true, IPAddress.Parse("192.168.0.145"), 7000);
             secsGem.ConnectionChanged += SecsGem_ConnectionChanged;
             secsGem.PrimaryMessageReceived += SecsGem_PrimaryMessageReceived;
             secsGem.Start();
@@ -108,18 +103,18 @@ namespace SecsClient
         }
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            MessageBox.Show(e.ExceptionObject.ToString());
+            //MessageBox.Show(e.ExceptionObject.ToString());
         }
 
         private void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
-            MessageBox.Show(e.Exception.ToString());
+            //MessageBox.Show(e.Exception.ToString());
         }
 
-        public void UpdateControlState(CRST controlState)
-        {
-            LogMsg("Control State Change: " + controlState.ToString());
-        }
+        //public void UpdateControlState(CRST controlState)
+        //{
+        //    LogMsg("Control State Change: " + controlState.ToString());
+        //}
 
         public void UpdateDateTime(string dateTimeStr)
         {

@@ -39,30 +39,34 @@ namespace Granda.ATTS.CIM.Scenario
         #endregion
 
         #region message handle methods
-        public void HandleSecsMessage(SecsMessage secsMessage)
+        public bool HandleSecsMessage(SecsMessage secsMessage)
         {
+            bool ret = false;
             PrimaryMessage = secsMessage;
             switch (PrimaryMessage.GetSFString())
             {
                 case "S10F1":// operator sends textual
                     var strs = GetTestMsg();
-                    if (strs != null)
+                    ret = strs != null;
+                    if (ret)
                     {
                         eqtTerminalService.ReceiveTestMessage(strs);
+                        PrimaryMessage.S10F2(0);
                     }
-                    PrimaryMessage.S10F2(0);
                     break;
                 case "S10F5":// host sends muiti-block message
                     strs = GetTestMsg();
-                    if (strs != null)
+                    ret = strs != null;
+                    if (ret)
                     {
                         eqtTerminalService.ReceiveTestMessage(strs);
+                        PrimaryMessage.S10F6(0);
                     }
-                    PrimaryMessage.S10F6(0);
                     break;
                 default:
                     break;
             }
+            return ret;
         }
         #endregion
 

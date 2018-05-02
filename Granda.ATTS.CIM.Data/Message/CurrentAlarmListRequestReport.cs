@@ -33,23 +33,33 @@ namespace Granda.ATTS.CIM.Data.Message
         /// 
         /// </summary>
         /// <param name="item"></param>
-        public void Parse(Item item)
+        public bool Parse(Item item)
         {
-            List<string> list = new List<string>();
-            foreach (var ite in item.Items)
+            try
             {
-                if (ite.Format == SecsFormat.List)
+                List<string> list = new List<string>();
+                foreach (var ite in item.Items)
                 {
-                    foreach (var it in ite.Items)
+                    if (ite.Format == SecsFormat.List)
                     {
-                        if (it.Format == SecsFormat.ASCII)
-                            list.Add(it.GetString());
+                        foreach (var it in ite.Items)
+                        {
+                            if (it.Format == SecsFormat.ASCII)
+                                list.Add(it.GetString());
+                        }
                     }
+                    else if (ite.Format == SecsFormat.ASCII)
+                        list.Add(ite.GetString());
                 }
-                else if (ite.Format == SecsFormat.ASCII)
-                    list.Add(ite.GetString());
+                UNITIDLIST = list;
+                return true;
             }
-            UNITIDLIST = list;
+            catch (Exception)
+            {
+
+                return false;
+            }
+
         }
         /// <summary>
         /// 

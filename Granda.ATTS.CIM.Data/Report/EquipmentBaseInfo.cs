@@ -51,13 +51,15 @@ namespace Granda.ATTS.CIM.Data.Report
         /// 
         /// </summary>
         /// <param name="item"></param>
-        public void Parse(Item item)
+        public bool Parse(Item item)
         {
             if (item.Items.Count == 2)
             {
                 MDLN = item.Items[0].Format == SecsFormat.ASCII ? item.Items[0].GetString() : String.Empty;
                 SOFTREV = item.Items[1].Format == SecsFormat.ASCII ? item.Items[1].GetString() : String.Empty;
+                return true;
             }
+            return false;
         }
     }
 }

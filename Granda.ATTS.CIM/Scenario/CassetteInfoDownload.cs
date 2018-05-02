@@ -25,7 +25,7 @@ namespace Granda.ATTS.CIM.Scenario
             ScenarioType = Model.Scenarios.Cassette_Information_Download;
         }
 
-        public void HandleSecsMessage(SecsMessage secsMessage)
+        public bool HandleSecsMessage(SecsMessage secsMessage)
         {
             throw new NotImplementedException();
         }

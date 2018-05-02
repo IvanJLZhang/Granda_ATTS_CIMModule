@@ -24,6 +24,7 @@ using Granda.ATTS.CIM.Data.Message;
 using Granda.ATTS.CIM.Extension;
 using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.Scenario;
+using Granda.ATTS.CIM.StreamType;
 using Granda.HSMS;
 using static Granda.ATTS.CIM.Extension.ExtensionHelper;
 namespace Granda.ATTS.CIM
@@ -215,13 +216,42 @@ namespace Granda.ATTS.CIM
                     scenario = scenarioControllers[Scenarios.Data_Collection];
                     break;
                 default:
+                    CheckSF(e);
                     break;
             }
             LogAdapter.WriteLog(new LogRecord(LogLevel.INFO, "receive primary message\r\n" + message.ToSml()));
             message.SystenBytes = e.MessageId;
-            scenario?.HandleSecsMessage(message);
+            if (scenario != null)
+            {
+                var ret = scenario.HandleSecsMessage(message);
+                if (!ret)
+                {// Illegal Data
+                    message.S9F7(Item.B(e.Header.EncodeTo(new byte[10])));
+                }
+            }
         }
 
+
+        private void CheckSF(PrimaryMessageWrapper primaryMessage)
+        {
+            var secsMessage = primaryMessage.Message;
+            var item = Item.B(primaryMessage.Header.EncodeTo(new byte[10]));
+            switch (secsMessage.S)
+            {
+                case 1:
+                case 2:
+                case 5:
+                case 6:
+                case 7:
+                case 9:
+                case 10:// Unrecognized Function Type
+                    secsMessage.S9F5(item);
+                    break;
+                default:// Unrecognized Stream Type
+                    secsMessage.S9F3(item);
+                    break;
+            }
+        }
         /// <summary>
         /// 场景初始化
         /// <para>接口初始化和事件初始化不可同时使用，即如果初始化了相应场景的接口之后，对应场景下所有的事件将不会再被响应</para>

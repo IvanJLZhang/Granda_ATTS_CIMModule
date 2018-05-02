@@ -25,9 +25,9 @@ namespace Granda.ATTS.CIM.Scenario
             ScenarioType = Model.Scenarios.Operation_Normal_Sequence;
         }
 
-        public void HandleSecsMessage(SecsMessage secsMessage)
+        public bool HandleSecsMessage(SecsMessage secsMessage)
         {
-            throw new NotImplementedException();
+            return false;
         }
     }
 }

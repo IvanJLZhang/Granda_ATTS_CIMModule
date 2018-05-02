@@ -46,84 +46,101 @@ namespace Granda.ATTS.CIM.Scenario
         #endregion
 
         #region message handle methods
-        public void HandleSecsMessage(SecsMessage secsMessage)
+        public bool HandleSecsMessage(SecsMessage secsMessage)
         {
+            bool ret = false;
             PrimaryMessage = secsMessage;
             switch (PrimaryMessage.GetSFString())
             {
                 case "S6F3"://Discrete Variable Data Send
                     SubScenarioName = Resource.DCS_Discrete_Variable_Data_Send;
                     PrimaryMessage.S6F4(0);
+                    ret = true;
                     break;
                 case "S2F23":// trace data initialization request
                     SubScenarioName = Resource.DCS_Host_Initiates_Trace_Report;
-                    PrimaryMessage.S2F24("0");
                     TraceDataInitializationRequest traceDataInitializationRequest = new TraceDataInitializationRequest();
-                    traceDataInitializationRequest.Parse(PrimaryMessage.SecsItem);
-                    dataCollection.TraceDataInitializationRequestEvent(traceDataInitializationRequest);
+                    ret = traceDataInitializationRequest.Parse(PrimaryMessage.SecsItem);
+                    if (ret)
+                    {
+                        PrimaryMessage.S2F24("0");
+                        dataCollection.TraceDataInitializationRequestEvent(traceDataInitializationRequest);
+                    }
                     break;
                 case "S6F1":
+                    ret = true;
                     break;
                 case "S1F3":// Selected Equipment Status Request
                     SubScenarioName = Resource.DCS_Host_request_value_status;
-                    handleS1F3();
+                    ret = handleS1F3();
                     break;
                 case "S1F5":// Request formatted status
                     SubScenarioName = Resource.DCS_Host_request_Formatted_status;
-                    handleS1F5();
+                    ret = handleS1F5();
                     break;
                 case "S2F13":// equipment constants request
                     SubScenarioName = Resource.DCS_Equipment_Constants_Request;
-                    handleS2F13();
+                    ret = handleS2F13();
                     break;
                 case "S2F15":// X
+                    ret = true;
                     break;
                 case "S2F37":// host request enable or disable events
                     SubScenarioName = Resource.DCS_Host_Requests_Enable_Disable_Event;
-                    handleS2F37();
+                    ret = handleS2F37();
                     break;
                 default:
                     break;
             }
+            return ret;
         }
         /// <summary>
         /// Selected equipment Status request
         /// </summary>
-        void handleS1F3()
+        bool handleS1F3()
         {
+            bool ret = false;
             var requestData = GetData(PrimaryMessage.SecsItem);
-            dataCollection.SelectedEquipmentStatusRequestEvent(requestData, true);
+            ret = requestData != null && requestData.Length > 0;
+            if (ret) dataCollection.SelectedEquipmentStatusRequestEvent(requestData, true);
+            return ret;
         }
         /// <summary>
         /// Host requests the formatted status
         /// </summary>
-        void handleS1F5()
+        bool handleS1F5()
         {
             var sfcd = PrimaryMessage.GetCommandValue();
-            dataCollection.FormattedStatusRequestEvent((SFCD)sfcd, true);
+            bool ret = Enum.TryParse(sfcd.ToString(), out SFCD _);
+            if (ret) dataCollection.FormattedStatusRequestEvent((SFCD)sfcd, true);
+            return ret;
         }
         /// <summary>
         /// Equipment constants request
         /// </summary>
-        void handleS2F13()
+        bool handleS2F13()
         {
             var requestData = GetData(PrimaryMessage.SecsItem);
-            dataCollection.EquipmentConstantsRequestEvent(requestData, true);
+            var ret = requestData != null && requestData.Length > 0;
+            if (ret) dataCollection.EquipmentConstantsRequestEvent(requestData, true);
+            return ret;
         }
         /// <summary>
         /// Host requests Enable or Disable events
         /// </summary>
-        void handleS2F37()
+        bool handleS2F37()
         {
+            bool ret = false;
             var requestData = GetData(PrimaryMessage.SecsItem);
             var ceed = PrimaryMessage.GetCommandValue();
-            if (requestData.Length >= 2)
+            ret = requestData != null && requestData.Length >= 2;
+            if (ret)
             {
                 var ceids = requestData.Skip(1).Take(requestData.Length - 1).ToArray();
                 dataCollection.EnableDisableEventReportRequestEvent(requestData);
+                PrimaryMessage.S2F38(0);
             }
-
-            PrimaryMessage.S2F38(0);
+            return ret;
         }
 
         string[] GetData(Item itemList)

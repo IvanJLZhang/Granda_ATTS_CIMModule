@@ -37,27 +37,33 @@ namespace Granda.ATTS.CIM.Scenario
         #endregion
 
         #region message handle methods
-        public void HandleSecsMessage(SecsMessage secsMessage)
+        public bool HandleSecsMessage(SecsMessage secsMessage)
         {
+            bool ret = false;
             PrimaryMessage = secsMessage;
             switch (secsMessage.GetSFString())
             {
                 case "S5F3":// enable or disable alarm
                     SubScenarioName = Resource.AMS_Enable_Disable_Alarm;
                     AlarmEnableDisableRequest alarmEnableDisableJob = new AlarmEnableDisableRequest();
-                    alarmEnableDisableJob.Parse(PrimaryMessage.SecsItem);
-                    AMSCallBack.AlarmEnableDisableRequestEvent(alarmEnableDisableJob);
-                    secsMessage.S5F4(0);
+                    ret = alarmEnableDisableJob.Parse(PrimaryMessage.SecsItem);
+                    if (ret)
+                    {
+                        AMSCallBack.AlarmEnableDisableRequestEvent(alarmEnableDisableJob);
+                        secsMessage.S5F4(0);
+                    }
                     break;
                 case "S5F103":// current alarm set list request
                     SubScenarioName = Resource.AMS_Alarm_List_Request;
                     CurrentAlarmListRequest currentAlarmListJob = new CurrentAlarmListRequest();
-                    currentAlarmListJob.Parse(PrimaryMessage.SecsItem);
-                    AMSCallBack.CurrentAlarmListRequestEvent(currentAlarmListJob, true);
+                    ret = currentAlarmListJob.Parse(PrimaryMessage.SecsItem);
+                    if (ret)
+                        AMSCallBack.CurrentAlarmListRequestEvent(currentAlarmListJob, true);
                     break;
                 default:
                     break;
             }
+            return ret;
         }
         #endregion
 

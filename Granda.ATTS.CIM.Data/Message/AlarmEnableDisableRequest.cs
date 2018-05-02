@@ -40,7 +40,7 @@ namespace Granda.ATTS.CIM.Data.Message
         /// 
         /// </summary>
         /// <param name="item"></param>
-        public void Parse(Item item)
+        public bool Parse(Item item)
         {
             if (item.Items.Count == 3)
             {
@@ -53,7 +53,9 @@ namespace Granda.ATTS.CIM.Data.Message
                     idlist.Add(it.Format == SecsFormat.ASCII ? it.GetString() : String.Empty);
                 }
                 ALIDLIST = idlist;
+                return true;
             }
+            return false;
         }
         /// <summary>
         /// 

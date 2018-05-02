@@ -38,40 +38,44 @@ namespace Granda.ATTS.CIM.Scenario
         #endregion
 
         #region message handle methods
-        public void HandleSecsMessage(SecsMessage secsMessage)
+        public bool HandleSecsMessage(SecsMessage secsMessage)
         {
+            bool ret = false;
             PrimaryMessage = secsMessage;
             switch (secsMessage.GetSFString())
             {
                 case "S7F19":// current EPPD request
                     SubScenarioName = Resource.RMS_Host_Attempts_To_Recipe_Mnt;
-                    handleS7F19Message();
+                    ret = handleS7F19Message();
                     break;
                 case "S7F25":// formatted process program request
                     SubScenarioName = Resource.RMS_Host_Requests_formatted_Process_program;
-                    handleS7F25Message();
+                    ret = handleS7F25Message();
                     break;
                 default:
                     break;
             }
+            return ret;
         }
         /// <summary>
         /// current EPPD request
         /// </summary>
-        void handleS7F19Message()
+        bool handleS7F19Message()
         {
             CurrentEPPDRequest currentEPPDRequest = new CurrentEPPDRequest();
-            currentEPPDRequest.Parse(PrimaryMessage.SecsItem);
-            recipeManagement.CurrentEPPDRequestEvent(currentEPPDRequest, true);
+            var ret = currentEPPDRequest.Parse(PrimaryMessage.SecsItem);
+            if (ret) recipeManagement.CurrentEPPDRequestEvent(currentEPPDRequest, true);
+            return ret;
         }
         /// <summary>
         /// formatted process program request
         /// </summary>
-        void handleS7F25Message()
+        bool handleS7F25Message()
         {
             FormattedProcessProgramRequest formattedProcessProgramRequest = new FormattedProcessProgramRequest();
-            formattedProcessProgramRequest.Parse(PrimaryMessage.SecsItem);
-            recipeManagement.FormattedProcessProgramRequestEvent(formattedProcessProgramRequest, true);
+            var ret = formattedProcessProgramRequest.Parse(PrimaryMessage.SecsItem);
+            if (ret) recipeManagement.FormattedProcessProgramRequestEvent(formattedProcessProgramRequest, true);
+            return ret;
         }
         #endregion
 

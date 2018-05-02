@@ -48,10 +48,10 @@ namespace Granda.ATTS.CIM.Data.Message
         /// 
         /// </summary>
         /// <param name="item"></param>
-        public void Parse(Item item)
+        public bool Parse(Item item)
         {
             if (item == null)
-                return;
+                return false;
             if (item.Items.Count == 2)
             {
                 Enum.TryParse(item.Items[0].GetString(), out RCMD rcmd);
@@ -81,7 +81,9 @@ namespace Granda.ATTS.CIM.Data.Message
                         }
                     }
                 }
+                return true;
             }
+            return false;
         }
         /// <summary>
         /// 

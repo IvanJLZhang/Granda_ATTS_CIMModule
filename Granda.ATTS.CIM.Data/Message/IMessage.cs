@@ -11,6 +11,6 @@ namespace Granda.ATTS.CIM.Data
         /// 将SecsItem转换为业务数据类型
         /// </summary>
         /// <param name="item"></param>
-        void Parse(Item item);
+        bool Parse(Item item);
     }
 }

@@ -54,20 +54,22 @@ namespace Granda.ATTS.CIM.Scenario
         /// <summary>
         /// handle online/offline request by host
         /// </summary>
-        public void HandleSecsMessage(SecsMessage secsMessage)
+        public bool HandleSecsMessage(SecsMessage secsMessage)
         {
+            bool ret = false;
             PrimaryMessage = secsMessage;
             switch (PrimaryMessage.GetSFString())
             {
                 case "S1F1":// are you there request
                     SubScenarioName = Resource.Intialize_Scenario_1;
                     secsMessage.S1F2(this._equipmentBaseInfo.MDLN ?? String.Empty, this._equipmentBaseInfo.SOFTREV ?? String.Empty);// 作为unit端， 只考虑online的选项
+                    ret = true;
                     break;
                 case "S1F13":// estublish communication request
-                    handleS1F13();
+                    ret = handleS1F13();
                     break;
                 case "S1F17":// request online by host
-                    handleS1F17();
+                    ret = handleS1F17();
                     break;
                 case "S1F15":// request offline by host
                     SubScenarioName = Resource.Intialize_Scenario_4;
@@ -92,29 +94,33 @@ namespace Granda.ATTS.CIM.Scenario
                         default:
                             break;
                     }
+                    ret = true;
                     break;
                 case "S2F17":// Date and Time Request
                     string dataTime = DateTime.Now.ToString("yyyyMMddHHmmss");
                     secsMessage.S2F18(dataTime);
+                    ret = true;
                     break;
                 case "S6F11":// Event Report Send (ERS)
                     secsMessage.S6F12("0");
+                    ret = true;
                     break;
                 default:
                     break;
             }
+            return ret;
         }
 
         /// <summary>
         /// establish communication request by host
         /// </summary>
-        void handleS1F13()
+        bool handleS1F13()
         {
             SubScenarioName = Resource.Intialize_Scenario_3;
             EquipmentBaseInfo message = new EquipmentBaseInfo();
-            message.Parse(PrimaryMessage.SecsItem);
-            //this._equipmentBaseInfo = message;
+            var ret = message.Parse(PrimaryMessage.SecsItem);
             PrimaryMessage.S1F14(_equipmentBaseInfo.MDLN ?? String.Empty, _equipmentBaseInfo.SOFTREV ?? String.Empty, "0");
+            return ret;
         }
         /// <summary>
         /// request online by host
@@ -123,8 +129,9 @@ namespace Granda.ATTS.CIM.Scenario
         /// 2: Already ON-LINE LOCAL,
         /// 3: Already ON-LINE REMOTE.
         /// </summary>
-        void handleS1F17()
+        bool handleS1F17()
         {
+            bool ret = false;
             SubScenarioName = Resource.Intialize_Scenario_3;
             string ONLACK = String.Empty;
             switch (this._equipmentStatusInfo.CRST)
@@ -154,6 +161,7 @@ namespace Granda.ATTS.CIM.Scenario
                 }
             }));
             thread.Start();
+            return ret;
         }
         #endregion
 
