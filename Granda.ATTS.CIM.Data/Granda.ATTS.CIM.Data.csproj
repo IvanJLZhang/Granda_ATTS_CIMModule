@@ -97,9 +97,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Granda.HSMS\Granda.HSMS.csproj">
-      <Project>{d2071314-a2a1-4890-9175-7409a9f72880}</Project>
-      <Name>Granda.HSMS</Name>
+    <ProjectReference Include="..\..\Secs4Net4\Secs4Frmk4\Secs4Frmk4.csproj">
+      <Project>{7e51f1ae-3104-4858-af49-6a81aabe7bcb}</Project>
+      <Name>Secs4Frmk4</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

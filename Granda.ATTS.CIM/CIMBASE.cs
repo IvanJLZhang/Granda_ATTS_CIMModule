@@ -17,7 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
-using System.Threading;
 using Granda.AATS.Log;
 using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Data.Message;
@@ -26,6 +25,7 @@ using Granda.ATTS.CIM.Model;
 using Granda.ATTS.CIM.Scenario;
 using Granda.ATTS.CIM.StreamType;
 using Granda.HSMS;
+using Granda.HSMS.Sml;
 using static Granda.ATTS.CIM.Extension.ExtensionHelper;
 namespace Granda.ATTS.CIM
 {
@@ -55,7 +55,7 @@ namespace Granda.ATTS.CIM
         /// 设备ID
         /// </summary>
         private static short DeviceId { get; set; } = 1;
-        private static SecsHsms secsGemService = null;
+        private static SecsGem secsGemService = null;
         /// <summary>
         /// 场景控制器集合
         /// </summary>
@@ -150,7 +150,7 @@ namespace Granda.ATTS.CIM
         /// </summary>
         /// <param name="secsGem"></param>
         /// <param name="deviceId">设备Id号， 默认为1</param>
-        public CIMBASE(SecsHsms secsGem, short deviceId) : this()
+        public CIMBASE(SecsGem secsGem, short deviceId) : this()
         {
             secsGemService = secsGem;
             secsGemService.ConnectionChanged += SecsGemService_ConnectionChanged;
@@ -166,7 +166,7 @@ namespace Granda.ATTS.CIM
         /// <param name="deviceId">设备Id号， 默认为1</param>
         public CIMBASE(string ipAddress, int port, bool isActive, short deviceId) : this()
         {
-            secsGemService = new SecsHsms(isActive, IPAddress.Parse(ipAddress), port);
+            secsGemService = new SecsGem(isActive, IPAddress.Parse(ipAddress), port);
             secsGemService.ConnectionChanged += SecsGemService_ConnectionChanged;
             secsGemService.PrimaryMessageReceived += SecsGemService_PrimaryMessageReceived;
             DeviceId = deviceId;
@@ -177,6 +177,7 @@ namespace Granda.ATTS.CIM
             var message = e.Message;
             string sf = message.GetSFString();
             IScenario scenario = null;
+            LogAdapter.WriteLog(new LogRecord(LogLevel.INFO, "receive primary message\r\n" + message.ToSml()));
             switch (sf)
             {
                 case "S1F1":
@@ -219,7 +220,6 @@ namespace Granda.ATTS.CIM
                     CheckSF(e);
                     break;
             }
-            LogAdapter.WriteLog(new LogRecord(LogLevel.INFO, "receive primary message\r\n" + message.ToSml()));
             message.SystenBytes = e.MessageId;
             if (scenario != null)
             {
@@ -392,7 +392,7 @@ namespace Granda.ATTS.CIM
         /// </summary>
         private void SecsGemService_ConnectionChanged(object sender, TEventArgs<ConnectionState> e)
         {
-            Debug.WriteLine("connection state change: " + e.ToString());
+            Debug.WriteLine("connection state change: " + e.Data.ToString());
             ConnectionChanged?.Invoke(this, new CIMEventArgs<ConnectionStatus>((ConnectionStatus)Enum.Parse(typeof(ConnectionStatus), e.Data.ToString()), false));
         }
 

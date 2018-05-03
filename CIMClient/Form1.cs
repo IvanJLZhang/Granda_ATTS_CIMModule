@@ -54,7 +54,7 @@ namespace CIMClient
 
         private void btn_start_Click(object sender, EventArgs e)
         {
-            SecsHsms secsGem = new SecsHsms(this.rbtn_active.Checked, IPAddress.Parse(this.tb_ip.Text.Trim()), Int32.Parse(this.tb_port.Text));
+            SecsGem secsGem = new SecsGem(this.rbtn_active.Checked, IPAddress.Parse(this.tb_ip.Text.Trim()), Int32.Parse(this.tb_port.Text));
             cimClient = new CIM4EQT(secsGem, 1000);
             cimClient.ConnectionChanged += CimClient_ConnectionChanged;
             cimClient.ScenarioInitialize(this, this, this, this, this, this, this);

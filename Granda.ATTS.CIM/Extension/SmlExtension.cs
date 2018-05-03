@@ -104,32 +104,9 @@ namespace Granda.ATTS.CIM.Extension
 
         private static readonly Tuple<Func<Item>, Func<byte[], Item>, Func<string, byte>>
             BinaryParser = new Tuple<Func<Item>, Func<byte[], Item>, Func<string, byte>>(B, B, HexByteParser);
-        private static readonly Tuple<Func<Item>, Func<sbyte[], Item>, Func<string, sbyte>>
-            I1Parser = new Tuple<Func<Item>, Func<sbyte[], Item>, Func<string, sbyte>>(I1, I1, sbyte.Parse);
-        private static readonly Tuple<Func<Item>, Func<short[], Item>, Func<string, short>>
-            I2Parser = new Tuple<Func<Item>, Func<short[], Item>, Func<string, short>>(I2, I2, short.Parse);
-        private static readonly Tuple<Func<Item>, Func<int[], Item>, Func<string, int>>
-            I4Parser = new Tuple<Func<Item>, Func<int[], Item>, Func<string, int>>(I4, I4, int.Parse);
-        private static readonly Tuple<Func<Item>, Func<long[], Item>, Func<string, long>>
-            I8Parser = new Tuple<Func<Item>, Func<long[], Item>, Func<string, long>>(I8, I8, long.Parse);
-        private static readonly Tuple<Func<Item>, Func<byte[], Item>, Func<string, byte>>
-            U1Parser = new Tuple<Func<Item>, Func<byte[], Item>, Func<string, byte>>(U1, U1, byte.Parse);
-        private static readonly Tuple<Func<Item>, Func<ushort[], Item>, Func<string, ushort>>
-            U2Parser = new Tuple<Func<Item>, Func<ushort[], Item>, Func<string, ushort>>(U2, U2, ushort.Parse);
-        private static readonly Tuple<Func<Item>, Func<uint[], Item>, Func<string, uint>>
-            U4Parser = new Tuple<Func<Item>, Func<uint[], Item>, Func<string, uint>>(U4, U4, uint.Parse);
-        private static readonly Tuple<Func<Item>, Func<ulong[], Item>, Func<string, ulong>>
-            U8Parser = new Tuple<Func<Item>, Func<ulong[], Item>, Func<string, ulong>>(U8, U8, ulong.Parse);
-        private static readonly Tuple<Func<Item>, Func<float[], Item>, Func<string, float>>
-            F4Parser = new Tuple<Func<Item>, Func<float[], Item>, Func<string, float>>(F4, F4, float.Parse);
-        private static readonly Tuple<Func<Item>, Func<double[], Item>, Func<string, double>>
-            F8Parser = new Tuple<Func<Item>, Func<double[], Item>, Func<string, double>>(F8, F8, double.Parse);
-        private static readonly Tuple<Func<Item>, Func<bool[], Item>, Func<string, bool>>
-            BoolParser = new Tuple<Func<Item>, Func<bool[], Item>, Func<string, bool>>(Boolean, Boolean, bool.Parse);
         private static readonly Tuple<Func<Item>, Func<string, Item>>
             AParser = new Tuple<Func<Item>, Func<string, Item>>(A, A);
-        private static readonly Tuple<Func<Item>, Func<string, Item>>
-            JParser = new Tuple<Func<Item>, Func<string, Item>>(J, J);
+
 
         private static readonly char[] Separator = { ' ' };
 
@@ -140,21 +117,8 @@ namespace Granda.ATTS.CIM.Extension
             {
                 case "A": return ParseStringItem(smlValue, AParser);
                 case "JIS8":
-                case "J": return ParseStringItem(smlValue, JParser);
-                case "Bool":
-                case "Boolean": return ParseValueItem(smlValue, BoolParser);
                 case "Binary":
                 case "B": return ParseValueItem(smlValue, BinaryParser);
-                case "I1": return ParseValueItem(smlValue, I1Parser);
-                case "I2": return ParseValueItem(smlValue, I2Parser);
-                case "I4": return ParseValueItem(smlValue, I4Parser);
-                case "I8": return ParseValueItem(smlValue, I8Parser);
-                case "U1": return ParseValueItem(smlValue, U1Parser);
-                case "U2": return ParseValueItem(smlValue, U2Parser);
-                case "U4": return ParseValueItem(smlValue, U4Parser);
-                case "U8": return ParseValueItem(smlValue, U8Parser);
-                case "F4": return ParseValueItem(smlValue, F4Parser);
-                case "F8": return ParseValueItem(smlValue, F8Parser);
                 case "L": throw new SecsException("Please use Item.L(...) to create list item.");
                 default: throw new SecsException("Unknown SML format :" + format);
             }

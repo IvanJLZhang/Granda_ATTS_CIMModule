@@ -83,9 +83,9 @@
       <Project>{57e0a100-47fd-43de-bbda-7908b0dc5ddf}</Project>
       <Name>Granda.AATS.Log</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Granda.HSMS\Granda.HSMS.csproj">
-      <Project>{d2071314-a2a1-4890-9175-7409a9f72880}</Project>
-      <Name>Granda.HSMS</Name>
+    <ProjectReference Include="..\..\Secs4Net4\Secs4Frmk4\Secs4Frmk4.csproj">
+      <Project>{7e51f1ae-3104-4858-af49-6a81aabe7bcb}</Project>
+      <Name>Secs4Frmk4</Name>
     </ProjectReference>
     <ProjectReference Include="..\Granda.ATTS.CIM.Data\Granda.ATTS.CIM.Data.csproj">
       <Project>{a992048f-ae2a-4b95-894a-76e4f955e986}</Project>

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Granda.ATTS.CIM.Data;
 using Granda.HSMS;
+using Granda.HSMS.Sml;
 
 namespace Granda.ATTS.CIM.Extension
 {
@@ -84,10 +85,17 @@ namespace Granda.ATTS.CIM.Extension
         }
 
 
-        public static Task<SecsMessage> SendMessage(this SecsHsms secsGem, short deviceId, byte s, byte f, bool replyExpected, int systemBytes, Item item = null, string key = "", int value = 0)
+        public static Task<SecsMessage> SendMessage(this SecsGem secsGem, short deviceId, byte s, byte f, bool replyExpected, int systemBytes, Item item = null, string key = "", int value = 0)
         {
             SecsMessage secsMessage = new SecsMessage(s, f, replyExpected, GetFunctionName(s, f, key, value), item);
-            CIMBASE.WriteLog(AATS.Log.LogLevel.INFO, "\r\n" + secsMessage.ToSml());
+            var isSendary = String.Empty;
+            if (s == 9)
+                isSendary = "Error";
+            else if (f % 2 == 0)
+                isSendary = "Secondary";
+            else
+                isSendary = "Primary";
+            CIMBASE.WriteLog(AATS.Log.LogLevel.INFO, $"Send {isSendary} Message \r\n" + secsMessage.ToSml());
             if (systemBytes == -1)
             {
                 return secsGem.SendAsync(secsMessage);
@@ -116,7 +124,8 @@ namespace Granda.ATTS.CIM.Extension
                     Int32.TryParse(commandItem.GetString(), out int result);
                     return result;
                 }
-            }else if(secsMessage.SecsItem.Format == SecsFormat.ASCII)
+            }
+            else if (secsMessage.SecsItem.Format == SecsFormat.ASCII)
             {
                 Int32.TryParse(secsMessage.SecsItem.GetString(), out int result);
                 return result;

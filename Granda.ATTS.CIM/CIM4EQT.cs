@@ -42,7 +42,7 @@ namespace Granda.ATTS.CIM
         /// </summary>
         /// <param name="secsGem">HSMS通信模块</param>
         /// <param name="deviceId">设备Id号， 默认为1</param>
-        public CIM4EQT(SecsHsms secsGem, short deviceId = 1) : base(secsGem, deviceId)
+        public CIM4EQT(SecsGem secsGem, short deviceId = 1) : base(secsGem, deviceId)
         {
         }
         /// <summary>

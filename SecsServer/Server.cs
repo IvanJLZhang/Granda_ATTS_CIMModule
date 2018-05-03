@@ -2,8 +2,8 @@
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using Secs4Frmk4;
-using Secs4Frmk4.Sml;
+using Granda.HSMS;
+using Granda.HSMS.Sml;
 
 namespace SecsServer
 {

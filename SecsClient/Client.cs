@@ -2,8 +2,8 @@
 using System.Net;
 using System.Threading;
 using System.Windows.Forms;
-using Secs4Frmk4;
-using static Secs4Frmk4.Sml.SmlExtension;
+using Granda.HSMS;
+using static Granda.HSMS.Sml.SmlExtension;
 namespace SecsClient
 {
     public partial class Client : Form
