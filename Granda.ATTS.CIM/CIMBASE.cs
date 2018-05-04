@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Net;
 using Granda.AATS.Log;
+using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Data.ENUM;
 using Granda.ATTS.CIM.Data.Message;
 using Granda.ATTS.CIM.Extension;
@@ -327,6 +328,15 @@ namespace Granda.ATTS.CIM
                 if (result.Result != null)
                     WriteLog(LogLevel.INFO, "Receive Secondary message: \r\n" + result.Result.ToSml());
                 return result.Result;
+            }
+            catch (SecsException ex)
+            {
+                WriteLog(LogLevel.ERROR, "Send primary Message error.", ex);
+                if (ex.Message.Equals(Resource.T3Timeout))
+                {
+                    return new SecsMessage(9, 9, Resource.S9F9, null);
+                }
+                return null;
             }
             catch (Exception ex)
             {

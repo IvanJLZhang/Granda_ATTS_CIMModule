@@ -85,11 +85,7 @@ namespace Granda.ATTS.CIM.Scenario
                             // 0: Accepted, 1: Not Accepted
                             var result = secsMessage.S1F16("0");
                             // send Control State Change(OFF_LINE)
-                            Thread thread = new Thread(new ThreadStart(() =>
-                            {
-                                launchControlStateProcess((int)CRST.O);
-                            }));
-                            thread.Start();
+                            launchControlStateProcess((int)CRST.O);
                             break;
                         default:
                             break;
@@ -150,17 +146,13 @@ namespace Granda.ATTS.CIM.Scenario
                     break;
             }
             PrimaryMessage.S1F18(ONLACK);
-            Thread thread = new Thread(new ThreadStart(() =>
+            if (launchControlStateProcess((int)CRST.R))
             {
-                if (launchControlStateProcess((int)CRST.R))
+                if (LaunchDateTimeUpdateProcess())
                 {
-                    if (LaunchDateTimeUpdateProcess())
-                    {
-                        launchControlStateProcess(114);
-                    }
+                    ret = launchControlStateProcess(114);
                 }
-            }));
-            thread.Start();
+            }
             return ret;
         }
         #endregion

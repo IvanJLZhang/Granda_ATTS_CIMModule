@@ -195,4 +195,47 @@
   <data name="RMS_Recipe_Changed" xml:space="preserve">
     <value>Process Program is changed(created/edited/deleted) by Operator</value>
   </data>
+  <data name="S9F1" xml:space="preserve">
+    <value>Unrecognized Device Id</value>
+    <comment>S9F1 description</comment>
+  </data>
+  <data name="S9F11" xml:space="preserve">
+    <value>Data Too Long</value>
+    <comment>S9F11 description</comment>
+  </data>
+  <data name="S9F13" xml:space="preserve">
+    <value>Conversation Timeout</value>
+    <comment>S9F13 description</comment>
+  </data>
+  <data name="S9F3" xml:space="preserve">
+    <value>Unrecognized Stream Type</value>
+    <comment>S9F3 description</comment>
+  </data>
+  <data name="S9F5" xml:space="preserve">
+    <value>Unrecognized Function Type</value>
+    <comment>S9F5 description</comment>
+  </data>
+  <data name="S9F7" xml:space="preserve">
+    <value>Illegal Data</value>
+    <comment>S9F7 description</comment>
+  </data>
+  <data name="S9F9" xml:space="preserve">
+    <value>Transaction Timer Timeout</value>
+    <comment>S9F9 description</comment>
+  </data>
+  <data name="S9Fy" xml:space="preserve">
+    <value>S9Fy message reply.</value>
+    <comment>S9Fy description</comment>
+  </data>
+  <data name="SecsMessageStreamNumberMustLessThan127" xml:space="preserve">
+    <value>Stream number must be less than 127</value>
+  </data>
+  <data name="SxF0" xml:space="preserve">
+    <value>Equipment is not online mode</value>
+    <comment>EquipmentIsNotOnlineMode description</comment>
+  </data>
+  <data name="T3Timeout" xml:space="preserve">
+    <value>T3 Timeout!</value>
+    <comment>T3 Timeout description</comment>
+  </data>
 </root>

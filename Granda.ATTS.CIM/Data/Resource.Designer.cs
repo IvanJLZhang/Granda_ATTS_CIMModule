@@ -293,5 +293,104 @@ namespace Granda.ATTS.CIM.Data {
                 return ResourceManager.GetString("RMS_Recipe_Changed", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   查找类似 Unrecognized Device Id 的本地化字符串。
+        /// </summary>
+        internal static string S9F1 {
+            get {
+                return ResourceManager.GetString("S9F1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Data Too Long 的本地化字符串。
+        /// </summary>
+        internal static string S9F11 {
+            get {
+                return ResourceManager.GetString("S9F11", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Conversation Timeout 的本地化字符串。
+        /// </summary>
+        internal static string S9F13 {
+            get {
+                return ResourceManager.GetString("S9F13", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Unrecognized Stream Type 的本地化字符串。
+        /// </summary>
+        internal static string S9F3 {
+            get {
+                return ResourceManager.GetString("S9F3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Unrecognized Function Type 的本地化字符串。
+        /// </summary>
+        internal static string S9F5 {
+            get {
+                return ResourceManager.GetString("S9F5", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Illegal Data 的本地化字符串。
+        /// </summary>
+        internal static string S9F7 {
+            get {
+                return ResourceManager.GetString("S9F7", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Transaction Timer Timeout 的本地化字符串。
+        /// </summary>
+        internal static string S9F9 {
+            get {
+                return ResourceManager.GetString("S9F9", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 S9Fy message reply. 的本地化字符串。
+        /// </summary>
+        internal static string S9Fy {
+            get {
+                return ResourceManager.GetString("S9Fy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Stream number must be less than 127 的本地化字符串。
+        /// </summary>
+        internal static string SecsMessageStreamNumberMustLessThan127 {
+            get {
+                return ResourceManager.GetString("SecsMessageStreamNumberMustLessThan127", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 Equipment is not online mode 的本地化字符串。
+        /// </summary>
+        internal static string SxF0 {
+            get {
+                return ResourceManager.GetString("SxF0", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   查找类似 T3 Timeout! 的本地化字符串。
+        /// </summary>
+        internal static string T3Timeout {
+            get {
+                return ResourceManager.GetString("T3Timeout", resourceCulture);
+            }
+        }
     }
 }
