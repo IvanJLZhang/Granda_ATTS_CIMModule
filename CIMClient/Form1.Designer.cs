@@ -41,9 +41,9 @@
             this.rbtn_active = new System.Windows.Forms.RadioButton();
             this.rbtn_passive = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.btn_i_datetime = new System.Windows.Forms.Button();
             this.btn_i_offline = new System.Windows.Forms.Button();
             this.btn_i_online = new System.Windows.Forms.Button();
+            this.btn_i_datetime = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.btn_d_prr = new System.Windows.Forms.Button();
             this.btn_r_process_control = new System.Windows.Forms.Button();
@@ -72,7 +72,7 @@
             this.tb_ip.Name = "tb_ip";
             this.tb_ip.Size = new System.Drawing.Size(107, 21);
             this.tb_ip.TabIndex = 0;
-            this.tb_ip.Text = "192.168.0.145";
+            this.tb_ip.Text = "192.168.0.143";
             // 
             // label1
             // 
@@ -123,6 +123,7 @@
             // 
             // contextMenuStrip1
             // 
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clearToolStripMenuItem});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
@@ -178,17 +179,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Initialize";
             // 
-            // btn_i_datetime
-            // 
-            this.btn_i_datetime.Location = new System.Drawing.Point(27, 26);
-            this.btn_i_datetime.Name = "btn_i_datetime";
-            this.btn_i_datetime.Size = new System.Drawing.Size(158, 31);
-            this.btn_i_datetime.TabIndex = 2;
-            this.btn_i_datetime.Text = "DateTime";
-            this.toolTip1.SetToolTip(this.btn_i_datetime, "Launch Request Date and Time Process");
-            this.btn_i_datetime.UseVisualStyleBackColor = true;
-            this.btn_i_datetime.Click += new System.EventHandler(this.btn_i_datetime_Click);
-            // 
             // btn_i_offline
             // 
             this.btn_i_offline.Location = new System.Drawing.Point(209, 26);
@@ -210,6 +200,17 @@
             this.toolTip1.SetToolTip(this.btn_i_online, "Launch Online Process");
             this.btn_i_online.UseVisualStyleBackColor = true;
             this.btn_i_online.Click += new System.EventHandler(this.btn_i_online_Click);
+            // 
+            // btn_i_datetime
+            // 
+            this.btn_i_datetime.Location = new System.Drawing.Point(27, 26);
+            this.btn_i_datetime.Name = "btn_i_datetime";
+            this.btn_i_datetime.Size = new System.Drawing.Size(158, 31);
+            this.btn_i_datetime.TabIndex = 2;
+            this.btn_i_datetime.Text = "DateTime";
+            this.toolTip1.SetToolTip(this.btn_i_datetime, "Launch Request Date and Time Process");
+            this.btn_i_datetime.UseVisualStyleBackColor = true;
+            this.btn_i_datetime.Click += new System.EventHandler(this.btn_i_datetime_Click);
             // 
             // btn_d_prr
             // 

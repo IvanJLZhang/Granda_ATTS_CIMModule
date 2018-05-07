@@ -68,6 +68,7 @@
     <Compile Include="Scenario\BaseScenario.cs" />
     <Compile Include="Scenario\CassetteInfoDownload.cs" />
     <Compile Include="Scenario\Clock.cs" />
+    <Compile Include="Scenario\ConversationController.cs" />
     <Compile Include="Scenario\DataCollection.cs" />
     <Compile Include="Scenario\EqtTerminalService.cs" />
     <Compile Include="Scenario\ErrorMessage.cs" />

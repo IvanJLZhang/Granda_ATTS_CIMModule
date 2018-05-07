@@ -42,7 +42,7 @@ namespace CIMClient
         }
         private void AddLog(string msg)
         {
-            this.Invoke((MethodInvoker)delegate
+            this.BeginInvoke((MethodInvoker)delegate
             {
                 this.tb_msg.Text += msg + "\r\n";
             });

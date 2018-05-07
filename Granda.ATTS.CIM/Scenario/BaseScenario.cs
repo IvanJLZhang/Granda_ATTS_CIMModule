@@ -22,7 +22,7 @@ using System.Text;
 
 namespace Granda.ATTS.CIM.Scenario
 {
-    internal class BaseScenario
+    internal class BaseScenario : ConversationController
     {
         /// <summary>
         /// 场景类型
@@ -53,7 +53,7 @@ namespace Granda.ATTS.CIM.Scenario
         public SecsMessage PrimaryMessage { get; set; }
         //public SecsTracer secsTracer { get; set; }
 
-        public BaseScenario()
+        public BaseScenario() : base()
         {
             ScenarioType = Scenarios.Default_Scenario;
         }

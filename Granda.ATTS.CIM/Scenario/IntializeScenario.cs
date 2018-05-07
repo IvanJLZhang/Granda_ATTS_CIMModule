@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using Granda.AATS.Log;
 using Granda.ATTS.CIM.Data;
 using Granda.ATTS.CIM.Data.ENUM;
@@ -158,11 +159,24 @@ namespace Granda.ATTS.CIM.Scenario
         #endregion
 
         #region Initialize Scenario methods
+        public bool LaunchOnlineProcess(EquipmentInfo equipmentInfo)
+        {
+            this.StartConversation(Timeout.Infinite);
+            Task<bool> task = new Task<bool>(() =>
+            {
+                var ret = LaunchOnlineProcessTask(equipmentInfo, this.CancellationTokenSource.Token);
+                this.CompleteConversation();
+                return ret;
+            }, this.CancellationTokenSource.Token);
+            task.Start();
+            task.Wait();
+            return task.Result;
+        }
         /// <summary>
         /// 启动建立连接进程 online by Unit
         /// </summary>
         /// <returns></returns>
-        public bool LaunchOnlineProcess(EquipmentInfo equipmentInfo)
+        public bool LaunchOnlineProcessTask(EquipmentInfo equipmentInfo, CancellationToken cancellationToken)
         {
             SubScenarioName = Resource.Intialize_Scenario_1;
             this._equipmentBaseInfo = equipmentInfo.EquipmentBase;
@@ -179,10 +193,10 @@ namespace Granda.ATTS.CIM.Scenario
                     return false;
                 }
             }
-            if (replyMsg == null)
+            if (replyMsg == null || cancellationToken.IsCancellationRequested)
                 return false;
             replyMsg = S1F1();
-            if (replyMsg == null || replyMsg.F == 0)
+            if (replyMsg == null || replyMsg.F == 0 || cancellationToken.IsCancellationRequested)
             {// host denies online request
                 CIMBASE.WriteLog(LogLevel.INFO, "Host denies online request.");
                 return false;
@@ -306,7 +320,7 @@ namespace Granda.ATTS.CIM.Scenario
                         if (ack == 0)
                         {
                             this._equipmentStatusInfo = controlStateChangeReport.EquipmentStatus;
-                            itializeScenario?.UpdateControlState(this._equipmentStatusInfo.CRST);
+                            itializeScenario.UpdateControlState(this._equipmentStatusInfo.CRST);
                             return true;
                         }
                     }
